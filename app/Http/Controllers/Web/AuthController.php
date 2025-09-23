@@ -21,7 +21,6 @@ class AuthController extends Controller
             'mobile' => 'required|numeric|digits:10',
         ]);
 
-        // Check if complaint already submitted
         $complaint = Complainant::where('mobile', $request->mobile)->first();
         if ($complaint && $complaint->is_completed == 1) {
             return redirect()->back()->withErrors([
@@ -29,12 +28,10 @@ class AuthController extends Controller
             ])->withInput();
         }
 
-        // Generate OTP
         if (env('APP_ENV') === 'local') {
             $otp = '111111';
         } else {
             $otp = rand(100000, 999999);
-            // You can also integrate SMS API here to send OTP
         }
 
         Otp::create([
