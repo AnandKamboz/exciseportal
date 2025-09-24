@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('complainant_name');
             $table->string('mobile');
             $table->string('email')->nullable();
-            $table->string('aadhaar')->nullable();
+            $table->string('aadhaar', 12)->nullable();
             $table->text('address')->nullable();
             $table->string('upload_document')->nullable();
             $table->enum('complaint_type', ['vat', 'gst', 'excise']);
