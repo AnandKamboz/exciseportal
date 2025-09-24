@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class ComplainantController extends Controller
  {
     public function storeFirstStep( Request $request )
-    {
+ {
         $data = $request->validate( [
             'complainant_name' => 'required|string|max:255',
             'complaint_type'   => 'required',
@@ -24,18 +24,20 @@ class ComplainantController extends Controller
             'upload_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ] );
 
-        $data['mobile'] = Auth::user()->mobile;
+        $data[ 'mobile' ] = Auth::user()->mobile;
+
+        $data[ 'is_fraud_related' ] = 0;
 
         $complaint = Complainant::where( 'mobile', Auth::user()->mobile )
         ->where( 'is_completed', false )
         ->first();
 
-        $complaint = Complainant::where('mobile', Auth::user()->mobile)->first();
-        
-        if ($complaint && $complaint->is_completed == 1) {
-            return response()->json([
+        $complaint = Complainant::where( 'mobile', Auth::user()->mobile )->first();
+
+        if ( $complaint && $complaint->is_completed == 1 ) {
+            return response()->json( [
                 'message' => 'Complaint already submitted for this mobile number.'
-            ], 403);
+            ], 403 );
         }
 
         if ( $complaint ) {
@@ -87,7 +89,8 @@ class ComplainantController extends Controller
     }
 
     public function storeSecondStep( Request $request )
-    {   
+ {
+
         $data = $request->validate( [
             'secure_id' => 'required',
             'is_fraud_related' => 'required|in:0,1',
@@ -95,8 +98,8 @@ class ComplainantController extends Controller
 
         $complaint = Complainant::where( 'secure_id', $data[ 'secure_id' ] )->first();
 
-        if ($complaint->is_completed == "1") {
-            return response()->json(['message' => 'Complaint already submitted.'], 403);
+        if ( $complaint->is_completed == '1' ) {
+            return response()->json( [ 'message' => 'Complaint already submitted.' ], 403 );
         }
 
         if ( !$complaint ) {
@@ -115,21 +118,29 @@ class ComplainantController extends Controller
         ] );
     }
 
-    public function storeThirdStep( Request $request )
+    public function store( Request $request )
     {
         $data = $request->validate( [
+            'complainant_name' => 'required|string|max:255',
+            'complaint_type'   => 'required',
+            'mobile' => 'required|numeric|digits:10',
+            'email' => 'required|email|unique:users,email',
+            'aadhaar' => 'required|digits:12',
+            'address'          => 'required|string',
+            'upload_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'secure_id'       => 'required|string|exists:complainants,secure_id',
             'firm_name'       => 'required|string|max:255',
             'gstin'           => 'required|string|max:15',
             'firm_address'    => 'required|string|max:500',
             'proof_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'remarks'         => 'required|string|max:1000',
+            'is_fraud_related' => 'required|in:0,1',
         ] );
 
         $complaint = Complainant::where( 'secure_id', $data[ 'secure_id' ] )->first();
 
-        if ($complaint->is_completed == "1") {
-            return response()->json(['message' => 'Complaint already submitted.'], 403);
+        if ( $complaint->is_completed == '1' ) {
+            return response()->json( [ 'message' => 'Complaint already submitted.' ], 403 );
         }
 
         if ( !$complaint ) {
@@ -164,5 +175,4 @@ class ComplainantController extends Controller
             'complaint' => $complaint,
         ] );
     }
-
 }
