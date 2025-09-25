@@ -29,7 +29,7 @@ class ComplainantController extends Controller
             'email'            => 'required|email|unique:users,email,' . Auth::id(),
             'aadhaar'          => 'required|digits:12',
             'address'          => 'required|string',
-            'upload_document' => 'required|file|mimes:jpg,jpeg,png,pdf|max:200',
+            // 'upload_document' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:200',
         ]);
 
         $userMobile = Auth::user()->mobile;

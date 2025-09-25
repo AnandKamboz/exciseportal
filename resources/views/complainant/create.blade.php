@@ -142,18 +142,12 @@
 
                 <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
                     onchange="checkFileSize(this)">
-
-
-
                 <div id="previewContainer" style="margin-top:10px;"></div>
 
-
-
-
-                <img id="existing-image"
-                    src="{{ isset($complaint) ? asset('storage/' . $complaint->upload_document) : '' }}" alt="Existing"
-                    style="max-width:200px; display:block; margin-bottom:10px;">
-
+                @if (!empty($userData->upload_document) && !empty($userData->upload_document))
+                    <img id="existing-image" src="{{ asset('storage/' . $userData->upload_document) }}"
+                        alt="Existing Document" style="max-width:200px; display:block; margin-bottom:10px;">
+                @endif
 
                 <div class="d-flex justify-content-end mt-3">
                     <button type="button" class="btn btn-primary btn-step" onclick="nextStep()">Next</button>
@@ -176,8 +170,6 @@
                     <button type="button" class="btn btn-primary btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
-
-
 
             <!-- Step 3 -->
             <div class="step" id="step3">
@@ -287,8 +279,8 @@
                 });
             }
 
-               const userData = @json($userData);
-               console.log(userData['upload_document']);
+            const userData = @json($userData);
+
 
             if (!upload_document && !userData['upload_document']) {
                 $('#loader').addClass('d-none');
@@ -300,27 +292,29 @@
                 });
             }
 
+            if (upload_document) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 
-            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-            if (!allowedTypes.includes(upload_document.type)) {
-                $('#loader').addClass('d-none');
-                return Swal.fire({
-                    icon: 'warning',
-                    title: 'Error',
-                    text: 'Only JPG, PNG, or PDF files are allowed!',
-                    confirmButtonText: 'OK'
-                });
-            }
+                if (!allowedTypes.includes(upload_document.type)) {
+                    $('#loader').addClass('d-none');
+                    return Swal.fire({
+                        icon: 'warning',
+                        title: 'Error',
+                        text: 'Only JPG, PNG, or PDF files are allowed!',
+                        confirmButtonText: 'OK'
+                    });
+                }
 
-            const maxSize = 50 * 1024;
-            if (upload_document.size > maxSize) {
-                $('#loader').addClass('d-none');
-                return Swal.fire({
-                    icon: 'warning',
-                    title: 'Error',
-                    text: 'File size must be less than 50 KB!',
-                    confirmButtonText: 'OK'
-                });
+                const maxSize = 50 * 1024;
+                if (upload_document.size > maxSize) {
+                    $('#loader').addClass('d-none');
+                    return Swal.fire({
+                        icon: 'warning',
+                        title: 'Error',
+                        text: 'File size must be less than 50 KB!',
+                        confirmButtonText: 'OK'
+                    });
+                }
             }
 
             let formData = new FormData();
