@@ -166,6 +166,7 @@
 
                 return;
             }
+            
             sendOtpBtn.disabled = true;
             sendOtpBtn.innerText = 'Sending...';
             axios.post("{{ route('send-otp') }}", {
@@ -260,5 +261,5 @@
 
 </html>
 
+{{-- My --}}
 
-{{-- My name is Anand k Kamboj rrrrrrrrrrrrrrrrrrrrrrr --}}
