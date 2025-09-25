@@ -166,6 +166,7 @@
 
                 return;
             }
+            
             sendOtpBtn.disabled = true;
             sendOtpBtn.innerText = 'Sending...';
             axios.post("{{ route('send-otp') }}", {
