@@ -232,7 +232,7 @@
                 .then(res => {
                     if (res.data.success) {
                         $('#loader').addClass('d-none');
-                        window.location.href = res.data.redirect || '/complainant';
+                        window.location.href = "{{ route('complainant') }}";
                     } else {
                         $('#loader').addClass('d-none');
                         Swal.fire({
