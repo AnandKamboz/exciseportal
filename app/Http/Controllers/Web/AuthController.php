@@ -20,8 +20,8 @@ class AuthController extends Controller
         $request->validate([
             'mobile' => 'required|numeric|digits:10',
         ]);
-
         $complaint = Complainant::where('mobile', $request->mobile)->first();
+    
         if ($complaint && $complaint->is_completed == 1) {
             return redirect()->back()->withErrors([
                 'mobile' => 'Complaint already submitted for this mobile number.'

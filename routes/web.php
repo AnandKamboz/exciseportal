@@ -6,13 +6,13 @@ use App\Http\Controllers\Web\ComplainantController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('login');
 
-Route::post('/send-otp', [AuthController::class, 'sendOtp']);
-Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
 
 
 Route::get('/complainant', [ComplainantController::class, 'complainant'])->name('complainant');
 Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep'])->name('complaints.step-first');
 Route::post('/complaints/step-second', [ComplainantController::class, 'storeSecondStep'])->name('complaints.step-second');
-Route::post('/complaints/step-third', [ComplainantController::class, 'storeThirdStep'])->name('complaints.step-third');
+Route::post('/complaints/step-third', [ComplainantController::class, 'store'])->name('complaints.store');

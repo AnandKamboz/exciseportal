@@ -89,7 +89,7 @@ class ComplainantController extends Controller
     }
 
     public function storeSecondStep( Request $request )
- {
+    {
 
         $data = $request->validate( [
             'secure_id' => 'required',

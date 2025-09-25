@@ -168,7 +168,7 @@
             }
             sendOtpBtn.disabled = true;
             sendOtpBtn.innerText = 'Sending...';
-            axios.post('/send-otp', {
+            axios.post("{{ route('send-otp') }}", {
                     mobile: mobileInput.value
                 })
                 .then(res => {
@@ -186,7 +186,7 @@
                             text: res.data.message || 'Something went wrong!',
                             confirmButtonText: 'OK'
                         });
-
+                        
                     }
                 })
                 .catch(err => {
@@ -221,7 +221,7 @@
                 return;
             }
 
-            axios.post('/verify-otp', {
+            axios.post("{{ route('verify-otp') }}", {
                     mobile: mobileInput.value,
                     otp: otpInput.value,
                     _token: document.querySelector('input[name="_token"]').value
@@ -238,7 +238,9 @@
                             text: res.data.message || 'Invalid OTP!',
                             confirmButtonText: 'OK'
                         });
-
+                        $('#otp').val("");
+                        loginBtn.disabled = false;
+                        loginBtn.innerText = 'Send Otp';
                     }
                 })
                 .catch(err => {
