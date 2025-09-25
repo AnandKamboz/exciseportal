@@ -15,7 +15,9 @@ class ComplainantController extends Controller
         if (!Auth::check()) {
           return redirect('/');
         }
-        return view('complainant.create');
+        $userMobile = Auth::user()->mobile;
+        $userData = Complainant::where('mobile', $userMobile)->first();
+        return view('complainant.create',compact('userMobile','userData'));
     }
 
     public function storeFirstStep(Request $request)
@@ -162,6 +164,25 @@ class ComplainantController extends Controller
                 'complaint_id'  => $complaint->complaint_id,
             ]);
 
+    }
+
+    public function getUserData(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not authenticated'
+            ], 401);
+        }
+
+        $complaints = Complainant::where('mobile', $user->mobile)->first();
+
+
+        return response()->json([
+            'status' => 'success',
+            'complaints' => $complaints
+        ]);
     }
 
 

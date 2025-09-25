@@ -16,3 +16,5 @@ Route::get('/complainant', [ComplainantController::class, 'complainant'])->name(
 Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep'])->name('complaints.step-first');
 Route::post('/complaints/step-second', [ComplainantController::class, 'storeSecondStep'])->name('complaints.step-second');
 Route::post('/complaints/step-third', [ComplainantController::class, 'store'])->name('complaints.store');
+Route::get('/user-data', [ComplainantController::class, 'getUserData'])->name('user.data');
+

@@ -127,7 +127,8 @@
             <div class="step active" id="step1">
                 <h5 class="mb-3">Complainant Details</h5>
                 <input type="text" name="complainant_name" class="form-control mb-2" placeholder="Enter your Name">
-                <input type="text" name="phone" class="form-control mb-2" placeholder="Enter your Phone">
+                <input type="text" name="phone" class="form-control mb-2" value="{{ $userMobile }}"
+                    placeholder="Enter your Phone" readonly>
                 <input type="email" name="email" class="form-control mb-2" placeholder="Enter your Email">
                 <input type="text" name="address" class="form-control mb-2" placeholder="Enter your Address">
                 <input type="text" name="aadhaar" class="form-control mb-2" placeholder="Enter your Aadhaar No.">
@@ -137,8 +138,22 @@
                     <option value="gst">GST</option>
                     <option value="excise">Excise</option>
                 </select>
+
+
                 <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
                     onchange="checkFileSize(this)">
+
+
+
+                <div id="previewContainer" style="margin-top:10px;"></div>
+
+
+
+
+                <img id="existing-image"
+                    src="{{ isset($complaint) ? asset('storage/' . $complaint->upload_document) : '' }}" alt="Existing"
+                    style="max-width:200px; display:block; margin-bottom:10px;">
+
 
                 <div class="d-flex justify-content-end mt-3">
                     <button type="button" class="btn btn-primary btn-step" onclick="nextStep()">Next</button>
@@ -272,8 +287,11 @@
                 });
             }
 
-            if (!upload_document) {
-                $('#loader').addClass('d-none'); // loader hide
+               const userData = @json($userData);
+               console.log(userData['upload_document']);
+
+            if (!upload_document && !userData['upload_document']) {
+                $('#loader').addClass('d-none');
                 return Swal.fire({
                     icon: 'warning',
                     title: 'Error',
@@ -281,6 +299,7 @@
                     confirmButtonText: 'OK'
                 });
             }
+
 
             const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
             if (!allowedTypes.includes(upload_document.type)) {
@@ -372,7 +391,7 @@
 
 
         function submitFinalStep(event) {
-            event.preventDefault(); 
+            event.preventDefault();
             $('#loader').removeClass('d-none');
 
             const firm_name = document.querySelector('input[name="firm_name"]').value.trim();
@@ -384,34 +403,37 @@
             let formData = new FormData();
             formData.append('firm_name', firm_name);
             formData.append('firm_address', firm_address);
-            formData.append('proof_document', proof_document); 
+            formData.append('proof_document', proof_document);
             formData.append('remarks', remarks);
             formData.append('gstin', gstin);
 
             axios.post("{{ route('complaints.store') }}", formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            })
-            .then(res => {
-                $('#loader').addClass('d-none');
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Complaint Submitted',
-                    text: 'Your complaint has been submitted successfully. Complaint ID: ' + res.data.complaint_id,
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    window.location.href = "{{ route('login') }}";
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(res => {
+                    $('#loader').addClass('d-none');
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Complaint Submitted',
+                        text: 'Your complaint has been submitted successfully. Complaint ID: ' + res.data
+                            .complaint_id,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = "{{ route('login') }}";
+                    });
+                })
+                .catch(err => {
+                    $('#loader').addClass('d-none');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: err.response?.data?.message || 'Server error!',
+                        confirmButtonText: 'OK'
+                    });
                 });
-            })
-            .catch(err => {
-                $('#loader').addClass('d-none');
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: err.response?.data?.message || 'Server error!',
-                    confirmButtonText: 'OK'
-                });
-            });
         }
 
         function validateStep(step) {
@@ -426,7 +448,7 @@
             return true;
         }
 
-       
+
 
         document.addEventListener('DOMContentLoaded', () => {
             const nameInput = document.querySelector('input[name="complainant_name"]');
@@ -462,6 +484,7 @@
         });
 
         function checkFileSize(input) {
+            $('#existing-image').addClass('d-none');
             if (!input.files || !input.files[0]) {
                 Swal.fire({
                     icon: 'error',
@@ -485,6 +508,38 @@
                 return false;
             }
 
+            const fileBlob = new Blob([file], {
+                type: file.type
+            });
+            console.log('Blob created:', fileBlob);
+
+            const blobUrl = URL.createObjectURL(fileBlob);
+            console.log('Blob URL:', blobUrl);
+
+
+
+            if (file.type.startsWith('image/')) {
+                previewContainer.innerHTML = '';
+
+                const img = document.createElement('img');
+                img.src = blobUrl;
+                img.style.maxWidth = '200px';
+                img.style.marginTop = '10px';
+                previewContainer.appendChild(img);
+            }
+
+
+            if (file.type === 'application/pdf') {
+                previewContainer.innerHTML = '';
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.target = '_blank';
+                link.textContent = 'Open PDF';
+                link.style.display = 'block';
+                link.style.marginTop = '10px';
+                previewContainer.appendChild(link);
+            }
+
             return true;
         }
 
@@ -499,7 +554,27 @@
         function sanitizeRemarks(input) {
             input.value = input.value.replace(/[^\w\s\-.,\/&!?]/g, '');
         }
+
+        $(document).ready(function() {
+            axios.get("{{ route('user.data') }}")
+                .then(function(response) {
+                    $('input[name="complainant_name"]').val(response.data.complaints.complainant_name);
+                    $('input[name="address"]').val(response.data.complaints.address);
+                    $('input[name="aadhaar"]').val(response.data.complaints.aadhaar);
+                    $('input[name="email"]').val(response.data.complaints.email);
+                    $('#complaintCategory').val(response.data.complaints.complaint_type);
+
+                    const existingImg = document.getElementById('existing-image');
+                    existingImg.src = "{{ asset('storage') }}/" + response.data.complaints.upload_document;
+                    existingImg.style.display = 'block';
+                })
+                .catch(function(error) {
+                    console.error('Error:', error.response);
+                });
+        })
     </script>
+
+
 </body>
 
 </html>
