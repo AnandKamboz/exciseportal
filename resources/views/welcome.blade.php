@@ -114,7 +114,7 @@
         }
     </style>
 
-    {{-- Anand --}}
+    {{-- Anand kamboj --}}
 
     <div class="login-card">
         <h3>Excise Login</h3>
