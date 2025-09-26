@@ -20,13 +20,13 @@ class AuthController extends Controller
         $request->validate([
             'mobile' => 'required|numeric|digits:10',
         ]);
-        $complaint = Complainant::where('mobile', $request->mobile)->first();
+        // $complaint = Complainant::where('mobile', $request->mobile)->first();
     
-        if ($complaint && $complaint->is_completed == 1) {
-            return redirect()->back()->withErrors([
-                'mobile' => 'Complaint already submitted for this mobile number.'
-            ])->withInput();
-        }
+        // if ($complaint && $complaint->is_completed == 1) {
+        //     return redirect()->back()->withErrors([
+        //         'mobile' => 'Complaint already submitted for this mobile number.'
+        //     ])->withInput();
+        // }
 
         if (env('APP_ENV') === 'local') {
             $otp = '111111';
@@ -58,12 +58,12 @@ class AuthController extends Controller
         $mobile = $request->mobile;
         $otpInput = $request->otp;
 
-        $complaint = Complainant::where('mobile', $mobile)->first();
-        if ($complaint && $complaint->is_completed == 1) {
-            return back()->withErrors([
-                'mobile' => 'Complaint already submitted for this mobile number.'
-            ])->withInput();
-        }
+        // $complaint = Complainant::where('mobile', $mobile)->first();
+        // if ($complaint && $complaint->is_completed == 1) {
+        //     return back()->withErrors([
+        //         'mobile' => 'Complaint already submitted for this mobile number.'
+        //     ])->withInput();
+        // }
 
         $otpRecord = Otp::where('mobile', $mobile)
                         ->where('otp', $otpInput)

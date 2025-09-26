@@ -142,6 +142,7 @@
 
                 <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
                     onchange="checkFileSize(this)">
+                    
                 <div id="previewContainer" style="margin-top:10px;"></div>
 
                 @if (!empty($userData->upload_document) && !empty($userData->upload_document))

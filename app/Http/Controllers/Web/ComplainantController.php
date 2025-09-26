@@ -16,7 +16,7 @@ class ComplainantController extends Controller
           return redirect('/');
         }
         $userMobile = Auth::user()->mobile;
-        $userData = Complainant::where('mobile', $userMobile)->first();
+        $userData = Complainant::where('mobile', $userMobile)->where('is_completed',0)->first();
         return view('complainant.create',compact('userMobile','userData'));
     }
 
@@ -36,13 +36,13 @@ class ComplainantController extends Controller
         $data['mobile'] = $userMobile;
         $data['is_fraud_related'] = false;
 
-        $complaint = Complainant::where('mobile', $userMobile)->first();
+        $complaint = Complainant::where('mobile', $userMobile)->where('is_completed',0)->first();
 
-        if ($complaint && $complaint->is_completed) {
-            return response()->json([
-                'message' => 'Complaint already submitted for this mobile number.'
-            ], 403);
-        }
+        // if ($complaint && $complaint->is_completed) {
+        //     return response()->json([
+        //         'message' => 'Complaint already submitted for this mobile number.'
+        //     ], 403);
+        // }
 
         if ($complaint) {
             $complaint->update($data);
@@ -92,7 +92,7 @@ class ComplainantController extends Controller
             'fraud_check' => 'required|in:1,0',
         ]);
         
-        $secureId = Complainant::where('mobile', auth::user()->mobile)->value('secure_id');
+        $secureId = Complainant::where('mobile', auth::user()->mobile)->where('is_completed',0)->value('secure_id');
         $complaint = Complainant::where('secure_id', $secureId)->first();
 
         if (!$complaint) {
@@ -122,7 +122,10 @@ class ComplainantController extends Controller
                 'gstin'           => 'required|string|max:15',
             ]);
           
-            $secureId = Complainant::where('mobile', auth::user()->mobile)->value('secure_id');         
+            $secureId = Complainant::where('mobile', auth()->user()->mobile)
+                        ->where('is_completed', 0)
+                        ->value('secure_id');
+        
             $complaint = Complainant::where('secure_id', $secureId)->first();
           
             if (!$complaint) {
@@ -176,7 +179,9 @@ class ComplainantController extends Controller
             ], 401);
         }
 
-        $complaints = Complainant::where('mobile', $user->mobile)->first();
+        $complaints = Complainant::where('mobile', auth()->user()->mobile)
+                          ->where('is_completed', 0)
+                          ->first();
 
 
         return response()->json([
