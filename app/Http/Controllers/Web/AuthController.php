@@ -48,8 +48,71 @@ class AuthController extends Controller
         ]);
     }
 
+    // public function verifyOtp(Request $request)
+    // {
+    //     $request->validate([
+    //         'mobile' => 'required|numeric|digits:10',
+    //         'otp' => 'required|numeric|digits:6',
+    //     ]);
+
+    //     $mobile = $request->mobile;
+    //     $otpInput = $request->otp;
+
+    //     $otpRecord = Otp::where('mobile', $mobile)
+    //                     ->where('otp', $otpInput)
+    //                     ->where('is_used', false)
+    //                     ->where('expires_at', '>=', Carbon::now())
+    //                     ->latest()
+    //                     ->first();
+
+    //     if (!$otpRecord) {
+    //         return back()->withErrors([
+    //             'otp' => 'Invalid or expired OTP'
+    //         ])->withInput();
+    //     }
+
+    //     $otpRecord->update(['is_used' => true]);
+
+
+    //     $recordExicts = Complainant::where('mobile', $userMobile)->where('is_completed',1)->first();
+
+    //     if($recordExists) {
+    //         auth()->login($user);
+    //         return response()->json([
+    //             'success' => true,
+    //             'redirect_url' => route('complainant'),
+    //         ]);
+    //     } 
+
+    //     do {
+    //         $secureId = Str::random(32);
+    //     } while (User::where('secure_id', $secureId)->exists());
+
+    //     $user = User::firstOrCreate(
+    //         ['mobile' => $mobile],
+    //         ['secure_id' => $secureId]
+    //     );
+
+    //     if ($user->wasRecentlyCreated) {
+    //         $defaultRole = RoleGroup::where('role_name', 'user')->first();
+    //         if ($defaultRole) {
+    //             $user->roles()->attach($defaultRole->id);
+    //         }
+    //     }
+
+    //     auth()->login($user);
+
+    //     $request->session()->put('mobile', $mobile);
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Login successful!',
+    //     ]);
+    // }
+
     public function verifyOtp(Request $request)
     {
+        
         $request->validate([
             'mobile' => 'required|numeric|digits:10',
             'otp' => 'required|numeric|digits:6',
@@ -58,27 +121,39 @@ class AuthController extends Controller
         $mobile = $request->mobile;
         $otpInput = $request->otp;
 
-        // $complaint = Complainant::where('mobile', $mobile)->first();
-        // if ($complaint && $complaint->is_completed == 1) {
-        //     return back()->withErrors([
-        //         'mobile' => 'Complaint already submitted for this mobile number.'
-        //     ])->withInput();
-        // }
-
         $otpRecord = Otp::where('mobile', $mobile)
-                        ->where('otp', $otpInput)
-                        ->where('is_used', false)
-                        ->where('expires_at', '>=', Carbon::now())
-                        ->latest()
-                        ->first();
+            ->where('otp', $otpInput)
+            ->where('is_used', false)
+            ->where('expires_at', '>=', Carbon::now())
+            ->latest()
+            ->first();
 
         if (!$otpRecord) {
-            return back()->withErrors([
-                'otp' => 'Invalid or expired OTP'
-            ])->withInput();
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired OTP'
+            ]);
         }
 
         $otpRecord->update(['is_used' => true]);
+
+        $recordExists = Complainant::where('mobile', $mobile)
+            ->where('is_completed', 1)
+            ->first();
+        
+
+        if ($recordExists) {
+            $user = User::where('mobile', $mobile)->first();
+            if ($user) {
+                auth()->login($user);
+            }
+
+            return response()->json([
+                'success' => true,
+                'redirect_url' => route('user.dashboard'), 
+            ]);
+        }
+
 
         do {
             $secureId = Str::random(32);
@@ -102,8 +177,8 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
+            'redirect_url' => route('complainant'),
             'message' => 'Login successful!',
         ]);
     }
-
 }

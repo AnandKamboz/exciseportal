@@ -123,7 +123,6 @@
 
     <div class="card">
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
-            <!-- Step 1 -->
             <div class="step active" id="step1">
                 <h5 class="mb-3">Complainant Details</h5>
                 <input type="text" name="complainant_name" class="form-control mb-2" placeholder="Enter your Name">
@@ -417,7 +416,7 @@
                             .complaint_id,
                         confirmButtonText: 'OK'
                     }).then(() => {
-                        window.location.href = "{{ route('login') }}";
+                        window.location.href = "{{ route('user.dashboard') }}";
                     });
                 })
                 .catch(err => {

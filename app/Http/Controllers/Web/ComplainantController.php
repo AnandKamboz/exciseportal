@@ -37,7 +37,7 @@ class ComplainantController extends Controller
         $data['is_fraud_related'] = false;
 
         $complaint = Complainant::where('mobile', $userMobile)->where('is_completed',0)->first();
-
+        
         // if ($complaint && $complaint->is_completed) {
         //     return response()->json([
         //         'message' => 'Complaint already submitted for this mobile number.'
@@ -159,7 +159,7 @@ class ComplainantController extends Controller
             $data['is_completed'] = 1;
             $complaint->update($data);
             
-            $request->session()->flush();
+            // $request->session()->flush();
 
            return response()->json([
                 'success'       => true,
