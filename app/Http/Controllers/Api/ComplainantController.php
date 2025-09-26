@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
+
 
 class ComplainantController extends Controller
  {
@@ -267,6 +269,8 @@ class ComplainantController extends Controller
 
         $data[ 'is_completed' ] = 1;
         $complaint->update( $data );
+
+        Session::flush();
 
         return response()->json( [
             'success'   => true,
