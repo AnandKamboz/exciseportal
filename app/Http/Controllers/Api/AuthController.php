@@ -39,9 +39,15 @@ class AuthController extends Controller
             'expires_at' => Carbon::now()->addMinutes( 5 ),
         ] );
 
-        return response()->json( [
+        // return response()->json( [
+        //     'message' => 'OTP sent successfully',
+        // ] );
+
+        return response()->json([
+            'status' => 'success',
             'message' => 'OTP sent successfully',
-        ] );
+        ], 200);
+
     }
 
     // public function verifyOtp( Request $request )
