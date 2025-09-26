@@ -117,8 +117,12 @@ class AuthController extends Controller
         ->first();
 
     if (!$otpRecord) {
-        return response()->json(['message' => 'Invalid or expired OTP'], 422);
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid or expired OTP'
+        ], 422);
     }
+
 
     $otpRecord->update(['is_used' => true]);
 
