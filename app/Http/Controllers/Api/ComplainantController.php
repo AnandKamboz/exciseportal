@@ -171,15 +171,31 @@ class ComplainantController extends Controller
 
         $complaint = Complainant::where( 'secure_id', $data[ 'secure_id' ] )->where('is_completed',0)->first();
 
-        if ( $complaint->is_completed == '1' ) {
-            return response()->json( [ 'message' => 'Complaint already submitted.' ], 403 );
+        // if ( $complaint->is_completed == '1' ) {
+        //     return response()->json( [ 'message' => 'Complaint already submitted.' ], 403 );
+        // }
+
+        if ($complaint->is_completed == '1') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Complaint already submitted.'
+            ], 403);
         }
 
-        if ( !$complaint ) {
-            return response()->json( [
+
+        // if ( !$complaint ) {
+        //     return response()->json( [
+        //         'message' => 'Complaint not found.',
+        //     ], 404 );
+        // }
+
+        if (!$complaint) {
+            return response()->json([
+                'success' => false,
                 'message' => 'Complaint not found.',
-            ], 404 );
+            ], 404);
         }
+
 
         $complaint->update( [
             'is_fraud_related' => $data[ 'is_fraud_related' ],
@@ -217,11 +233,19 @@ class ComplainantController extends Controller
         //     return response()->json( [ 'message' => 'Complaint already submitted.' ], 403 );
         // }
 
-        if ( !$complaint ) {
-            return response()->json( [
+        // if ( !$complaint ) {
+        //     return response()->json( [
+        //         'message' => 'Complaint not found.',
+        //     ], 404 );
+        // }
+
+        if (!$complaint) {
+            return response()->json([
+                'success' => false,
                 'message' => 'Complaint not found.',
-            ], 404 );
+            ], 404);
         }
+
 
         if ( $request->hasFile( 'proof_document' ) ) {
             if ( $complaint->proof_document && Storage::disk( 'public' )->exists( $complaint->proof_document ) ) {
