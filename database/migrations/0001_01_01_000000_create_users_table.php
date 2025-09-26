@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('secure_id')->unique();
             $table->string('mobile', 10)->unique();
             $table->string('name')->nullable();
-            $table->string('email')->nullable();
-            $table->string('aadhaar', 12)->nullable();
+            $table->string('email')->nullable()->unique();
+            $table->string('aadhaar', 12)->nullable()->unique();
             $table->string('address')->nullable();
             $table->timestamps();
         });

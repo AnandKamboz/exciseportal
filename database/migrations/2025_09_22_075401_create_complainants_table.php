@@ -30,7 +30,7 @@ return new class extends Migration
             // Optional document and remarks
             $table->string('proof_document')->nullable();
             $table->text('remarks')->nullable();
-
+             
             // Fraud/Evasion question (from screen 1)
             $table->boolean('is_fraud_related')->default(false);
 
