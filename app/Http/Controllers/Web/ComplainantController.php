@@ -117,7 +117,7 @@ class ComplainantController extends Controller
     {       
             $data = $request->validate([
                 'firm_address'    => 'required|string|max:500',
-                'proof_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'proof_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:200',
                 'remarks'         => 'required|string|max:1000',
                 'gstin'           => 'required|string|max:15',
             ]);

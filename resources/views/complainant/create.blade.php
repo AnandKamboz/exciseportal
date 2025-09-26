@@ -142,7 +142,7 @@
 
                 <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
                     onchange="checkFileSize(this)">
-                    
+
                 <div id="previewContainer" style="margin-top:10px;"></div>
 
                 @if (!empty($userData->upload_document) && !empty($userData->upload_document))
@@ -183,7 +183,7 @@
 
                 <textarea name="remarks" class="form-control mb-2" placeholder="Remarks" oninput="sanitizeRemarks(this)"></textarea>
                 <input type="text" name="gstin" class="form-control mb-2" placeholder="Enter gstin" id="gstin">
-                <input type="file" name="document" class="form-control mb-2">
+                <input type="file" name="document" class="form-control mb-2" id="document">
 
 
                 <div class="d-flex justify-content-between mt-3">
@@ -567,6 +567,38 @@
                     console.error('Error:', error.response);
                 });
         })
+
+        document.getElementById('document').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            const maxSize = 200 * 1024; // 200 KB
+
+            if (!file) return; // No file selected
+
+            // File type validation
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Only JPG, JPEG, or PNG files are allowed!',
+                    confirmButtonText: 'OK'
+                });
+                e.target.value = ''; // Reset file input
+                return;
+            }
+
+            // File size validation
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'File size must be less than 200 KB!',
+                    confirmButtonText: 'OK'
+                });
+                e.target.value = ''; // Reset file input
+                return;
+            }
+        });
     </script>
 
 
