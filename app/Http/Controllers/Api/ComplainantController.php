@@ -147,10 +147,17 @@ class ComplainantController extends Controller
                     'updated_at' => now(),
                 ]);
 
+            // return response()->json([
+            //     'message'   => 'Step 1 saved',
+            //     'complaint' => $complaint
+            // ]);
+
             return response()->json([
+                'success'   => true,
                 'message'   => 'Step 1 saved',
                 'complaint' => $complaint
-            ]);
+            ], 200);
+
     }
 
 
@@ -179,6 +186,7 @@ class ComplainantController extends Controller
         ] );
 
         return response()->json( [
+            'success'   => true,
             'message'   => 'Step 2 saved',
             'complaint' => $complaint,
         ] );
@@ -237,6 +245,7 @@ class ComplainantController extends Controller
         $complaint->update( $data );
 
         return response()->json( [
+            'success'   => true,
             'message'   => 'Step 3 saved. Complaint submitted successfully.',
             'complaint' => $complaint,
         ] );
