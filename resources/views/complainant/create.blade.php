@@ -551,6 +551,7 @@
         }
 
         $(document).ready(function() {
+            $('#loader').removeClass("d-none");
             axios.get("{{ route('user.data') }}")
                 .then(function(response) {
                     $('input[name="complainant_name"]').val(response.data.complaints.complainant_name);
@@ -558,12 +559,14 @@
                     $('input[name="aadhaar"]').val(response.data.complaints.aadhaar);
                     $('input[name="email"]').val(response.data.complaints.email);
                     $('#complaintCategory').val(response.data.complaints.complaint_type);
+                    $('#loader').addClass("d-none");
 
                     const existingImg = document.getElementById('existing-image');
                     existingImg.src = "{{ asset('storage') }}/" + response.data.complaints.upload_document;
                     existingImg.style.display = 'block';
                 })
                 .catch(function(error) {
+                    $('#loader').addClass("d-none");
                     console.error('Error:', error.response);
                 });
         })
