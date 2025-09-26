@@ -145,11 +145,18 @@ class AuthController extends Controller
     // Create token for both existing & new user
     $token = $user->createToken('api_token')->plainTextToken;
 
+    // return response()->json([
+    //     'message' => 'Login successful',
+    //     'token'   => $token,
+    //     'user'    => $user, 
+    // ]);
     return response()->json([
+        'success' => true,
         'message' => 'Login successful',
         'token'   => $token,
-        'user'    => $user, // optional, helpful in frontend
-    ]);
+        'user'    => $user,
+    ], 200);
+
 }
 
 }
