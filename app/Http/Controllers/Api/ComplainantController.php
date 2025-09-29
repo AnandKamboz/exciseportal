@@ -270,7 +270,7 @@ class ComplainantController extends Controller
         $data[ 'is_completed' ] = 1;
         $complaint->update( $data );
 
-        Session::flush();
+        // Session::flush();
 
         return response()->json( [
             'success'   => true,
