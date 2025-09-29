@@ -96,7 +96,7 @@ class ComplainantController extends Controller
                 'complainant_name' => 'required|string|max:255',
                 'complaint_type'   => 'required',
                 'mobile'           => 'required|numeric|digits:10',
-                'email'            => 'required|email|unique:users,email',
+                'email'            => 'required',
                 'aadhaar'          => 'required|digits:12',
                 'address'          => 'required|string',
                 'upload_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',

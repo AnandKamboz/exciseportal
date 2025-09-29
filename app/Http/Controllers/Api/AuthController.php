@@ -49,118 +49,116 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // public function verifyOtp( Request $request )
+
+    // public function verifyOtp(Request $request)
     // {
-    //     $request->validate( [
-    //         'mobile' => 'required|numeric|digits:10',
-    //         'otp' => 'required|numeric|digits:6',
-    //     ] );
+    //         $request->validate([
+    //             'mobile' => 'required|numeric|digits:10',
+    //             'otp'    => 'required|numeric|digits:6',
+    //         ]);
 
-    //     $otpRecord = Otp::where( 'mobile', $request->mobile )
-    //     ->where( 'otp', $request->otp )
-    //     ->where( 'is_used', false )
-    //     ->where( 'expires_at', '>=', Carbon::now() )
-    //     ->latest()
-    //     ->first();
+    //         $otpRecord = Otp::where('mobile', $request->mobile)
+    //             ->where('otp', $request->otp)
+    //             ->where('is_used', false)
+    //             ->where('expires_at', '>=', Carbon::now())
+    //             ->latest()
+    //             ->first();
 
-    //     if ( !$otpRecord ) {
-    //         return response()->json( [ 'message' => 'Invalid or expired OTP' ], 422 );
-    //     }
-
-    //     $otpRecord->update( [ 'is_used' => true ] );
-
-    //     $exists = User::where( 'mobile', $request->mobile )->exists();
-        
-    //     if ( !$exists ) {
-    //         do {
-    //             $secureId = Str::random( 32 );
+    //         if (!$otpRecord) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Invalid or expired OTP'
+    //             ], 422);
     //         }
-    //         while ( User::where( 'secure_id', $secureId )->exists() );
 
-    //         $user = User::firstOrCreate(
-    //             [ 'mobile' => $request->mobile ],
-    //             [
+
+    //         $otpRecord->update(['is_used' => true]);
+
+    //         $user = User::where('mobile', $request->mobile)->first();
+
+    //         if (!$user) {
+    //             do {
+    //                 $secureId = Str::random(32);
+    //             } while (User::where('secure_id', $secureId)->exists());
+
+    //             $user = User::create([
+    //                 'mobile'    => $request->mobile,
     //                 'secure_id' => $secureId,
-    //             ]
-    //         );
+    //             ]);
 
-    //         if ( $user->wasRecentlyCreated ) {
-    //             $defaultRole = RoleGroup::where( 'role_name', 'user' )->first();
-
-    //             if ( $defaultRole ) {
-    //                 $user->roles()->attach( $defaultRole->id );
+    //             $defaultRole = RoleGroup::where('role_name', 'user')->first();
+    //             if ($defaultRole) {
+    //                 $user->roles()->attach($defaultRole->id);
     //             }
     //         }
-    //     }
 
-    //     $token = $user->createToken( 'api_token' )->plainTextToken;
+    //         $token = $user->createToken('api_token')->plainTextToken;
 
-    //     return response()->json( [
-    //         'message' => 'Login successful',
-    //         'token' => $token,
-    //         // 'user' => $user
-    //     ] );
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Login successful',
+    //             'token'   => $token,
+    //             'user'    => $user,
+    //         ], 200);
+
     // }
 
     public function verifyOtp(Request $request)
-   {
-    $request->validate([
-        'mobile' => 'required|numeric|digits:10',
-        'otp'    => 'required|numeric|digits:6',
-    ]);
-
-    $otpRecord = Otp::where('mobile', $request->mobile)
-        ->where('otp', $request->otp)
-        ->where('is_used', false)
-        ->where('expires_at', '>=', Carbon::now())
-        ->latest()
-        ->first();
-
-    if (!$otpRecord) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Invalid or expired OTP'
-        ], 422);
-    }
-
-
-    $otpRecord->update(['is_used' => true]);
-
-    // Check user existence
-    $user = User::where('mobile', $request->mobile)->first();
-
-    if (!$user) {
-        do {
-            $secureId = Str::random(32);
-        } while (User::where('secure_id', $secureId)->exists());
-
-        $user = User::create([
-            'mobile'    => $request->mobile,
-            'secure_id' => $secureId,
+{
+        $request->validate([
+            'mobile' => 'required|numeric|digits:10',
+            'otp'    => 'required|numeric|digits:6',
         ]);
 
-        // Attach default role
-        $defaultRole = RoleGroup::where('role_name', 'user')->first();
-        if ($defaultRole) {
-            $user->roles()->attach($defaultRole->id);
+        $otpRecord = Otp::where('mobile', $request->mobile)
+            ->where('otp', $request->otp)
+            ->where('is_used', false)
+            ->where('expires_at', '>=', Carbon::now())
+            ->latest()
+            ->first();
+
+        if (!$otpRecord) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired OTP'
+            ], 422);
         }
+
+        $otpRecord->update(['is_used' => true]);
+
+        $user = User::where('mobile', $request->mobile)->first();
+
+        if (!$user) {
+            do {
+                $secureId = Str::random(32);
+            } while (User::where('secure_id', $secureId)->exists());
+
+            $user = User::create([
+                'mobile'    => $request->mobile,
+                'secure_id' => $secureId,
+            ]);
+
+            $defaultRole = RoleGroup::where('role_name', 'user')->first();
+            if ($defaultRole) {
+                $user->roles()->attach($defaultRole->id);
+            }
+        }
+
+        $token = $user->createToken('api_token')->plainTextToken;
+
+        $recordExists = Complainant::where('mobile', $request->mobile)
+            ->where('is_completed', 1)
+            ->exists();
+
+        $isNewUser = $recordExists ? 1 : 0;
+
+        return response()->json([
+            'success'     => true,
+            'message'     => 'Login successful',
+            'token'       => $token,
+            'user'        => $user,
+            'is_new_user' => $isNewUser,
+        ], 200);
     }
-
-    // Create token for both existing & new user
-    $token = $user->createToken('api_token')->plainTextToken;
-
-    // return response()->json([
-    //     'message' => 'Login successful',
-    //     'token'   => $token,
-    //     'user'    => $user, 
-    // ]);
-    return response()->json([
-        'success' => true,
-        'message' => 'Login successful',
-        'token'   => $token,
-        'user'    => $user,
-    ], 200);
-
-}
 
 }
