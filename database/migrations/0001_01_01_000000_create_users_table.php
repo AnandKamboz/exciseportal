@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('aadhaar', 12)->nullable();
             $table->string('address')->nullable();
+            $table->integer('district_id')->nullable();
             $table->timestamps();
         });
 

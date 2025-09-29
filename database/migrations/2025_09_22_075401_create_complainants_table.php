@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('complainants', function (Blueprint $table) {
             $table->id();
             $table->string('secure_id');
+            $table->integer('district_id')->nullable();
             $table->string('complainant_name');
             $table->string('mobile');
             $table->string('email')->nullable();

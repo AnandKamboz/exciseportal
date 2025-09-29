@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\ComplainantController;
 
-
 Route::get('/test', function () {
     return response()->json([
         'success' => true,
@@ -24,4 +23,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/complaints/final-step-t6y9dw', [ComplainantController::class, 'store']);
     Route::get('/districts', [DistrictController::class, 'getAllDistricts']);
 });
-//  Route::get('/districts', [DistrictController::class, 'getAllDistricts']);

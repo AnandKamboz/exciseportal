@@ -213,33 +213,16 @@ class ComplainantController extends Controller
     public function store( Request $request )
     {
         $data = $request->validate( [
-            // 'complainant_name' => 'required|string|max:255',
-            // 'complaint_type'   => 'required',
-            // 'mobile' => 'required|numeric|digits:10',
-            // 'email' => 'required|email|unique:users,email',
-            // 'aadhaar' => 'required|digits:12',
-            // 'address'          => 'required|string',
-            // 'upload_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'secure_id'       => 'required|string|exists:complainants,secure_id',
             'firm_name'       => 'required|string|max:255',
             'gstin'           => 'required|string|max:15',
             'firm_address'    => 'required|string|max:500',
             'proof_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'remarks'         => 'required|string|max:1000',
-            // 'is_fraud_related' => 'required|in:0,1',
+            'district_id' => 'required|integer',
         ] );
 
         $complaint = Complainant::where( 'secure_id', $data[ 'secure_id' ] )->where('is_completed',0)->first();
-
-        // if ( $complaint->is_completed == '1' ) {
-        //     return response()->json( [ 'message' => 'Complaint already submitted.' ], 403 );
-        // }
-
-        // if ( !$complaint ) {
-        //     return response()->json( [
-        //         'message' => 'Complaint not found.',
-        //     ], 404 );
-        // }
 
         if (!$complaint) {
             return response()->json([
@@ -247,7 +230,6 @@ class ComplainantController extends Controller
                 'message' => 'Complaint not found.',
             ], 404);
         }
-
 
         if ( $request->hasFile( 'proof_document' ) ) {
             if ( $complaint->proof_document && Storage::disk( 'public' )->exists( $complaint->proof_document ) ) {
@@ -266,11 +248,17 @@ class ComplainantController extends Controller
         } else {
             unset( $data[ 'proof_document' ] );
         }
+        
 
         $data[ 'is_completed' ] = 1;
+        $data['district_id'] = $request->district_id;
         $complaint->update( $data );
 
-        // Session::flush();
+        $user = Auth::user();
+        if ($user) {
+            $user->district_id = $request->district_id;
+            $user->save();
+        }
 
         return response()->json( [
             'success'   => true,
