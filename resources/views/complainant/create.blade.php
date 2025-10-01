@@ -13,25 +13,26 @@
 
     <style>
         body {
-            background: linear-gradient(to right, #74ebd5, #acb6e5);
-            font-family: 'Segoe UI', sans-serif;
+            {{-- background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e, #ff6a00); --}} font-family: 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
+            align-items: flex-start;
             padding: 3rem 0;
+            min-height: 100vh;
         }
 
         .card {
-            width: 500px;
-            padding: 2.5rem;
-            border-radius: 20px;
-            background: #fff;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
+            width: 600px;
+            padding: 3rem 2rem;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
         }
 
         .step {
@@ -43,26 +44,71 @@
             display: block;
         }
 
-        .btn-step {
-            border-radius: 12px;
-            font-weight: 600;
-            padding: 0.5rem 1.5rem;
-            transition: all 0.2s;
-        }
-
-        .btn-step:hover {
-            transform: scale(1.05);
-        }
-
         h5 {
-            color: #333;
-            font-weight: 600;
+            color: #ff6a00;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
         }
 
         input,
         select,
         textarea {
-            border-radius: 10px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            padding: 0.6rem 1rem;
+            width: 100%;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #ff6a00;
+            box-shadow: 0 0 8px rgba(255, 106, 0, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .row .col-half {
+            flex: 1;
+        }
+
+        .btn-step {
+            border-radius: 20px;
+            font-weight: 600;
+            padding: 0.6rem 2rem;
+            background: linear-gradient(90deg, #ffecd2, #fcb69f, #ff9a9e, #ff6a00);
+            border: none;
+            color: #fff;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3);
+        }
+
+        .btn-step:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 106, 0, 0.5);
+        }
+
+        .d-flex.justify-content-between {
+            margin-top: 1.5rem;
+        }
+
+        #previewContainer img {
+            max-width: 100px;
+            margin-right: 10px;
+            border-radius: 8px;
         }
 
         @keyframes fadeIn {
@@ -123,14 +169,32 @@
 
     <div class="card">
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
+        
             <div class="step active" id="step1">
-                <h5 class="mb-3">Complainant Details</h5>
-                <input type="text" name="complainant_name" class="form-control mb-2" placeholder="Enter your Name">
-                <input type="text" name="phone" class="form-control mb-2" value="{{ $userMobile }}"
-                    placeholder="Enter your Phone" readonly>
-                <input type="email" name="email" class="form-control mb-2" placeholder="Enter your Email">
+                <h5>Complainant Details</h5>
+
+                <div class="row">
+                    <div class="col-half">
+                        <input type="text" name="complainant_name" class="form-control"
+                            placeholder="Enter your Name">
+                    </div>
+                    <div class="col-half">
+                        <input type="text" name="phone" class="form-control" value="{{ $userMobile }}"
+                            placeholder="Enter your Phone" readonly>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-half">
+                        <input type="email" name="email" class="form-control" placeholder="Enter your Email">
+                    </div>
+                    <div class="col-half">
+                        <input type="text" name="aadhaar" class="form-control" placeholder="Enter your Aadhaar No.">
+                    </div>
+                </div>
+
                 <input type="text" name="address" class="form-control mb-2" placeholder="Enter your Address">
-                <input type="text" name="aadhaar" class="form-control mb-2" placeholder="Enter your Aadhaar No.">
+
                 <select name="complaint_type" id="complaintCategory" class="form-select mb-3">
                     <option value="" selected disabled>Select Complaint Type</option>
                     <option value="vat">VAT</option>
@@ -138,60 +202,71 @@
                     <option value="excise">Excise</option>
                 </select>
 
-
                 <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
                     onchange="checkFileSize(this)">
-
                 <div id="previewContainer" style="margin-top:10px;"></div>
 
-                @if (!empty($userData->upload_document) && !empty($userData->upload_document))
+                @if (!empty($userData->upload_document))
                     <img id="existing-image" src="{{ asset('storage/' . $userData->upload_document) }}"
-                        alt="Existing Document" style="max-width:200px; display:block; margin-bottom:10px;">
+                        alt="Existing Document" style="max-width:100px; display:block; margin-bottom:10px;">
                 @endif
 
-                <div class="d-flex justify-content-end mt-3">
-                    <button type="button" class="btn btn-primary btn-step" onclick="nextStep()">Next</button>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
 
             <!-- Step 2 -->
             <div class="step" id="step2">
-                <h5 class="mb-3">GST Fraud/Evasion Check</h5>
+                <h5>GST Fraud/Evasion Check</h5>
                 <p>Is complaint related to Fraud/Evasion?</p>
-                <div class="d-flex flex-column">
-                    <select id="fraudCheck" class="form-select mb-2" required>
-                        <option value="" selected disabled>Select an option</option>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-                <div class="d-flex justify-content-between mt-3">
+                <select id="fraudCheck" class="form-select mb-2" required>
+                    <option value="" selected disabled>Select an option</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+
+                <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary btn-step" onclick="prevStep()">Back</button>
-                    <button type="button" class="btn btn-primary btn-step" onclick="nextStep()">Next</button>
+                    <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
 
             <!-- Step 3 -->
             <div class="step" id="step3">
-                <h5 class="mb-3">Complaint Details</h5>
-                <input type="text" name="firm_name" class="form-control mb-2" placeholder="Enter Firm Name"
-                    oninput="sanitizeFirmName(this)">
-                <input type="text" name="address_detail" class="form-control mb-2" placeholder="Enter Address"
-                    oninput="sanitizeAddress(this)">
+                <h5>Complaint Details</h5>
 
+                <div class="row">
+                    <div class="col-half">
+                        <input type="text" name="firm_name" class="form-control" placeholder="Enter Firm Name"
+                            oninput="sanitizeFirmName(this)">
+                    </div>
+                    <div class="col-half">
+                        <input type="text" name="address_detail" class="form-control" placeholder="Enter Address"
+                            oninput="sanitizeAddress(this)">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-half">
+                        <input type="text" name="gstin" class="form-control" placeholder="Enter GSTIN"
+                            id="gstin">
+                    </div>
+                    <div class="col-half">
+                        <input type="file" name="document" class="form-control" id="document">
+                    </div>
+                </div>
 
                 <textarea name="remarks" class="form-control mb-2" placeholder="Remarks" oninput="sanitizeRemarks(this)"></textarea>
-                <input type="text" name="gstin" class="form-control mb-2" placeholder="Enter gstin" id="gstin">
-                <input type="file" name="document" class="form-control mb-2" id="document">
 
-
-                <div class="d-flex justify-content-between mt-3">
+                <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary btn-step" onclick="prevStep()">Back</button>
-                    <button type="submit" class="btn btn-success btn-step">Submit Complaint</button>
+                    <button type="submit" class="btn btn-step">Submit Complaint</button>
                 </div>
             </div>
         </form>
     </div>
+
 
     <script>
         let currentStep = 1;
