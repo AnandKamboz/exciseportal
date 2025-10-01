@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{-- Head --}}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,16 +14,14 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
-        body {
+        {{-- body {
             background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Segoe UI', sans-serif;
-        }
-
-        .login-card {
+        } --}} .login-card {
             background: #fff;
             border-radius: 25px;
             padding: 2.5rem 2rem;
@@ -73,7 +72,6 @@
     </div>
 
     <style>
-        /* Overlay */
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -87,7 +85,7 @@
             z-index: 9999;
         }
 
-        /* Spinner */
+
         .spinner {
             width: 60px;
             height: 60px;
@@ -97,7 +95,7 @@
             animation: spin 1s linear infinite;
         }
 
-        /* Spin animation */
+
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -108,7 +106,7 @@
             }
         }
 
-        /* Hide when d-none is present */
+
         .loader-overlay.d-none {
             display: none !important;
         }
@@ -116,7 +114,200 @@
 
     {{-- ak --}}
 
-    <div class="login-card">
+
+
+
+
+
+
+    {{-- --------------------new-design----------------------- --}}
+
+
+    <style>
+        .login-page {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(rgb(0 0 0 / 50%), rgb(0 0 0 / 50%)),
+                url(/assets/images/banner/IT-Act.png) center / cover no-repeat;
+
+
+
+        }
+
+        .login-page .bubble {
+            position: absolute;
+            border-radius: 50%;
+            /* background: radial-gradient(circle, #23e9ff, #5488a1, #435362); */
+            background: radial-gradient(circle at center, #ffecd2, #fcb69f, #ff9a9e, #ff6a00);
+
+
+            filter: blur(0px);
+        }
+
+        .bubble1 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 25%;
+        }
+
+        .bubble2 {
+            width: 100px;
+            height: 100px;
+            top: 15%;
+            right: 25%;
+        }
+
+        .bubble3 {
+            width: 120px;
+            height: 120px;
+            bottom: 15%;
+            left: 30%;
+        }
+
+        .bubble4 {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            right: 30%;
+        }
+
+        .login-glass {
+            position: relative;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 4px solid #fea49e;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+        }
+
+        .login-glass h2 {
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .login-glass input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #fff;
+            color: #fff;
+            {{-- width: 70%; --}} margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .login-glass input::placeholder {
+            color: #ddd;
+        }
+
+        .login-glass .btn {
+            width: 30%;
+            background: #fdaea1;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+        }
+
+        .login-glass .btn:hover {
+            background: #d19187ff;
+        }
+
+        .captcha-box {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .captcha-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-control:focus {
+            color: #fff;
+
+            background: transparent;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .login-logo {
+            max-width: 100px;
+            height: 70px;
+            width: 70px;
+            background: #fff;
+            padding: 5px;
+            object-fit: contain;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+    <div class="login-page">
+        <div class="bubble bubble1"></div>
+        <div class="bubble bubble2"></div>
+        <div class="bubble bubble3"></div>
+        <div class="bubble bubble4"></div>
+
+        <div class="login-glass">
+
+            <div class="logo-container">
+                <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo" class="login-logo">
+            </div>
+
+            <h2>LOGIN</h2>
+            <form id="loginForm">
+                @csrf
+                <!-- Mobile Section -->
+                <div id="mobileSection" class="mb-3">
+                    <input type="text" name="mobile" id="mobile" class="form-control"
+                        placeholder="Enter 10 digit mobile" />
+                    <button type="button" id="sendOtpBtn" class="btn btn-submit w-100 mt-3">
+                        Send OTP
+                    </button>
+                </div>
+
+                <!-- Success Message -->
+                <div id="successMsg" class="alert alert-success mt-3 hidden"></div>
+
+                <!-- OTP Section -->
+                <div id="otpSection" class="hidden mt-3">
+                    <input type="text" name="otp" id="otp" class="form-control otp-input" maxlength="6"
+                        placeholder="Enter 6 digit OTP" />
+                    <button type="button" id="loginBtn" class="btn btn-submit w-100 mt-3">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    {{-- --------------------new-design----------------------- --}}
+
+
+
+
+    {{-- <div class="login-card">
         <h3>Login</h3>
         <form id="loginForm">
             @csrf
@@ -136,7 +327,7 @@
                 <button type="button" id="loginBtn" class="btn btn-success w-100 mt-3 btn-custom">Login</button>
             </div>
         </form>
-    </div>
+    </div> --}}
 
     <script>
         const mobileInput = document.getElementById('mobile');
@@ -168,7 +359,7 @@
 
                 return;
             }
-            
+
             sendOtpBtn.disabled = true;
             sendOtpBtn.innerText = 'Sending...';
             axios.post("{{ route('send-otp') }}", {
@@ -189,7 +380,7 @@
                             text: res.data.message || 'Something went wrong!',
                             confirmButtonText: 'OK'
                         });
-                        
+
                     }
                 })
                 .catch(err => {
@@ -232,7 +423,7 @@
                 .then(res => {
                     if (res.data.success) {
                         $('#loader').addClass('d-none');
-                        
+
                         window.location.href = res.data.redirect_url;
                     } else {
                         $('#loader').addClass('d-none');
