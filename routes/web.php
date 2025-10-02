@@ -11,9 +11,7 @@ Route::get('/', function () {
 
 Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
-
 Route::get('/complainant', [ComplainantController::class, 'complainant'])->name('complainant');
-
 
 
 Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep'])->name('complaints.step-first');

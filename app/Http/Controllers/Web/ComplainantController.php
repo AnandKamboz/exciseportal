@@ -23,42 +23,61 @@ class ComplainantController extends Controller
     public function storeFirstStep(Request $request)
     {
         $request->validate([
-           'complaint_type' => 'required|in:vat,gst,excise',
+            'complaint_type' => 'required|in:vat,gst,excise',
         ]);
 
-        $userMobile = Auth::user()->mobile;
-        do {
-            $complaintId = strtoupper('CMP-' . rand(100000, 999999));
-        } while (Complainant::where('complaint_id', $complaintId)->exists());
+        $userMobile = trim(Auth::user()->mobile);
 
-        do {
-            $secureId = bin2hex(random_bytes(16));
-        } while (Complainant::where('secure_id', $secureId)->exists());
+        // Existing complaint check (is_completed = 0 OR NULL)
+        $existingComplaint = Complainant::where('mobile', $userMobile)
+            ->where(function($q) {
+                $q->where('is_completed', 0)
+                ->orWhereNull('is_completed');
+            })
+            ->first();
 
+        if ($existingComplaint) {
+            // 🔹 Update existing record
+            $existingComplaint->complaint_type = $request->complaint_type;
+            $existingComplaint->save();
 
-        $complaint = new Complaint();
-        $complaint->complaint_type = $request->complaint_type;
-        $complaint->mobile = auth::user()->mobile;
-        $complaint->secure_id = $secureId;
-        $complaint->complaint_id = $complaintId;
-        $complaint->save();
-        
+            return response()->json([
+                'status' => 'updated',
+                'message' => 'Existing complaint updated successfully.',
+                'secure_id' => $existingComplaint->secure_id,
+                'complaint_id' => $existingComplaint->complaint_id,
+            ]);
+        } else {
+            // 🔹 Create new record
+            do {
+                $complaintId = strtoupper('CMP-' . rand(100000, 999999));
+            } while (Complainant::where('complaint_id', $complaintId)->exists());
 
+            do {
+                $secureId = bin2hex(random_bytes(16));
+            } while (Complainant::where('secure_id', $secureId)->exists());
 
+            $complaint = new Complainant();
+            $complaint->complaint_type = $request->complaint_type;
+            $complaint->mobile = $userMobile;
+            $complaint->secure_id = $secureId;
+            $complaint->complaint_id = $complaintId;
+            $complaint->is_completed = 0; // default set
+            $complaint->save();
 
-
-
-
-        
-
-
+            return response()->json([
+                'status' => 'created',
+                'message' => 'New complaint created successfully.',
+                'secure_id' => $complaint->secure_id,
+                'complaint_id' => $complaint->complaint_id,
+            ]);
+        }
     }
 
     public function storeSecondStep(Request $request)
     {
         $data = $request->validate([
             'complainant_name' => 'required|string|max:255',
-            'complaint_type' => 'required|in:vat,gst,excise',
             'mobile'           => 'required|numeric|digits:10',
             'email'            => 'required|email|unique:users,email,' . Auth::id(),
             'aadhaar'          => 'required|digits:12',
@@ -71,12 +90,6 @@ class ComplainantController extends Controller
         $data['is_fraud_related'] = false;
 
         $complaint = Complainant::where('mobile', $userMobile)->where('is_completed',0)->first();
-        
-        // if ($complaint && $complaint->is_completed) {
-        //     return response()->json([
-        //         'message' => 'Complaint already submitted for this mobile number.'
-        //     ], 403);
-        // }
 
         if ($complaint) {
             $complaint->update($data);

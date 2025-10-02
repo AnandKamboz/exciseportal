@@ -208,12 +208,6 @@
 
                 <input type="text" name="address" class="form-control mb-2" placeholder="Enter your Address">
 
-                <select name="complaint_type" id="complaintCategory" class="form-select mb-3">
-                    <option value="" selected disabled>Select Complaint Type</option>
-                    <option value="vat">VAT</option>
-                    <option value="gst">GST</option>
-                    <option value="excise">Excise</option>
-                </select>
 
                 <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
                     onchange="checkFileSize(this)">
@@ -224,7 +218,7 @@
                         alt="Existing Document" style="max-width:100px; display:block; margin-bottom:10px;">
                 @endif
 
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary btn-step" onclick="prevStep()">Back</button>
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
@@ -300,12 +294,13 @@
         }
 
         function prevStep() {
-            const category = document.getElementById('complaintCategory')?.value;
+            const category = document.getElementById('complaint_type')?.value;
             if (currentStep === 3 && category !== 'gst') currentStep -= 2;
             else currentStep--;
             if (currentStep < 1) currentStep = 1;
             showStep(currentStep);
         }
+        
 
         // Submit Step First 
         function submitStep1() {
@@ -335,6 +330,8 @@
                         text: response.data.message || 'Step 1 submitted successfully!',
                         confirmButtonText: 'OK'
                     });
+                    currentStep++;
+                    showStep(currentStep);
                 })
                 .catch(function(error) {
                     $('#loader').addClass('d-none');
@@ -355,8 +352,8 @@
             const email = document.querySelector('input[name="email"]').value.trim();
             const address = document.querySelector('input[name="address"]').value.trim();
             const aadhaar = document.querySelector('input[name="aadhaar"]').value.trim();
-            const category = document.getElementById('complaintCategory').value;
             const upload_document = document.querySelector('input[name="document_upload"]').files[0];
+            const category = document.getElementById('complaint_type')?.value;
 
 
 
@@ -380,15 +377,7 @@
                 });
             }
 
-            if (!category) {
-                $('#loader').addClass('d-none');
-                return Swal.fire({
-                    icon: 'warning',
-                    title: 'Error',
-                    text: 'Select complaint type!',
-                    confirmButtonText: 'OK'
-                });
-            }
+            
 
             if (aadhaar && aadhaar.length !== 12) {
                 $('#loader').addClass('d-none');
@@ -454,7 +443,6 @@
             formData.append('email', email);
             formData.append('address', address);
             formData.append('aadhaar', aadhaar);
-            formData.append('complaint_type', category);
             formData.append('upload_document', upload_document);
 
             axios.post("{{ route('complaints.step-second') }}", formData, {
@@ -683,13 +671,13 @@
             $('#loader').removeClass("d-none");
             axios.get("{{ route('user.data') }}")
                 .then(function(response) {
+                    console.log(response.data.complaints.complaint_type);
                     $('input[name="complainant_name"]').val(response.data.complaints.complainant_name);
                     $('input[name="address"]').val(response.data.complaints.address);
                     $('input[name="aadhaar"]').val(response.data.complaints.aadhaar);
                     $('input[name="email"]').val(response.data.complaints.email);
-                    $('#complaintCategory').val(response.data.complaints.complaint_type);
+                    $('#complaint_type').val(response.data.complaints.complaint_type);
                     $('#loader').addClass("d-none");
-
                     const existingImg = document.getElementById('existing-image');
                     existingImg.src = "{{ asset('storage') }}/" + response.data.complaints.upload_document;
                     existingImg.style.display = 'block';

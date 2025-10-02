@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('secure_id');
             $table->integer('district_id')->nullable();
-            $table->string('complainant_name');
+            $table->string('complainant_name')->nullable();
             $table->string('mobile');
             $table->string('email')->nullable();
             $table->string('aadhaar', 12)->nullable();
             $table->text('address')->nullable();
             $table->string('upload_document')->nullable();
-            $table->enum('complaint_type', ['vat', 'gst', 'excise']);
+            $table->enum('complaint_type', ['vat', 'gst', 'excise'])->nullable();
 
             // Firm being reported
             $table->string('firm_name')->nullable();
