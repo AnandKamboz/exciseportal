@@ -324,12 +324,12 @@
                 .then(function(response) {
                     $('#loader').addClass('d-none');
                     console.log(response.data);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: response.data.message || 'Step 1 submitted successfully!',
-                        confirmButtonText: 'OK'
-                    });
+                    // Swal.fire({
+                    //     icon: 'success',
+                    //     title: 'Success',
+                    //     text: response.data.message || 'Step 1 submitted successfully!',
+                    //     confirmButtonText: 'OK'
+                    // });
                     currentStep++;
                     showStep(currentStep);
                 })
