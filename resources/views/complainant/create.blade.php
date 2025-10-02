@@ -162,15 +162,28 @@
 </head>
 
 <body>
-
     <div id="loader" class="loader-overlay d-none">
         <div class="spinner"></div>
     </div>
 
     <div class="card">
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
-        
             <div class="step active" id="step1">
+                <h5>Complainant Details</h5>
+                <select name="complaint_type" id="complaint_type" class="form-select mb-3">
+                    <option value="" selected disabled>Select Complaint Type</option>
+                    <option value="vat">VAT</option>
+                    <option value="gst">GST</option>
+                    <option value="excise">Excise</option>
+                </select>
+
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
+                </div>
+            </div>
+            {{-- Select 1 --}}
+
+            <div class="step" id="step2">
                 <h5>Complainant Details</h5>
 
                 <div class="row">
@@ -212,12 +225,13 @@
                 @endif
 
                 <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary btn-step" onclick="prevStep()">Back</button>
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
 
             <!-- Step 2 -->
-            <div class="step" id="step2">
+            <div class="step" id="step3">
                 <h5>GST Fraud/Evasion Check</h5>
                 <p>Is complaint related to Fraud/Evasion?</p>
                 <select id="fraudCheck" class="form-select mb-2" required>
@@ -233,7 +247,7 @@
             </div>
 
             <!-- Step 3 -->
-            <div class="step" id="step3">
+            <div class="step" id="step4">
                 <h5>Complaint Details</h5>
 
                 <div class="row">
@@ -281,7 +295,8 @@
         function nextStep() {
             if (currentStep === 1) return submitStep1();
             if (currentStep === 2) return submitStep2();
-            if (currentStep === 3) return submitFinalStep();
+            if (currentStep === 3) return submitStep3();
+            if (currentStep === 4) return submitFinalStep();
         }
 
         function prevStep() {
@@ -292,7 +307,48 @@
             showStep(currentStep);
         }
 
+        // Submit Step First 
         function submitStep1() {
+            $('#loader').removeClass('d-none');
+            let complaint_type = $('#complaint_type').val();
+
+            if (!complaint_type) {
+                $('#loader').addClass('d-none');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Select your Complaint Type!',
+                    confirmButtonText: 'OK'
+                });
+                return; 
+            }
+
+            axios.post("{{ route('complaints.step-first') }}", {
+                    complaint_type: complaint_type,
+                })
+                .then(function(response) {
+                    $('#loader').addClass('d-none');
+                    console.log(response.data);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.data.message || 'Step 1 submitted successfully!',
+                        confirmButtonText: 'OK'
+                    });
+                })
+                .catch(function(error) {
+                    $('#loader').addClass('d-none');
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.response?.data?.message || 'Something went wrong!',
+                        confirmButtonText: 'OK'
+                    });
+            });
+        }
+
+        function submitStep2() {
             $('#loader').removeClass('d-none');
             const complainant_name = document.querySelector('input[name="complainant_name"]').value.trim();
             const mobile = document.querySelector('input[name="phone"]').value.trim();
@@ -401,7 +457,7 @@
             formData.append('complaint_type', category);
             formData.append('upload_document', upload_document);
 
-            axios.post("{{ route('complaints.step-first') }}", formData, {
+            axios.post("{{ route('complaints.step-second') }}", formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -423,7 +479,7 @@
                 });
         }
 
-        function submitStep2() {
+        function submitStep3() {
             $('#loader').removeClass('d-none');
             const fraudCheck = document.getElementById('fraudCheck').value;
 
@@ -438,7 +494,7 @@
                 return false;
             }
 
-            axios.post("{{ route('complaints.step-second') }}", {
+            axios.post("{{ route('complaints.step-third') }}", {
                     fraud_check: fraudCheck
                 })
                 .then(res => {
@@ -457,7 +513,6 @@
                 });
 
         }
-
 
         function submitFinalStep(event) {
             event.preventDefault();

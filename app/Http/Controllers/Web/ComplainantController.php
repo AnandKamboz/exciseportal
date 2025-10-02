@@ -22,6 +22,40 @@ class ComplainantController extends Controller
 
     public function storeFirstStep(Request $request)
     {
+        $request->validate([
+           'complaint_type' => 'required|in:vat,gst,excise',
+        ]);
+
+        $userMobile = Auth::user()->mobile;
+        do {
+            $complaintId = strtoupper('CMP-' . rand(100000, 999999));
+        } while (Complainant::where('complaint_id', $complaintId)->exists());
+
+        do {
+            $secureId = bin2hex(random_bytes(16));
+        } while (Complainant::where('secure_id', $secureId)->exists());
+
+
+        $complaint = new Complaint();
+        $complaint->complaint_type = $request->complaint_type;
+        $complaint->mobile = auth::user()->mobile;
+        $complaint->secure_id = $secureId;
+        $complaint->complaint_id = $complaintId;
+        $complaint->save();
+        
+
+
+
+
+
+
+        
+
+
+    }
+
+    public function storeSecondStep(Request $request)
+    {
         $data = $request->validate([
             'complainant_name' => 'required|string|max:255',
             'complaint_type' => 'required|in:vat,gst,excise',
@@ -81,12 +115,12 @@ class ComplainantController extends Controller
             ]);
 
         return response()->json([
-            'message'   => 'Step 1 saved',
+            'message'   => 'Step 2 saved',
             'complaint' => $complaint
         ]);
     }
 
-    public function storeSecondStep(Request $request)
+    public function storeThirdStep(Request $request)
     {
         $data = $request->validate([
             'fraud_check' => 'required|in:1,0',
@@ -108,7 +142,7 @@ class ComplainantController extends Controller
         ]);
 
         return response()->json([
-            'message'   => 'Step 2 saved',
+            'message'   => 'Step 3 saved',
             'complaint' => $complaint
         ]);
     }
@@ -163,7 +197,7 @@ class ComplainantController extends Controller
 
            return response()->json([
                 'success'       => true,
-                'message'       => 'Step 3 saved. Complaint submitted successfully!',
+                'message'       => 'Step final saved. Complaint submitted successfully!',
                 'complaint_id'  => $complaint->complaint_id,
             ]);
 
