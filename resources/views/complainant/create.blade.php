@@ -339,7 +339,7 @@
             <div class="step" id="step3">
                 <h5>GST Fraud/Evasion Check</h5>
                 <p>Is complaint related to Fraud/Evasion?</p>
-                <select id="fraudCheck" class="form-select mb-2" required>
+                <select id="fraudCheck" class="form-select mb-2">
                     <option value="" selected disabled>Select an option</option>
                     <option value="1">Yes</option>
                     <option value="0">No</option>
