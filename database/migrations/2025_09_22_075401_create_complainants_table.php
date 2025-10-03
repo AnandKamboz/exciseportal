@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('complainants', function (Blueprint $table) {
             $table->id();
             $table->string('secure_id');
-            $table->integer('district_id')->nullable();
+            $table->integer('complainant_dist_id')->nullable();
             $table->string('complainant_name')->nullable();
-            $table->string('mobile');
-            $table->string('email')->nullable();
-            $table->string('aadhaar', 12)->nullable();
-            $table->text('address')->nullable();
+            $table->string('complainant_phone');
+            $table->string('complainant_email')->nullable();
+            $table->string('complainant_aadhaar', 12)->nullable();
+            $table->text('complainant_address')->nullable();
             $table->string('upload_document')->nullable();
             $table->enum('complaint_type', ['vat', 'gst', 'excise'])->nullable();
 
@@ -36,7 +36,9 @@ return new class extends Migration
             $table->boolean('is_fraud_related')->default(false);
 
             // Confirmation page
+
             $table->string('complaint_id')->unique();
+            $table->integer('against_district_id')->nullable();
             $table->boolean('is_completed')->default(false);
 
             $table->timestamps();

@@ -137,7 +137,7 @@ class AuthController extends Controller
 
         $otpRecord->update(['is_used' => true]);
 
-        $recordExists = Complainant::where('mobile', $mobile)
+        $recordExists = Complainant::where('complainant_phone', $mobile)
             ->where('is_completed', 1)
             ->first();
         

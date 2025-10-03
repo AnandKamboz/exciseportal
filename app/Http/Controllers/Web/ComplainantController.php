@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Complainant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ComplainantController extends Controller
@@ -15,9 +16,12 @@ class ComplainantController extends Controller
         if (!Auth::check()) {
           return redirect('/');
         }
+
+        $districts = DB::table('districts')->get();
+        // dd($districts);
         $userMobile = Auth::user()->mobile;
-        $userData = Complainant::where('mobile', $userMobile)->where('is_completed',0)->first();
-        return view('complainant.create',compact('userMobile','userData'));
+        $userData = Complainant::where('complainant_phone', $userMobile)->where('is_completed',0)->first();
+        return view('complainant.create',compact('userMobile','userData','districts'));
     }
 
     public function storeFirstStep(Request $request)
@@ -29,7 +33,7 @@ class ComplainantController extends Controller
         $userMobile = trim(Auth::user()->mobile);
 
         // Existing complaint check (is_completed = 0 OR NULL)
-        $existingComplaint = Complainant::where('mobile', $userMobile)
+        $existingComplaint = Complainant::where('complainant_phone', $userMobile)
             ->where(function($q) {
                 $q->where('is_completed', 0)
                 ->orWhereNull('is_completed');
@@ -48,7 +52,6 @@ class ComplainantController extends Controller
                 'complaint_id' => $existingComplaint->complaint_id,
             ]);
         } else {
-            // 🔹 Create new record
             do {
                 $complaintId = strtoupper('CMP-' . rand(100000, 999999));
             } while (Complainant::where('complaint_id', $complaintId)->exists());
@@ -59,7 +62,7 @@ class ComplainantController extends Controller
 
             $complaint = new Complainant();
             $complaint->complaint_type = $request->complaint_type;
-            $complaint->mobile = $userMobile;
+            $complaint->complainant_phone = $userMobile;
             $complaint->secure_id = $secureId;
             $complaint->complaint_id = $complaintId;
             $complaint->is_completed = 0; // default set
@@ -78,18 +81,18 @@ class ComplainantController extends Controller
     {
         $data = $request->validate([
             'complainant_name' => 'required|string|max:255',
-            'mobile'           => 'required|numeric|digits:10',
-            'email'            => 'required|email|unique:users,email,' . Auth::id(),
-            'aadhaar'          => 'required|digits:12',
-            'address'          => 'required|string',
-            // 'upload_document' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:200',
+            'complainant_phone'           => 'required|numeric|digits:10',
+            'complainant_email'            => 'required|email|unique:users,email,' . Auth::id(),
+            'complainant_aadhaar'          => 'required|digits:12',
+            'complainant_address'          => 'required|string',
+            'complainant_dist_id'     => 'required',
         ]);
 
         $userMobile = Auth::user()->mobile;
-        $data['mobile'] = $userMobile;
+        $data['complainant_phone'] = $userMobile;
         $data['is_fraud_related'] = false;
 
-        $complaint = Complainant::where('mobile', $userMobile)->where('is_completed',0)->first();
+        $complaint = Complainant::where('complainant_phone', $userMobile)->where('is_completed',0)->first();
 
         if ($complaint) {
             $complaint->update($data);
@@ -121,9 +124,10 @@ class ComplainantController extends Controller
         User::where('mobile', $userMobile)
             ->update([
                 'name'       => $data['complainant_name'],
-                'email'      => $data['email'],
-                'aadhaar'    => $data['aadhaar'],
-                'address'    => $data['address'],
+                'email'      => $data['complainant_email'],
+                'aadhaar'    => $data['complainant_aadhaar'],
+                'address'    => $data['complainant_address'],
+                'district_id'=> $data['complainant_dist_id'],
                 'updated_at' => now(),
             ]);
 
@@ -139,7 +143,7 @@ class ComplainantController extends Controller
             'fraud_check' => 'required|in:1,0',
         ]);
         
-        $secureId = Complainant::where('mobile', auth::user()->mobile)->where('is_completed',0)->value('secure_id');
+        $secureId = Complainant::where('complainant_phone', auth::user()->mobile)->where('is_completed',0)->value('secure_id');
         $complaint = Complainant::where('secure_id', $secureId)->first();
 
         if (!$complaint) {
@@ -167,9 +171,10 @@ class ComplainantController extends Controller
                 'proof_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:200',
                 'remarks'         => 'required|string|max:1000',
                 'gstin'           => 'required|string|max:15',
+                'against_district_id' => 'required',
             ]);
           
-            $secureId = Complainant::where('mobile', auth()->user()->mobile)
+            $secureId = Complainant::where('complainant_phone', auth()->user()->mobile)
                         ->where('is_completed', 0)
                         ->value('secure_id');
         
@@ -226,7 +231,7 @@ class ComplainantController extends Controller
             ], 401);
         }
 
-        $complaints = Complainant::where('mobile', auth()->user()->mobile)
+        $complaints = Complainant::where('complainant_phone', auth()->user()->mobile)
                           ->where('is_completed', 0)
                           ->first();
 

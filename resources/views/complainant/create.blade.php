@@ -170,6 +170,9 @@
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
                 <h5>Complainant Details</h5>
+
+
+
                 <div class="mb-3">
                     <label for="complaint_type" class="form-label">
                         Complaint Type <span class="text-danger">*</span>
@@ -187,25 +190,14 @@
                 </div>
             </div>
 
+
+
+
+
             {{-- Select 1 --}}
 
             <div class="step" id="step2">
                 <h5>Complainant Details</h5>
-
-                <!-- <div class="row">
-
-
-                    <div class="col-half">
-                        <input type="text" name="complainant_name" class="form-control"
-                            placeholder="Enter your Name">
-                    </div>
-
-
-                    <div class="col-half">
-                        <input type="text" name="phone" class="form-control" value="{{ $userMobile }}"
-                            placeholder="Enter your Phone" readonly>
-                    </div>
-                </div> -->
 
                 <div class="row">
                     <div class="col-half mb-3">
@@ -217,75 +209,74 @@
                     </div>
 
                     <div class="col-half mb-3">
-                        <label for="phone" class="form-label">
+                        <label for="complainant_phone" class="form-label">
                             Phone <span class="text-danger">*</span>
                         </label>
-                        <input type="text" name="phone" id="phone" 
+                        <input type="text" name="complainant_phone" id="complainant_phone" 
                             class="form-control" value="{{ $userMobile }}" 
                             placeholder="Enter your Phone" readonly>
                     </div>
                 </div>
 
 
-                <!-- <div class="row">
-                    <div class="col-half">
-                        <input type="email" name="email" class="form-control" placeholder="Enter your Email">
-                    </div>
-                    <div class="col-half">
-                        <input type="text" name="aadhaar" class="form-control" placeholder="Enter your Aadhaar No.">
-                    </div>
-                </div> -->
-
-
                 <div class="row">
                     <div class="col-half mb-3">
-                        <label for="email" class="form-label">
+                        <label for="complainant_email" class="form-label">
                             Email <span class="text-danger">*</span>
                         </label>
-                        <input type="email" name="email" id="email" 
+                        <input type="complainant_email" name="complainant_email" id="complainant_email" 
                             class="form-control" placeholder="Enter your Email" required>
                     </div>
 
                     <div class="col-half mb-3">
-                        <label for="aadhaar" class="form-label">
+                        <label for="complainant_aadhaar" class="form-label">
                             Aadhaar No. <span class="text-danger">*</span>
                         </label>
-                        <input type="text" name="aadhaar" id="aadhaar" 
+                        <input type="text" name="complainant_aadhaar" id="complainant_aadhaar" 
                             class="form-control" placeholder="Enter your Aadhaar No." required>
                     </div>
                 </div>
 
                 <!-- <input type="text" name="address" class="form-control mb-2" placeholder="Enter your Address"> -->
 
-                <div class="mb-4">
-                    <label for="address" class="form-label">
-                        Address <span class="text-danger">*</span>
-                    </label>
-                    <input type="text" name="address" id="address" 
-                        class="form-control mb-3" placeholder="Enter your Address" required>
+                <div class="row">
+                    <div class="mb-2">
+                        <label for="complainant_dist_id" class="form-label">
+                            District <span class="text-danger">*</span>
+                        </label>
+                        <select name="complainant_dist_id" id="complainant_dist_id" class="form-select" required>
+                            <option value="" disabled selected>Select District</option>
+                            @foreach($districts as $district)
+                                <option value="{{ $district->id }}">
+                                    {{ $district->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
 
-
-                <!-- <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
-                    onchange="checkFileSize(this)"> -->
-
-                    <div class="mt-3">
-                        <label for="document_upload" class="form-label">
-                            Upload Document <span class="text-danger">*</span>
+                <div class="row">
+                    <div class="mb-2">
+                        <label for="complainant_address" class="form-label mb-2">
+                            Address <span class="text-danger">*</span>
                         </label>
-                        <input type="file" name="document_upload" id="document_upload" 
-                            class="form-control mb-2" 
-                            accept=".jpg,.jpeg,.png,.pdf"
-                            onchange="checkFileSize(this)" required>
+                        <textarea name="complainant_address" id="complainant_address" 
+                            class="form-control mb-3" placeholder="Enter your Address" rows="3" required></textarea>
                     </div>
+                </div>
 
-
+                <div class="mt-2">
+                    <label for="document_upload" class="form-label">
+                        Upload Document <span class="text-danger">*</span>
+                    </label>
+                    <input type="file" name="document_upload" id="document_upload" 
+                        class="form-control mb-2" 
+                        accept=".jpg,.jpeg,.png,.pdf"
+                        onchange="checkFileSize(this)">
+                </div>
 
                 <div id="previewContainer" style="margin-top:10px;"></div>
-
-
-
 
 
                 @if (!empty($userData->upload_document))
@@ -298,6 +289,51 @@
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <!-- Step 2 -->
             <div class="step" id="step3">
@@ -314,6 +350,7 @@
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
+            
 
             <!-- Step 3 -->
             <div class="step" id="step4">
@@ -321,8 +358,6 @@
 
                 <div class="row">
                     <div class="col-half">
-                        <!-- <input type="text" name="firm_name" class="form-control" placeholder="Enter Firm Name"
-                            oninput="sanitizeFirmName(this)"> -->
 
                             <div class="mb-3">
                                 <label for="firm_name" class="form-label">
@@ -330,14 +365,9 @@
                                 </label>
                                 <input type="text" name="firm_name" id="firm_name" 
                                     class="form-control" placeholder="Enter Firm Name" 
-                                    oninput="sanitizeFirmName(this)" required>
+                                    oninput="sanitizeFirmName(this)">
                             </div>
                     </div>
-
-                    <!-- <div class="col-half">
-                        <input type="text" name="address_detail" class="form-control" placeholder="Enter Address"
-                            oninput="sanitizeAddress(this)">
-                    </div> -->
 
                     <div class="col-half mb-3">
                         <label for="address_detail" class="form-label">
@@ -345,7 +375,7 @@
                         </label>
                         <input type="text" name="address_detail" id="address_detail" 
                             class="form-control" placeholder="Enter Address"
-                            oninput="sanitizeAddress(this)" required>
+                            oninput="sanitizeAddress(this)">
                     </div>
                 </div>
 
@@ -361,7 +391,7 @@
                                     GSTIN <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" name="gstin" id="gstin" 
-                                    class="form-control" placeholder="Enter GSTIN" required>
+                                    class="form-control" placeholder="Enter GSTIN">
                             </div>
                     </div>
 
@@ -371,8 +401,27 @@
                                 Upload Document <span class="text-danger">*</span>
                             </label>
                             <input type="file" name="document" id="document" 
-                                class="form-control" accept=".jpg,.jpeg,.png,.pdf" required>
+                                class="form-control" accept=".jpg,.jpeg,.png,.pdf">
                         </div>
+                    </div>
+                </div>
+
+
+                <!-- h -->
+
+                 <div class="row">
+                    <div class="mb-2">
+                        <label for="against_district_id" class="form-label">
+                            District <span class="text-danger">*</span>
+                        </label>
+                        <select name="against_district_id" id="against_district_id" class="form-select">
+                            <option value="" disabled selected>Select District</option>
+                            @foreach($districts as $district)
+                                <option value="{{ $district->id }}">
+                                    {{ $district->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
@@ -383,7 +432,7 @@
                     </label>
                     <textarea name="remarks" id="remarks" 
                             class="form-control mb-2" placeholder="Remarks" 
-                            oninput="sanitizeRemarks(this)" rows="3" required></textarea>
+                            oninput="sanitizeRemarks(this)" rows="3" ></textarea>
                 </div>
 
                 <div class="d-flex justify-content-between">
@@ -443,12 +492,6 @@
                 .then(function(response) {
                     $('#loader').addClass('d-none');
                     console.log(response.data);
-                    // Swal.fire({
-                    //     icon: 'success',
-                    //     title: 'Success',
-                    //     text: response.data.message || 'Step 1 submitted successfully!',
-                    //     confirmButtonText: 'OK'
-                    // });
                     currentStep++;
                     showStep(currentStep);
                 })
@@ -467,13 +510,13 @@
         function submitStep2() {
             $('#loader').removeClass('d-none');
             const complainant_name = document.querySelector('input[name="complainant_name"]').value.trim();
-            const mobile = document.querySelector('input[name="phone"]').value.trim();
-            const email = document.querySelector('input[name="email"]').value.trim();
-            const address = document.querySelector('input[name="address"]').value.trim();
-            const aadhaar = document.querySelector('input[name="aadhaar"]').value.trim();
+            const complainant_dist_id = document.getElementById('complainant_dist_id')?.value;
+            const complainant_phone = document.querySelector('input[name="complainant_phone"]').value.trim();
+            const complainant_email = document.querySelector('input[name="complainant_email"]').value.trim();
+            const complainant_address = $("#complainant_address").val();
+            const complainant_aadhaar = document.querySelector('input[name="complainant_aadhaar"]').value.trim();
             const upload_document = document.querySelector('input[name="document_upload"]').files[0];
             const category = document.getElementById('complaint_type')?.value;
-
 
 
             if (!complainant_name) {
@@ -486,7 +529,7 @@
                 });
             }
 
-            if (!mobile || mobile.length !== 10) {
+            if (!complainant_phone || complainant_phone.length !== 10) {
                 $('#loader').addClass('d-none');
                 return Swal.fire({
                     icon: 'warning',
@@ -496,30 +539,48 @@
                 });
             }
 
-            
-
-            if (aadhaar && aadhaar.length !== 12) {
+            if(!complainant_email) {
                 $('#loader').addClass('d-none');
                 return Swal.fire({
                     icon: 'warning',
                     title: 'Error',
-                    text: 'Enter valid 12-digit Aadhaar!',
+                    text: 'Enter your email!',
+                    confirmButtonText: 'OK'
+                });
+            }
+            
+
+           if (!complainant_aadhaar || !/^\d{12}$/.test(complainant_aadhaar)) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter a valid 12-digit Aadhaar!',
                     confirmButtonText: 'OK'
                 });
             }
 
-            if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+            if(!complainant_dist_id) {
                 $('#loader').addClass('d-none');
                 return Swal.fire({
                     icon: 'warning',
                     title: 'Error',
-                    text: 'Enter valid email!',
+                    text: 'Select your District!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            if (!complainant_address) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter your address!',
                     confirmButtonText: 'OK'
                 });
             }
 
             const userData = @json($userData);
-
 
             if (!upload_document && !userData['upload_document']) {
                 $('#loader').addClass('d-none');
@@ -534,8 +595,10 @@
             if (upload_document) {
                 const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 
+                // Check file type
                 if (!allowedTypes.includes(upload_document.type)) {
                     $('#loader').addClass('d-none');
+                    $('#upload_document').val(''); // reset file input
                     return Swal.fire({
                         icon: 'warning',
                         title: 'Error',
@@ -544,9 +607,11 @@
                     });
                 }
 
-                const maxSize = 50 * 1024;
+                // Check file size (50KB)
+                const maxSize = 50 * 1024; 
                 if (upload_document.size > maxSize) {
                     $('#loader').addClass('d-none');
+                    $('#upload_document').val(''); // reset file input
                     return Swal.fire({
                         icon: 'warning',
                         title: 'Error',
@@ -556,13 +621,15 @@
                 }
             }
 
+
             let formData = new FormData();
             formData.append('complainant_name', complainant_name);
-            formData.append('mobile', mobile);
-            formData.append('email', email);
-            formData.append('address', address);
-            formData.append('aadhaar', aadhaar);
+            formData.append('complainant_phone', complainant_phone);
+            formData.append('complainant_email', complainant_email);
+            formData.append('complainant_address', complainant_address);
+            formData.append('complainant_aadhaar', complainant_aadhaar);
             formData.append('upload_document', upload_document);
+            formData.append('complainant_dist_id', complainant_dist_id);
 
             axios.post("{{ route('complaints.step-second') }}", formData, {
                     headers: {
@@ -630,6 +697,7 @@
             const proof_document = document.querySelector('input[name="document"]').files[0];
             const remarks = document.querySelector('textarea[name="remarks"]').value.trim();
             const gstin = document.getElementById('gstin').value;
+            const against_district_id = document.getElementById('against_district_id')?.value;
 
             let formData = new FormData();
             formData.append('firm_name', firm_name);
@@ -637,6 +705,82 @@
             formData.append('proof_document', proof_document);
             formData.append('remarks', remarks);
             formData.append('gstin', gstin);
+            formData.append('against_district_id', against_district_id);
+
+            if(!firm_name) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter Firm Name!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            if(!firm_address) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter Firm Address!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+
+
+            if(!gstin){
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter GSTIN!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            if(!against_district_id) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Select District!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            if(!remarks) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter Remarks!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+
+            if (!proof_document) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Please upload a document!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            if (!allowedTypes.includes(proof_document.type)) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Only JPG, PNG, or PDF files are allowed!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
 
             axios.post("{{ route('complaints.store') }}", formData, {
                     headers: {
@@ -683,17 +827,17 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const nameInput = document.querySelector('input[name="complainant_name"]');
-            const addressInput = document.querySelector('input[name="address"]');
-            const phoneInput = document.querySelector('input[name="phone"]');
-            const aadhaarInput = document.querySelector('input[name="aadhaar"]');
-            const emailInput = document.querySelector('input[name="email"]');
+            const addressInput = document.querySelector('input[name="complainant_address"]');
+            const phoneInput = document.querySelector('input[name="complainant_phone"]');
+            const aadhaarInput = document.querySelector('input[name="complainant_aadhaar"]');
+            const emailInput = document.querySelector('input[name="complainant_email"]');
 
             nameInput.addEventListener('input', () => {
                 nameInput.value = nameInput.value.replace(/[^a-zA-Z\s]/g, '');
             });
-            addressInput.addEventListener('input', () => {
-                addressInput.value = addressInput.value.replace(/[^a-zA-Z0-9\s]/g, '');
-            });
+            // addressInput.addEventListener('input', () => {
+            //     addressInput.value = addressInput.value.replace(/[^a-zA-Z0-9\s]/g, '');
+            // });
             phoneInput.addEventListener('input', () => {
                 phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '').slice(0, 10);
             });
@@ -792,10 +936,15 @@
                 .then(function(response) {
                     console.log(response.data.complaints.complaint_type);
                     $('input[name="complainant_name"]').val(response.data.complaints.complainant_name);
-                    $('input[name="address"]').val(response.data.complaints.address);
-                    $('input[name="aadhaar"]').val(response.data.complaints.aadhaar);
-                    $('input[name="email"]').val(response.data.complaints.email);
+                    $('#complainant_address').val(response.data.complaints.complainant_address);
+                    $('input[name="complainant_aadhaar"]').val(response.data.complaints.complainant_aadhaar);
+                    $('input[name="complainant_email"]').val(response.data.complaints.complainant_email);
                     $('#complaint_type').val(response.data.complaints.complaint_type);
+                    $('#complainant_dist_id').val(response.data.complaints.complainant_dist_id);
+                    $('#complaint_type').val(response.data.complaints.complaint_type);
+                    $('#fraudCheck').val(response.data.complaints.is_fraud_related);
+
+
                     $('#loader').addClass("d-none");
                     const existingImg = document.getElementById('existing-image');
                     existingImg.src = "{{ asset('storage') }}/" + response.data.complaints.upload_document;
@@ -810,9 +959,9 @@
         document.getElementById('document').addEventListener('change', function(e) {
             const file = e.target.files[0];
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-            const maxSize = 200 * 1024; // 200 KB
+            const maxSize = 200 * 1024;
 
-            if (!file) return; // No file selected
+            if (!file) return; 
 
             // File type validation
             if (!allowedTypes.includes(file.type)) {
