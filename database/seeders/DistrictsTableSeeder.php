@@ -191,14 +191,14 @@ class DistrictsTableSeeder extends Seeder
                 'updated_at' => now(),
             ), 
             // Mewat
-            // 22 => 
-            // array (
-            //     'id' => 23,
-            //     'name' => 'Narnaul',
-            //     'code' => 'HRNN',
-            //     'created_at' => '2023-10-31 15:54:53',
-            //     'updated_at' => '2023-10-31 15:54:53',
-            // ),
+            22 => 
+            array (
+                'id' => 23,
+                'name' => 'Chandigarh',
+                'code' => 'CHD',
+                'created_at' => '2023-10-31 15:54:53',
+                'updated_at' => '2023-10-31 15:54:53',
+            ),
         ));
     }
 }
