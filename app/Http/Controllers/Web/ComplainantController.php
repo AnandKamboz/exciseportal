@@ -167,6 +167,7 @@ class ComplainantController extends Controller
     public function store(Request $request)
     {       
             $data = $request->validate([
+                'firm_name'      => 'required|string|max:255',
                 'firm_address'    => 'required|string|max:500',
                 'proof_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:200',
                 'remarks'         => 'required|string|max:1000',

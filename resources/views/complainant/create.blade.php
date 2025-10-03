@@ -170,9 +170,6 @@
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
                 <h5>Complainant Details</h5>
-
-
-
                 <div class="mb-3">
                     <label for="complaint_type" class="form-label">
                         Complaint Type <span class="text-danger">*</span>
@@ -189,10 +186,6 @@
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
-
-
-
-
 
             {{-- Select 1 --}}
 
@@ -291,50 +284,6 @@
             </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <!-- Step 2 -->
             <div class="step" id="step3">
                 <h5>GST Fraud/Evasion Check</h5>
@@ -355,7 +304,6 @@
             <!-- Step 3 -->
             <div class="step" id="step4">
                 <h5>Complaint Details</h5>
-
                 <div class="row">
                     <div class="col-half">
 
@@ -442,7 +390,6 @@
             </div>
         </form>
     </div>
-
 
     <script>
         let currentStep = 1;
