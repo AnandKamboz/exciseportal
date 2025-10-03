@@ -170,48 +170,123 @@
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
                 <h5>Complainant Details</h5>
-                <select name="complaint_type" id="complaint_type" class="form-select mb-3">
-                    <option value="" selected disabled>Select Complaint Type</option>
-                    <option value="vat">VAT</option>
-                    <option value="gst">GST</option>
-                    <option value="excise">Excise</option>
-                </select>
+                <div class="mb-3">
+                    <label for="complaint_type" class="form-label">
+                        Complaint Type <span class="text-danger">*</span>
+                    </label>
+                    <select name="complaint_type" id="complaint_type" class="form-select" required>
+                        <option value="" selected disabled>Select Complaint Type</option>
+                        <option value="vat">VAT</option>
+                        <option value="gst">GST</option>
+                        <option value="excise">Excise</option>
+                    </select>
+                </div>
 
                 <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
+
             {{-- Select 1 --}}
 
             <div class="step" id="step2">
                 <h5>Complainant Details</h5>
 
-                <div class="row">
+                <!-- <div class="row">
+
+
                     <div class="col-half">
                         <input type="text" name="complainant_name" class="form-control"
                             placeholder="Enter your Name">
                     </div>
+
+
                     <div class="col-half">
                         <input type="text" name="phone" class="form-control" value="{{ $userMobile }}"
                             placeholder="Enter your Phone" readonly>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="row">
+                    <div class="col-half mb-3">
+                        <label for="complainant_name" class="form-label">
+                            Name <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="complainant_name" id="complainant_name" 
+                            class="form-control" placeholder="Enter your Name" required>
+                    </div>
+
+                    <div class="col-half mb-3">
+                        <label for="phone" class="form-label">
+                            Phone <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="phone" id="phone" 
+                            class="form-control" value="{{ $userMobile }}" 
+                            placeholder="Enter your Phone" readonly>
+                    </div>
+                </div>
+
+
+                <!-- <div class="row">
                     <div class="col-half">
                         <input type="email" name="email" class="form-control" placeholder="Enter your Email">
                     </div>
                     <div class="col-half">
                         <input type="text" name="aadhaar" class="form-control" placeholder="Enter your Aadhaar No.">
                     </div>
+                </div> -->
+
+
+                <div class="row">
+                    <div class="col-half mb-3">
+                        <label for="email" class="form-label">
+                            Email <span class="text-danger">*</span>
+                        </label>
+                        <input type="email" name="email" id="email" 
+                            class="form-control" placeholder="Enter your Email" required>
+                    </div>
+
+                    <div class="col-half mb-3">
+                        <label for="aadhaar" class="form-label">
+                            Aadhaar No. <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="aadhaar" id="aadhaar" 
+                            class="form-control" placeholder="Enter your Aadhaar No." required>
+                    </div>
                 </div>
 
-                <input type="text" name="address" class="form-control mb-2" placeholder="Enter your Address">
+                <!-- <input type="text" name="address" class="form-control mb-2" placeholder="Enter your Address"> -->
+
+                <div class="mb-4">
+                    <label for="address" class="form-label">
+                        Address <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" name="address" id="address" 
+                        class="form-control mb-3" placeholder="Enter your Address" required>
+                </div>
 
 
-                <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
-                    onchange="checkFileSize(this)">
+
+                <!-- <input type="file" name="document_upload" class="form-control mb-2" accept=".jpg,.jpeg,.png,.pdf"
+                    onchange="checkFileSize(this)"> -->
+
+                    <div class="mt-3">
+                        <label for="document_upload" class="form-label">
+                            Upload Document <span class="text-danger">*</span>
+                        </label>
+                        <input type="file" name="document_upload" id="document_upload" 
+                            class="form-control mb-2" 
+                            accept=".jpg,.jpeg,.png,.pdf"
+                            onchange="checkFileSize(this)" required>
+                    </div>
+
+
+
                 <div id="previewContainer" style="margin-top:10px;"></div>
+
+
+
+
 
                 @if (!empty($userData->upload_document))
                     <img id="existing-image" src="{{ asset('storage/' . $userData->upload_document) }}"
@@ -246,26 +321,70 @@
 
                 <div class="row">
                     <div class="col-half">
-                        <input type="text" name="firm_name" class="form-control" placeholder="Enter Firm Name"
-                            oninput="sanitizeFirmName(this)">
+                        <!-- <input type="text" name="firm_name" class="form-control" placeholder="Enter Firm Name"
+                            oninput="sanitizeFirmName(this)"> -->
+
+                            <div class="mb-3">
+                                <label for="firm_name" class="form-label">
+                                    Firm Name <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="firm_name" id="firm_name" 
+                                    class="form-control" placeholder="Enter Firm Name" 
+                                    oninput="sanitizeFirmName(this)" required>
+                            </div>
                     </div>
-                    <div class="col-half">
+
+                    <!-- <div class="col-half">
                         <input type="text" name="address_detail" class="form-control" placeholder="Enter Address"
                             oninput="sanitizeAddress(this)">
+                    </div> -->
+
+                    <div class="col-half mb-3">
+                        <label for="address_detail" class="form-label">
+                            Address <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="address_detail" id="address_detail" 
+                            class="form-control" placeholder="Enter Address"
+                            oninput="sanitizeAddress(this)" required>
                     </div>
                 </div>
+
 
                 <div class="row">
                     <div class="col-half">
-                        <input type="text" name="gstin" class="form-control" placeholder="Enter GSTIN"
-                            id="gstin">
+
+                        <!-- <input type="text" name="gstin" class="form-control" placeholder="Enter GSTIN"
+                            id="gstin"> -->
+
+                            <div class="mb-3">
+                                <label for="gstin" class="form-label">
+                                    GSTIN <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="gstin" id="gstin" 
+                                    class="form-control" placeholder="Enter GSTIN" required>
+                            </div>
                     </div>
+
                     <div class="col-half">
-                        <input type="file" name="document" class="form-control" id="document">
+                         <div class="mb-3">
+                            <label for="document" class="form-label">
+                                Upload Document <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" name="document" id="document" 
+                                class="form-control" accept=".jpg,.jpeg,.png,.pdf" required>
+                        </div>
                     </div>
                 </div>
 
-                <textarea name="remarks" class="form-control mb-2" placeholder="Remarks" oninput="sanitizeRemarks(this)"></textarea>
+
+                <div class="mb-3">
+                    <label for="remarks" class="form-label">
+                        Remarks <span class="text-danger">*</span>
+                    </label>
+                    <textarea name="remarks" id="remarks" 
+                            class="form-control mb-2" placeholder="Remarks" 
+                            oninput="sanitizeRemarks(this)" rows="3" required></textarea>
+                </div>
 
                 <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary btn-step" onclick="prevStep()">Back</button>
