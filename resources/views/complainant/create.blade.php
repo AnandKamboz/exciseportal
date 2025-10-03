@@ -306,7 +306,6 @@
                 <h5>Complaint Details</h5>
                 <div class="row">
                     <div class="col-half">
-
                             <div class="mb-3">
                                 <label for="firm_name" class="form-label">
                                     Firm Name <span class="text-danger">*</span>
@@ -393,7 +392,7 @@
 
     <script>
         let currentStep = 1;
-
+        
         function showStep(step) {
             document.querySelectorAll('.step').forEach((el, i) => {
                 el.classList.remove('active');
@@ -410,13 +409,23 @@
 
         function prevStep() {
             const category = document.getElementById('complaint_type')?.value;
-            if (currentStep === 3 && category !== 'gst') currentStep -= 2;
-            else currentStep--;
-            if (currentStep < 1) currentStep = 1;
-            showStep(currentStep);
+            if(category != 'gst' && currentStep === 4){
+                $('#fraudCheck').val('');
+                currentStep -= 2
+                showStep(currentStep);
+            }else{
+                currentStep--;
+                showStep(currentStep);
+            }  
+            
+
+
+            // if (currentStep === 3 && category !== 'gst') currentStep -= 2;
+            // else currentStep--;
+            // if (currentStep < 1) currentStep = 1;
+            // showStep(currentStep);
         }
         
-
         // Submit Step First 
         function submitStep1() {
             $('#loader').removeClass('d-none');
@@ -769,8 +778,6 @@
             }
             return true;
         }
-
-
 
         document.addEventListener('DOMContentLoaded', () => {
             const nameInput = document.querySelector('input[name="complainant_name"]');
