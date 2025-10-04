@@ -136,34 +136,32 @@
   </style>
 </head>
 <body>
-<div class="main-container">
-    <div id="sidebar" class="sidebar p-3 d-flex flex-column">
-        <div class="logo">
-        <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo">
-        </div>
+  <div class="main-container">
+      <div id="sidebar" class="sidebar p-3 d-flex flex-column">
+          <div class="logo">
+          <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo">
+          </div>
 
-        <ul class="nav flex-column">
+          <ul class="nav flex-column">
+      <li class="nav-item">
+          <a class="nav-link text-white" href="{{ route('inspector.dashboard') }}">
+          <i class="bi bi-house"></i> <span>Dashboard</span>
+          </a>
+      </li>
+
     <li class="nav-item">
-        <a class="nav-link text-white" href="{{ route('inspector.dashboard'') }}">
-        <i class="bi bi-house"></i> <span>Dashboard</span>
-        </a>
+      <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="nav-link text-white border-0 bg-transparent w-100 text-start">
+          <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+        </button>
+      </form>
     </li>
+      </ul>
+  </div>
 
-   <li class="nav-item">
-    <form method="POST" action="{{ route('logout') }}">
-      @csrf
-      <button type="submit" class="nav-link text-white border-0 bg-transparent w-100 text-start">
-        <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
-      </button>
-    </form>
-  </li>
-    </ul>
-</div>
 
-  <!-- Main Content -->
   <div class="flex-grow-1 d-flex flex-column">
-
-    <!-- Topbar -->
     <div class="topbar d-flex justify-content-between align-items-center">
       <button class="btn btn-light" id="toggleSidebar">
         <i class="bi bi-list"></i>
@@ -175,12 +173,11 @@
       </div>
     </div>
 
-    <!-- Dynamic Content -->
+   
     <div class="container-fluid mt-4 flex-grow-1">
         @yield('content')
     </div>
 
-    <!-- Footer -->
     <footer>
       &copy; 2025 All Rights Reserved.
     </footer>
