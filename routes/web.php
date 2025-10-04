@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\ComplainantController;
 use App\Http\Controllers\Web\LogoutController;
 use App\Http\Controllers\Web\UserComplaintController;
 use App\Http\Controllers\Web\DetcController;
+use App\Http\Controllers\Web\InspectorDashboard;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,6 +28,7 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show'])->name('user.setails');
 
+// inspector.dashboard
 
 Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
 Route::get('detc/complaint/{secure_id}', [DetcController::class, 'show'])->name('detc.details');
@@ -36,4 +38,8 @@ Route::get('detc/complaint/{secure_id}', [DetcController::class, 'show'])->name(
 Route::post('/user/complaint/update/{secure_id}', [DetcController::class, 'updateComplaintStatus'])
     ->name('user.updateComplaintStatus');
 
+
+
+// Inspector routes
+Route::get('/inspector/dashboard', [InspectorDashboard::class, 'dashboard'])->name('inspector.dashboard');
 

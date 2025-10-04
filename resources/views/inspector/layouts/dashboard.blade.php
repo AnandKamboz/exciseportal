@@ -144,7 +144,7 @@
 
         <ul class="nav flex-column">
     <li class="nav-item">
-        <a class="nav-link text-white" href="{{ route('detc.dashboard') }}">
+        <a class="nav-link text-white" href="{{ route('inspector.dashboard'') }}">
         <i class="bi bi-house"></i> <span>Dashboard</span>
         </a>
     </li>

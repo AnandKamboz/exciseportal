@@ -246,17 +246,32 @@ class AuthController extends Controller
     $role = $user->roles()->pluck('role_name')->first(); // assume one role
 
     // Existing completed complainant record check
+    // $recordExists = Complainant::where('complainant_phone', $mobile)
+    //     ->where('is_completed', 1)
+    //     ->exists();
+
+    // if ($role === 'detc') {
+    //     $redirectUrl = route('detc.dashboard');
+    // } elseif ($recordExists || $role === 'user') {
+    //     $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
+    // } else {
+    //     $redirectUrl = route('home'); 
+    // }
+
+   
+
     $recordExists = Complainant::where('complainant_phone', $mobile)
         ->where('is_completed', 1)
         ->exists();
 
     if ($role === 'detc') {
         $redirectUrl = route('detc.dashboard');
+    } elseif ($role === 'excise inspector') {
+        $redirectUrl = route('inspector.dashboard'); 
     } elseif ($recordExists || $role === 'user') {
-        // If completed record exists OR role is user
         $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
     } else {
-        $redirectUrl = route('home'); // fallback
+        $redirectUrl = route('home'); 
     }
 
     return response()->json([
