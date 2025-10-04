@@ -173,6 +173,7 @@ class ComplainantController extends Controller
                 'remarks'         => 'required|string|max:1000',
                 'gstin'           => 'required|string|max:15',
                 'against_district_id' => 'required',
+                'estimate_tax_amount' => 'required|numeric|min:1',
             ]);
           
             $secureId = Complainant::where('complainant_phone', auth()->user()->mobile)

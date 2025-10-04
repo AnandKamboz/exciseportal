@@ -169,7 +169,7 @@
     <div class="card">
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
-                <h5>Complainant Details</h5>
+                 <h5>Details of Complanint/Informer</h5>
                 <div class="mb-3">
                     <label for="complaint_type" class="form-label">
                         Complaint Type <span class="text-danger">*</span>
@@ -186,7 +186,6 @@
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
-
             {{-- Select 1 --}}
 
             <div class="step" id="step2">
@@ -211,7 +210,6 @@
                     </div>
                 </div>
 
-
                 <div class="row">
                     <div class="col-half mb-3">
                         <label for="complainant_email" class="form-label">
@@ -230,7 +228,15 @@
                     </div>
                 </div>
 
-                <!-- <input type="text" name="address" class="form-control mb-2" placeholder="Enter your Address"> -->
+                <div class="row">
+                      <div class="">
+                        <label for="complainant_address" class="form-label">
+                            Address <span class="text-danger">*</span>
+                        </label>
+                        <textarea name="complainant_address" id="complainant_address" 
+                            class="form-control mb-3" placeholder="Enter your Address" rows="3" required></textarea>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="mb-2">
@@ -248,17 +254,6 @@
                     </div>
                 </div>
 
-
-                <div class="row">
-                    <div class="mb-2">
-                        <label for="complainant_address" class="form-label mb-2">
-                            Address <span class="text-danger">*</span>
-                        </label>
-                        <textarea name="complainant_address" id="complainant_address" 
-                            class="form-control mb-3" placeholder="Enter your Address" rows="3" required></textarea>
-                    </div>
-                </div>
-
                 <div class="mt-2">
                     <label for="document_upload" class="form-label">
                         Upload Document <span class="text-danger">*</span>
@@ -271,7 +266,6 @@
 
                 <div id="previewContainer" style="margin-top:10px;"></div>
 
-
                 @if (!empty($userData->upload_document))
                     <img id="existing-image" src="{{ asset('storage/' . $userData->upload_document) }}"
                         alt="Existing Document" style="max-width:100px; display:block; margin-bottom:10px;">
@@ -282,7 +276,6 @@
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
-
 
             <!-- Step 2 -->
             <div class="step" id="step3">
@@ -303,7 +296,7 @@
 
             <!-- Step 3 -->
             <div class="step" id="step4">
-                <h5>Complaint Details</h5>
+                <h5>Details of Suspect</h5>
                 <div class="row">
                     <div class="col-half">
                             <div class="mb-3">
@@ -316,47 +309,30 @@
                             </div>
                     </div>
 
-                    <div class="col-half mb-3">
-                        <label for="address_detail" class="form-label">
-                            Address <span class="text-danger">*</span>
-                        </label>
-                        <input type="text" name="address_detail" id="address_detail" 
-                            class="form-control" placeholder="Enter Address"
-                            oninput="sanitizeAddress(this)">
-                    </div>
-                </div>
-
-
-                <div class="row">
                     <div class="col-half">
-
-                        <!-- <input type="text" name="gstin" class="form-control" placeholder="Enter GSTIN"
-                            id="gstin"> -->
-
-                            <div class="mb-3">
-                                <label for="gstin" class="form-label">
-                                    GSTIN <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="gstin" id="gstin" 
-                                    class="form-control" placeholder="Enter GSTIN">
-                            </div>
-                    </div>
-
-                    <div class="col-half">
-                         <div class="mb-3">
-                            <label for="document" class="form-label">
-                                Upload Document <span class="text-danger">*</span>
+                        <div class="mb-3">
+                            <label for="gstin" class="form-label">
+                                GSTIN <span class="text-danger">*</span>
                             </label>
-                            <input type="file" name="document" id="document" 
-                                class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+                            <input type="text" name="gstin" id="gstin" 
+                                class="form-control" placeholder="Enter GSTIN">
                         </div>
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-half mb-3">
+                        <label for="address_detail" class="form-label">
+                            Address <span class="text-danger">*</span>
+                        </label>
+                        <textarea name="address_detail" id="address_detail" 
+                            class="form-control" rows="3" placeholder="Enter Address"
+                            oninput="sanitizeAddress(this)"></textarea>
+                    </div>
+                </div>
 
-                <!-- h -->
 
-                 <div class="row">
+                <!-- <div class="row">
                     <div class="mb-2">
                         <label for="against_district_id" class="form-label">
                             District <span class="text-danger">*</span>
@@ -370,9 +346,46 @@
                             @endforeach
                         </select>
                     </div>
+                </div> -->
+
+                <div class="row">
+                    <div class="mb-2">
+                        <label for="against_district_id" class="form-label">
+                            District <span class="text-danger">*</span>
+                        </label>
+                        <select name="against_district_id" id="against_district_id" class="form-select">
+                            <option value="" disabled selected>Select District</option>
+                            @foreach($districts as $district)
+                                <option value="{{ $district->id }}">
+                                    {{ $district->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="estimate_tax_amount" class="form-label">
+                            Estimate Amount of Tax (in Rupees) <span class="text-danger">*</span>
+                        </label>
+                        <input type="number" name="estimate_tax_amount" id="estimate_tax_amount" 
+                            class="form-control" placeholder="Enter estimated tax amount" min="0" step="any">
+                    </div>
                 </div>
 
 
+                <div class="row">
+                      <div class="col-half">
+                         <div class="mb-3">
+                            <label for="document" class="form-label">
+                                Upload Document <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" name="document" id="document" 
+                                class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+                        </div>
+                    </div>
+                </div>
+                <!-- h -->
+            
                 <div class="mb-3">
                     <label for="remarks" class="form-label">
                         Remarks <span class="text-danger">*</span>
@@ -649,11 +662,13 @@
             $('#loader').removeClass('d-none');
 
             const firm_name = document.querySelector('input[name="firm_name"]').value.trim();
-            const firm_address = document.querySelector('input[name="address_detail"]').value.trim();
+            // const firm_address = document.querySelector('input[name="address_detail"]').value.trim();
+            const firm_address = document.querySelector('[name="address_detail"]').value.trim();
             const proof_document = document.querySelector('input[name="document"]').files[0];
             const remarks = document.querySelector('textarea[name="remarks"]').value.trim();
             const gstin = document.getElementById('gstin').value;
             const against_district_id = document.getElementById('against_district_id')?.value;
+            const estimate_tax_amount = document.getElementById('estimate_tax_amount').value;
 
             let formData = new FormData();
             formData.append('firm_name', firm_name);
@@ -662,6 +677,7 @@
             formData.append('remarks', remarks);
             formData.append('gstin', gstin);
             formData.append('against_district_id', against_district_id);
+            formData.append('estimate_tax_amount', estimate_tax_amount);
 
             if(!firm_name) {
                 $('#loader').addClass('d-none');
@@ -683,6 +699,15 @@
                 });
             }
 
+            if(!estimate_tax_amount || estimate_tax_amount <= 0) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter valid Estimate Amount of Tax!',
+                    confirmButtonText: 'OK'
+                });
+            }
 
 
             if(!gstin){

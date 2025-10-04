@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('firm_name')->nullable();
             $table->string('gstin')->nullable();
             $table->text('firm_address')->nullable();
+            $table->decimal('estimate_tax_amount', 15, 2)->nullable();
 
             // Optional document and remarks
             $table->string('proof_document')->nullable();
