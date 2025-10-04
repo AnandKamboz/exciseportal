@@ -21,12 +21,6 @@ class UserComplaintController extends Controller
         $againstDistrictId = optional(
             DB::table('districts')->where('id', $complain->against_district_id)->first()
         )->name ?? 'Not Found';
-
-
-
-        
-        
-
         return view('users.complaints.show', compact('complain','complainantDistrictName','againstDistrictId'));
     }
 }

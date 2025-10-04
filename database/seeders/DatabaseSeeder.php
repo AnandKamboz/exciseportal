@@ -20,9 +20,19 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        // $this->call([
+        //     RoleGroupSeeder::class,
+        //     DistrictsTableSeeder::class,
+        //     UserSeeder::class,
+        //     RoleGroup::class,
+        //     RoleTypesSeeder::class,
+        // ]);
+
         $this->call([
             RoleGroupSeeder::class,
             DistrictsTableSeeder::class,
+            UserSeeder::class,
+            RoleTypesSeeder::class, // Remove RoleGroup::class
         ]);
     }
 }

@@ -24,6 +24,16 @@ class RoleGroupSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'role_name' => 'detc',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'role_name' => 'excise inspector',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
