@@ -30,4 +30,6 @@ Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show
 
 
 Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
+Route::get('detc/complaint/{secure_id}', [DetcController::class, 'show'])->name('detc.details');
+
 
