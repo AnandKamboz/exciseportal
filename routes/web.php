@@ -43,6 +43,7 @@ Route::post('/user/complaint/update/{secure_id}', [DetcController::class, 'updat
 Route::get('/inspector/dashboard', [InspectorDashboard::class, 'dashboard'])->name('inspector.dashboard');
 Route::get('inspector/complaint/{secure_id}', [InspectorDashboard::class, 'show'])->name('inspector.details');
 Route::get('/inspector/feedback', [InspectorDashboard::class, 'inspectorFedback'])->name('inspector.feedback');
+Route::post('/inspector/action', [InspectorDashboard::class, 'storeAction'])->name('inspector.action');
 
 
 

@@ -145,17 +145,14 @@
     @endif
 
     <hr>
-    <!-- <div class="text-center">
-        <button type="button" class="btn btn-proceed mt-2 mb-2">
-            <i class="bi bi-arrow-right-circle me-1"></i> Proceed
-        </button>
-    </div> -->
 
     <div class="text-center">
-        <a href="{{ route('inspector.feedback') }}" class="btn btn-proceed mt-2 mb-2">
+        <a href="{{ route('inspector.feedback', ['secure_id' => $complain->secure_id]) }}" 
+        class="btn btn-proceed mt-2 mb-2">
             <i class="bi bi-arrow-right-circle me-1"></i> Proceed
         </a>
     </div>
+
 
 <style>
 .btn-proceed {
