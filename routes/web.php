@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\ComplainantController;
 use App\Http\Controllers\Web\LogoutController;
 use App\Http\Controllers\Web\UserComplaintController;
+use App\Http\Controllers\Web\DetcController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,4 +27,7 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show'])->name('user.setails');
 
+
+
+Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
 

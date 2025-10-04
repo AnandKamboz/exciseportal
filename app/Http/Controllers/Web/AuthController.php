@@ -20,13 +20,6 @@ class AuthController extends Controller
         $request->validate([
             'mobile' => 'required|numeric|digits:10',
         ]);
-        // $complaint = Complainant::where('mobile', $request->mobile)->first();
-    
-        // if ($complaint && $complaint->is_completed == 1) {
-        //     return redirect()->back()->withErrors([
-        //         'mobile' => 'Complaint already submitted for this mobile number.'
-        //     ])->withInput();
-        // }
 
         if (env('APP_ENV') === 'local') {
             $otp = '111111';
@@ -58,32 +51,40 @@ class AuthController extends Controller
     //     $mobile = $request->mobile;
     //     $otpInput = $request->otp;
 
+       
     //     $otpRecord = Otp::where('mobile', $mobile)
-    //                     ->where('otp', $otpInput)
-    //                     ->where('is_used', false)
-    //                     ->where('expires_at', '>=', Carbon::now())
-    //                     ->latest()
-    //                     ->first();
+    //         ->where('otp', $otpInput)
+    //         ->where('is_used', false)
+    //         ->where('expires_at', '>=', Carbon::now())
+    //         ->latest()
+    //         ->first();
 
     //     if (!$otpRecord) {
-    //         return back()->withErrors([
-    //             'otp' => 'Invalid or expired OTP'
-    //         ])->withInput();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Invalid or expired OTP'
+    //         ]);
     //     }
 
     //     $otpRecord->update(['is_used' => true]);
 
+      
+    //     $recordExists = Complainant::where('complainant_phone', $mobile)
+    //         ->where('is_completed', 1)
+    //         ->exists();
 
-    //     $recordExicts = Complainant::where('mobile', $userMobile)->where('is_completed',1)->first();
-
-    //     if($recordExists) {
+    //     if ($recordExists) {
+    //         $user = User::firstOrCreate(['mobile' => $mobile]);
     //         auth()->login($user);
+
     //         return response()->json([
     //             'success' => true,
-    //             'redirect_url' => route('complainant'),
+    //             'redirect_url' => route('user.dashboard'),
+    //             'message' => 'Login successful!',
     //         ]);
-    //     } 
+    //     }
 
+       
     //     do {
     //         $secureId = Str::random(32);
     //     } while (User::where('secure_id', $secureId)->exists());
@@ -93,6 +94,7 @@ class AuthController extends Controller
     //         ['secure_id' => $secureId]
     //     );
 
+       
     //     if ($user->wasRecentlyCreated) {
     //         $defaultRole = RoleGroup::where('role_name', 'user')->first();
     //         if ($defaultRole) {
@@ -100,12 +102,15 @@ class AuthController extends Controller
     //         }
     //     }
 
+       
     //     auth()->login($user);
 
+       
     //     $request->session()->put('mobile', $mobile);
 
     //     return response()->json([
     //         'success' => true,
+    //         'redirect_url' => route('complainant'),
     //         'message' => 'Login successful!',
     //     ]);
     // }
@@ -138,21 +143,28 @@ class AuthController extends Controller
 
     //     $recordExists = Complainant::where('complainant_phone', $mobile)
     //         ->where('is_completed', 1)
-    //         ->first();
-        
+    //         ->exists();
 
     //     if ($recordExists) {
-    //         $user = User::where('mobile', $mobile)->first();
-    //         if ($user) {
-    //             auth()->login($user);
+    //         $user = User::firstOrCreate(['mobile' => $mobile]);
+
+    //         // **Role check for existing user**
+    //         $role = $user->roles()->pluck('role_name')->first(); 
+
+    //         auth()->login($user);
+
+    //         $redirectUrl = route('user.dashboard'); // default
+
+    //         if ($role === 'detc') {
+    //             $redirectUrl = route('detc.dashboard');
     //         }
 
     //         return response()->json([
     //             'success' => true,
-    //             'redirect_url' => route('user.dashboard'), 
+    //             'redirect_url' => $redirectUrl,
+    //             'message' => 'Login successful!',
     //         ]);
     //     }
-
 
     //     do {
     //         $secureId = Str::random(32);
@@ -181,80 +193,79 @@ class AuthController extends Controller
     //     ]);
     // }
 
+
     public function verifyOtp(Request $request)
-    {
-        $request->validate([
-            'mobile' => 'required|numeric|digits:10',
-            'otp' => 'required|numeric|digits:6',
-        ]);
+{
+    $request->validate([
+        'mobile' => 'required|numeric|digits:10',
+        'otp' => 'required|numeric|digits:6',
+    ]);
 
-        $mobile = $request->mobile;
-        $otpInput = $request->otp;
+    $mobile = $request->mobile;
+    $otpInput = $request->otp;
 
-        // Check OTP
-        $otpRecord = Otp::where('mobile', $mobile)
-            ->where('otp', $otpInput)
-            ->where('is_used', false)
-            ->where('expires_at', '>=', Carbon::now())
-            ->latest()
-            ->first();
+    // OTP check
+    $otpRecord = Otp::where('mobile', $mobile)
+        ->where('otp', $otpInput)
+        ->where('is_used', false)
+        ->where('expires_at', '>=', Carbon::now())
+        ->latest()
+        ->first();
 
-        if (!$otpRecord) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid or expired OTP'
-            ]);
-        }
-
-        // Mark OTP as used
-        $otpRecord->update(['is_used' => true]);
-
-        // Check if mobile exists in complainants table and is completed
-        $recordExists = Complainant::where('complainant_phone', $mobile)
-            ->where('is_completed', 1)
-            ->exists();
-
-        if ($recordExists) {
-            // Login the user if exists
-            $user = User::firstOrCreate(['mobile' => $mobile]);
-            auth()->login($user);
-
-            return response()->json([
-                'success' => true,
-                'redirect_url' => route('user.dashboard'),
-                'message' => 'Login successful!',
-            ]);
-        }
-
-        // If no completed complainant exists, create or get user
-        do {
-            $secureId = Str::random(32);
-        } while (User::where('secure_id', $secureId)->exists());
-
-        $user = User::firstOrCreate(
-            ['mobile' => $mobile],
-            ['secure_id' => $secureId]
-        );
-
-        // Assign default role if new user
-        if ($user->wasRecentlyCreated) {
-            $defaultRole = RoleGroup::where('role_name', 'user')->first();
-            if ($defaultRole) {
-                $user->roles()->attach($defaultRole->id);
-            }
-        }
-
-        // Log in the user
-        auth()->login($user);
-
-        // Save mobile in session for later use
-        $request->session()->put('mobile', $mobile);
-
+    if (!$otpRecord) {
         return response()->json([
-            'success' => true,
-            'redirect_url' => route('complainant'),
-            'message' => 'Login successful!',
+            'success' => false,
+            'message' => 'Invalid or expired OTP'
         ]);
     }
+
+    $otpRecord->update(['is_used' => true]);
+
+    // Get or create user
+    do {
+        $secureId = Str::random(32);
+    } while (User::where('secure_id', $secureId)->exists());
+
+    $user = User::firstOrCreate(
+        ['mobile' => $mobile],
+        ['secure_id' => $secureId]
+    );
+
+    // Assign default role if new user
+    if ($user->wasRecentlyCreated) {
+        $defaultRole = RoleGroup::where('role_name', 'user')->first();
+        if ($defaultRole) {
+            $user->roles()->attach($defaultRole->id);
+        }
+    }
+
+    auth()->login($user);
+    $request->session()->put('mobile', $mobile);
+
+    // Role check
+    $role = $user->roles()->pluck('role_name')->first(); // assume one role
+
+    // Existing completed complainant record check
+    $recordExists = Complainant::where('complainant_phone', $mobile)
+        ->where('is_completed', 1)
+        ->exists();
+
+    if ($role === 'detc') {
+        $redirectUrl = route('detc.dashboard');
+    } elseif ($recordExists || $role === 'user') {
+        // If completed record exists OR role is user
+        $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
+    } else {
+        $redirectUrl = route('home'); // fallback
+    }
+
+    return response()->json([
+        'success' => true,
+        'redirect_url' => $redirectUrl,
+        'message' => 'Login successful!',
+    ]);
+}
+
+
 
 }
