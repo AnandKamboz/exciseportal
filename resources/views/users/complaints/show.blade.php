@@ -11,16 +11,19 @@
         <div class="row g-3">
             <div class="col-md-6">
                 <p><strong>Complaint ID:</strong> {{ $complain->complaint_id }}</p>
-                <p><strong>Complainant Name:</strong> {{ $complain->complainant_name }}</p>
+                <p><strong>Complainant Name:</strong> {{ ucfirst($complain->complainant_name) }}</p>
                 <p><strong>Phone:</strong> {{ $complain->complainant_phone }}</p>
                 <p><strong>Email:</strong> {{ $complain->complainant_email }}</p>
                 <p><strong>Aadhaar:</strong> {{ $complain->complainant_aadhaar }}</p>
             </div>
 
             <div class="col-md-6">
-                <p><strong>District ID:</strong> {{ $complain->complainant_dist_id }}</p>
-                <p><strong>Against District ID:</strong> {{ $complain->against_district_id }}</p>
-                <p><strong>Complaint Type:</strong> {{ $complain->complaint_type }}</p>
+                <p><strong>Complainant District:</strong> {{ $complainantDistrictName }}</p>
+                <p><strong>Against District ID:</strong> {{ $againstDistrictId }}</p>
+                <p><strong>Complaint Type:</strong> {{ strtoupper($complain->complaint_type) }}</p>
+
+
+
                 <p><strong>Status:</strong>
                     @if($complain->is_completed)
                         <span class="badge bg-success">Completed</span>
@@ -36,9 +39,9 @@
 
         <div class="row g-3">
             <div class="col-md-6">
-                <p><strong>Firm Name:</strong> {{ $complain->firm_name }}</p>
+                <p><strong>Firm Name:</strong> {{ ucfirst($complain->firm_name) }}</p>
                 <p><strong>GSTIN:</strong> {{ $complain->gstin }}</p>
-                <p><strong>Firm Address:</strong> {{ $complain->firm_address }}</p>
+                <p><strong>Firm Address:</strong> {{ ucfirst($complain->firm_address) }}</p>
                 <p><strong>Estimate Tax Amount:</strong> ₹{{ number_format($complain->estimate_tax_amount, 2) }}</p>
             </div>
 

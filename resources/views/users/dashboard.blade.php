@@ -52,7 +52,7 @@
                     @foreach($allComplain as $index => $complain)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $complain->complainant_name }}</td>
+                        <td>{{ ucfirst($complain->complainant_name) }}</td>
                         <td>{{ $complain->complainant_phone }}</td>
                         <td>{{ $complain->complainant_aadhaar }}</td>
                         <td>{{ $complain->created_at->format('d-m-Y') }}</td>
