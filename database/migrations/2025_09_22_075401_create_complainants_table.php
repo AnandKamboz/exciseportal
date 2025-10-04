@@ -42,9 +42,8 @@ return new class extends Migration
             $table->integer('against_district_id')->nullable();
             $table->string('detc_status')->nullable();
             $table->string('detc_remarks')->nullable();
-
+            $table->boolean('detc_updated_flag')->default(0)->comment('0 = Not Updated, 1 = Updated');
             $table->boolean('is_completed')->default(false);
-
             $table->timestamps();
         });
     }

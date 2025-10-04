@@ -210,6 +210,7 @@ class ComplainantController extends Controller
 
     
             $data['is_completed'] = 1;
+            $data['detc_updated_flag'] = 1;
             $complaint->update($data);
             
             // $request->session()->flush();

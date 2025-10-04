@@ -56,7 +56,7 @@
                         <td>{{ $complain->complainant_aadhaar }}</td>
                         <td>{{ $complain->created_at->format('d-m-Y') }}</td>
                         <td>
-                          <a href="{{ route('detc.details', [$complain->secure_id]) }}" class="btn btn-sm btn-primary">View</a>
+                          <a href="{{ route('inspector.details', [$complain->secure_id]) }}" class="btn btn-sm btn-primary">View</a>
                         </td>
                     </tr>
                     @endforeach
