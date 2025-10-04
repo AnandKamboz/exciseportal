@@ -18,7 +18,6 @@ class ComplainantController extends Controller
         }
 
         $districts = DB::table('districts')->get();
-        // dd($districts);
         $userMobile = Auth::user()->mobile;
         $userData = Complainant::where('complainant_phone', $userMobile)->where('is_completed',0)->first();
         return view('complainant.create',compact('userMobile','userData','districts'));

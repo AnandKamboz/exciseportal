@@ -1,78 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: #f8f9fa;
-        }
-        .sidebar {
-            width: 220px;
-            min-height: 100vh;
-            background: #212529;
-        }
-        .sidebar a {
-            color: #adb5bd;
-            text-decoration: none;
-            display: block;
-            padding: 10px 15px;
-            border-radius: 6px;
-        }
-        .sidebar a:hover {
-            background: #495057;
-            color: #fff;
-        }
-        .sidebar h4 {
-            color: #fff;
-            margin-bottom: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <div class="sidebar p-3">
-            <h4>My App</h4>
-            <a href="#">🏠 Home</a>
-            <a href="#">👥 Users</a>
-            <a href="#">📊 Reports</a>
-            <a href="#">⚙️ Settings</a>
-        </div>
+@extends('users.layouts.dashboard')
 
-        <!-- Main content -->
-        <div class="flex-grow-1 p-4">
-            <h2 class="mb-4">Welcome to Dashboard</h2>
+@section('title', 'Dashboard')
+@section('page_title', 'User Dashboard')
 
-            <div class="card shadow-sm p-3 mb-3">
-                <h5>Hello, {{ Auth::user()->name ?? 'Guest' }}</h5>
-                <p>This is your dashboard where you can manage users, reports, and settings.</p>
+@section('content')
+
+<div class="container-fluid">
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card text-center p-3" style="background: #FF9983; color: #fff;">
+                <h5>Total Complaints</h5>
+                <h2>1</h2>
             </div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card shadow-sm p-3 mb-3">
-                        <h6>Total Users</h6>
-                        <p class="fs-4 text-primary">120</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm p-3 mb-3">
-                        <h6>Reports</h6>
-                        <p class="fs-4 text-success">45</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm p-3 mb-3">
-                        <h6>Notifications</h6>
-                        <p class="fs-4 text-danger">8</p>
-                    </div>
-                </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-3" style="background: #FF8A73; color: #fff;">
+                <h5>Approved</h5>
+                <h2>0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-3" style="background: #FFBDA3; color: #fff;">
+                <h5>Pending</h5>
+                <h2>1</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-3" style="background: #FF6F5E; color: #fff;">
+                <h5>Rejected</h5>
+                <h2>0</h2>
             </div>
         </div>
     </div>
-</body>
-</html>
-<!-- Hello -->
+
+    <!-- DataTable -->
+    <div class="card p-3">
+        <h5 class="fw-bold text-danger mb-3">Recent Complaint Activities</h5>
+        <div class="table-responsive">
+            <table id="complaintsTable" class="table table-hover table-striped">
+                <thead style="background: #FF8A73; color: #fff;">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>AAdhaar</th>
+                        <th>Submission Date</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($allComplain as $index => $complain)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $complain->complainant_name }}</td>
+                        <td>{{ $complain->complainant_phone }}</td>
+                        <td>{{ $complain->complainant_aadhaar }}</td>
+                        <td>{{ $complain->created_at->format('d-m-Y') }}</td>
+                        <td>
+                          <a href="{{ route('user.setails', [$complain->secure_id]) }}" class="btn btn-sm btn-primary">View</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- DataTables CSS & JS -->
+
+
+@endsection

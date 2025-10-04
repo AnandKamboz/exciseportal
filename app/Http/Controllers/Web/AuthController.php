@@ -110,9 +110,79 @@ class AuthController extends Controller
     //     ]);
     // }
 
+    // public function verifyOtp(Request $request)
+    // {
+    //     $request->validate([
+    //         'mobile' => 'required|numeric|digits:10',
+    //         'otp' => 'required|numeric|digits:6',
+    //     ]);
+
+    //     $mobile = $request->mobile;
+    //     $otpInput = $request->otp;
+
+    //     $otpRecord = Otp::where('mobile', $mobile)
+    //         ->where('otp', $otpInput)
+    //         ->where('is_used', false)
+    //         ->where('expires_at', '>=', Carbon::now())
+    //         ->latest()
+    //         ->first();
+
+    //     if (!$otpRecord) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Invalid or expired OTP'
+    //         ]);
+    //     }
+
+    //     $otpRecord->update(['is_used' => true]);
+
+    //     $recordExists = Complainant::where('complainant_phone', $mobile)
+    //         ->where('is_completed', 1)
+    //         ->first();
+        
+
+    //     if ($recordExists) {
+    //         $user = User::where('mobile', $mobile)->first();
+    //         if ($user) {
+    //             auth()->login($user);
+    //         }
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'redirect_url' => route('user.dashboard'), 
+    //         ]);
+    //     }
+
+
+    //     do {
+    //         $secureId = Str::random(32);
+    //     } while (User::where('secure_id', $secureId)->exists());
+
+    //     $user = User::firstOrCreate(
+    //         ['mobile' => $mobile],
+    //         ['secure_id' => $secureId]
+    //     );
+
+    //     if ($user->wasRecentlyCreated) {
+    //         $defaultRole = RoleGroup::where('role_name', 'user')->first();
+    //         if ($defaultRole) {
+    //             $user->roles()->attach($defaultRole->id);
+    //         }
+    //     }
+
+    //     auth()->login($user);
+
+    //     $request->session()->put('mobile', $mobile);
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'redirect_url' => route('complainant'),
+    //         'message' => 'Login successful!',
+    //     ]);
+    // }
+
     public function verifyOtp(Request $request)
     {
-        
         $request->validate([
             'mobile' => 'required|numeric|digits:10',
             'otp' => 'required|numeric|digits:6',
@@ -121,6 +191,7 @@ class AuthController extends Controller
         $mobile = $request->mobile;
         $otpInput = $request->otp;
 
+        // Check OTP
         $otpRecord = Otp::where('mobile', $mobile)
             ->where('otp', $otpInput)
             ->where('is_used', false)
@@ -135,26 +206,27 @@ class AuthController extends Controller
             ]);
         }
 
+        // Mark OTP as used
         $otpRecord->update(['is_used' => true]);
 
+        // Check if mobile exists in complainants table and is completed
         $recordExists = Complainant::where('complainant_phone', $mobile)
             ->where('is_completed', 1)
-            ->first();
-        
+            ->exists();
 
         if ($recordExists) {
-            $user = User::where('mobile', $mobile)->first();
-            if ($user) {
-                auth()->login($user);
-            }
+            // Login the user if exists
+            $user = User::firstOrCreate(['mobile' => $mobile]);
+            auth()->login($user);
 
             return response()->json([
                 'success' => true,
-                'redirect_url' => route('user.dashboard'), 
+                'redirect_url' => route('user.dashboard'),
+                'message' => 'Login successful!',
             ]);
         }
 
-
+        // If no completed complainant exists, create or get user
         do {
             $secureId = Str::random(32);
         } while (User::where('secure_id', $secureId)->exists());
@@ -164,6 +236,7 @@ class AuthController extends Controller
             ['secure_id' => $secureId]
         );
 
+        // Assign default role if new user
         if ($user->wasRecentlyCreated) {
             $defaultRole = RoleGroup::where('role_name', 'user')->first();
             if ($defaultRole) {
@@ -171,8 +244,10 @@ class AuthController extends Controller
             }
         }
 
+        // Log in the user
         auth()->login($user);
 
+        // Save mobile in session for later use
         $request->session()->put('mobile', $mobile);
 
         return response()->json([
@@ -181,4 +256,5 @@ class AuthController extends Controller
             'message' => 'Login successful!',
         ]);
     }
+
 }

@@ -4,11 +4,23 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Complainant;
+
+
 
 class UserDashboard extends Controller
 {
     public function userDashboard()
     {
-       return view("users.dashboard");
+        if (!Auth::check()) {
+          return redirect('/');
+        }
+        
+        $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+       return view("users.dashboard",compact('allComplain'));
     }
 }

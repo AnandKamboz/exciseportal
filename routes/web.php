@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\UserDashboard;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\ComplainantController;
+use App\Http\Controllers\Web\LogoutController;
+use App\Http\Controllers\Web\UserComplaintController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,5 +22,8 @@ Route::post('/complaints/step-third', [ComplainantController::class, 'storeThird
 Route::post('/complaints/step-fourth', [ComplainantController::class, 'store'])->name('complaints.store');
 Route::get('/user-data', [ComplainantController::class, 'getUserData'])->name('user.data');
 Route::get('/user/dashboard', [UserDashboard::class, 'userDashboard'])->name('user.dashboard');
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show'])->name('user.setails');
 
 
