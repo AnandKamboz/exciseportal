@@ -18,6 +18,7 @@ class DetcController extends Controller
 
     public function show($secure_id)
     {
+        
         $complain = Complainant::where('secure_id', $secure_id)->firstOrFail();
         $complainantDistrictName = optional(
             DB::table('districts')->where('id', $complain->complainant_dist_id)->first()
@@ -28,4 +29,26 @@ class DetcController extends Controller
         )->name ?? 'Not Found';
         return view('detc.show', compact('complain','complainantDistrictName','againstDistrictId'));
     }
+
+    public function updateComplaintStatus(Request $request, $secure_id)
+    {
+       
+        $request->validate([
+            'status' => 'required|string|in:forward_to_inspector,rejected',
+            'remarks' => 'required|string|max:1000',
+        ]);
+
+        //  dd('dddss!');
+
+        // Find complaint by secure_id
+        $complaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
+
+        $complaint->update([
+            'detc_status' => $request->status,
+            'detc_remarks' => $request->remarks,
+        ]);
+
+        return redirect()->back()->with('success', 'Complaint status updated successfully!');
+    }
+
 }

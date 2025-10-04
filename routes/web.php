@@ -28,8 +28,12 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show'])->name('user.setails');
 
 
-
 Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
 Route::get('detc/complaint/{secure_id}', [DetcController::class, 'show'])->name('detc.details');
+
+
+// Here 
+Route::post('/user/complaint/update/{secure_id}', [DetcController::class, 'updateComplaintStatus'])
+    ->name('user.updateComplaintStatus');
 
 

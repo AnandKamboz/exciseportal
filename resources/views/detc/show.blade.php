@@ -79,4 +79,89 @@
     </div>
 </div>
 
+
+<!-- Form Here -->
+   <hr>
+    @if($complain->detc_status == null)
+        <div class="card p-4 mb-4" style="background: #FFF8F0;">
+            <h5 class="fw-bold text-primary mb-3">Update Complaint Status</h5>
+            <form action="{{ route('user.updateComplaintStatus', $complain->secure_id) }}" method="POST">
+                @csrf
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="status" class="form-label"><strong>Status</strong></label>
+                        <select name="status" id="status" class="form-select" required>
+                            <option value="" disabled selected>Select Action</option>
+                            <option value="forward_to_inspector">Forward to Inspector</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="remarks" class="form-label"><strong>Remarks</strong></label>
+                        <textarea name="remarks" id="remarks" class="form-control" rows="3" placeholder="Enter remarks here..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm">Update Status</button>
+                </div>
+            </form>
+        </div>
+    @else
+        <div class="card shadow-sm mb-3" style="border-radius: 10px; background: #FFF9F3;">
+                <div class="card-header py-2" style="background: #FFDAB9; border-radius: 10px 10px 0 0;">
+                    <h6 class="mb-0 fw-bold text-primary">Complaint Status</h6>
+                </div>
+
+                <div class="card-body py-2 px-3">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Status:</strong></p>
+                            @if($complain->detc_status == 'forward_to_inspector')
+                                <span class="badge bg-info text-dark py-1 px-2" style="font-size: 0.85rem; border-radius: 6px;">
+                                    Forward to Inspector
+                                </span>
+                            @elseif($complain->detc_status == 'rejected')
+                                <span class="badge bg-danger py-1 px-2" style="font-size: 0.85rem; border-radius: 6px;">
+                                    Rejected
+                                </span>
+                            @else
+                                <span class="badge bg-secondary py-1 px-2" style="font-size: 0.85rem; border-radius: 6px;">
+                                    Unknown
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Remarks:</strong></p>
+                            <div class="p-2" style="background: #FFF3E0; border-radius: 6px; min-height: 50px; font-size: 0.9rem;">
+                                {{ $complain->detc_remarks ?? 'No remarks provided' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    @endif
+
+
+
+   
+
+<!-- Include this at the bottom of your Blade, before </body> -->
+    @if(session('success'))
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    @endif
+
+
+
 @endsection

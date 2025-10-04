@@ -40,6 +40,9 @@ return new class extends Migration
 
             $table->string('complaint_id')->unique();
             $table->integer('against_district_id')->nullable();
+            $table->string('detc_status')->nullable();
+            $table->string('detc_remarks')->nullable();
+
             $table->boolean('is_completed')->default(false);
 
             $table->timestamps();
