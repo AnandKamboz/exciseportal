@@ -144,6 +144,39 @@
             </div>
     @endif
 
+    <hr>
+    <!-- <div class="text-center">
+        <button type="button" class="btn btn-proceed mt-2 mb-2">
+            <i class="bi bi-arrow-right-circle me-1"></i> Proceed
+        </button>
+    </div> -->
+
+    <div class="text-center">
+        <a href="{{ route('inspector.feedback') }}" class="btn btn-proceed mt-2 mb-2">
+            <i class="bi bi-arrow-right-circle me-1"></i> Proceed
+        </a>
+    </div>
+
+<style>
+.btn-proceed {
+  background: linear-gradient(135deg, #FF8A73, #FF3200);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(255, 100, 50, 0.3);
+}
+.btn-proceed:hover {
+  background: linear-gradient(135deg, #FF3200, #FF8A73);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(255, 100, 50, 0.4);
+  color: #fff;
+}
+</style>
+
+
 
 
    

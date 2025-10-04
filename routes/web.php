@@ -33,7 +33,6 @@ Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show
 Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
 Route::get('detc/complaint/{secure_id}', [DetcController::class, 'show'])->name('detc.details');
 
-
 // Here 
 Route::post('/user/complaint/update/{secure_id}', [DetcController::class, 'updateComplaintStatus'])
     ->name('user.updateComplaintStatus');
@@ -43,6 +42,8 @@ Route::post('/user/complaint/update/{secure_id}', [DetcController::class, 'updat
 // Inspector routes
 Route::get('/inspector/dashboard', [InspectorDashboard::class, 'dashboard'])->name('inspector.dashboard');
 Route::get('inspector/complaint/{secure_id}', [InspectorDashboard::class, 'show'])->name('inspector.details');
+Route::get('/inspector/feedback', [InspectorDashboard::class, 'inspectorFedback'])->name('inspector.feedback');
+
 
 
 

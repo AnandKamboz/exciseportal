@@ -31,4 +31,8 @@ class InspectorDashboard extends Controller
         return view('inspector.show', compact('complain','complainantDistrictName','againstDistrictId'));
     }
 
+    public function inspectorFedback(Request $request)
+    {
+        return view('inspector.feedback');
+    }
 }
