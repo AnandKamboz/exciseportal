@@ -174,15 +174,33 @@
           </div>
 
           <div class="text-center mt-4">
-            <button type="submit" class="btn btn-proceed px-4">
+            <!-- <button type="submit" class="btn btn-proceed px-4">
               <i class="bi bi-check-circle me-1"></i> Submit Report
-            </button>
+            </button> -->
+            <button type="submit" class="btn btn-proceed px-4">
+    <i class="bi bi-check-circle me-1"></i> Submit Report
+</button>
+
           </div>
 
         </form>
       </div>
     </div>
 @endif
+
+<style>
+  .btn-proceed {
+    background-color: #0d6efd; /* Bootstrap primary color */
+    color: #fff;               /* Text color white */
+    border: 1px solid #0d6efd;
+}
+
+.btn-proceed:hover {
+    background-color: #0b5ed7; /* Thicker shade on hover */
+    border-color: #0b5ed7;
+}
+
+</style>
 
 
 
