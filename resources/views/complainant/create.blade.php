@@ -169,7 +169,7 @@
     <div class="card">
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
-                 <h5>Details of Complanint/Informer</h5>
+                 <h5>Details of Complainant / Informer</h5>
                 <div class="mb-3">
                     <label for="complaint_type" class="form-label">
                         Complaint Type <span class="text-danger">*</span>
@@ -256,7 +256,7 @@
 
                 <div class="mt-2">
                     <label for="document_upload" class="form-label">
-                        Upload Document <span class="text-danger">*</span>
+                        Upload Document (ID Proof)<span class="text-danger">*</span>
                     </label>
                     <input type="file" name="document_upload" id="document_upload" 
                         class="form-control mb-2" 
@@ -365,7 +365,7 @@
 
                     <div class="mb-2">
                         <label for="estimate_tax_amount" class="form-label">
-                            Estimate Amount of Tax (in Rupees) <span class="text-danger">*</span>
+                            Estimated amount of Tax Evasion (in Rupees) <span class="text-danger">*</span>
                         </label>
                         <input type="number" name="estimate_tax_amount" id="estimate_tax_amount" 
                             class="form-control" placeholder="Enter estimated tax amount" min="0" step="any">
@@ -377,7 +377,7 @@
                       <div class="col-half">
                          <div class="mb-3">
                             <label for="document" class="form-label">
-                                Upload Document <span class="text-danger">*</span>
+                                Upload Proof Document <span class="text-danger">*</span>
                             </label>
                             <input type="file" name="document" id="document" 
                                 class="form-control" accept=".jpg,.jpeg,.png,.pdf">
