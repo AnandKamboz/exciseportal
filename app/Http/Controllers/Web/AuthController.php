@@ -231,7 +231,6 @@ class AuthController extends Controller
         ['secure_id' => $secureId]
     );
 
-    // Assign default role if new user
     if ($user->wasRecentlyCreated) {
         $defaultRole = RoleGroup::where('role_name', 'user')->first();
         if ($defaultRole) {
@@ -242,37 +241,37 @@ class AuthController extends Controller
     auth()->login($user);
     $request->session()->put('mobile', $mobile);
 
-    // Role check
-    $role = $user->roles()->pluck('role_name')->first(); // assume one role
+    $role = $user->roles()->pluck('role_name')->first(); 
 
-    // Existing completed complainant record check
-    // $recordExists = Complainant::where('complainant_phone', $mobile)
-    //     ->where('is_completed', 1)
-    //     ->exists();
+    $recordExists = Complainant::where('complainant_phone', $mobile)
+        ->where('is_completed', 1)
+        ->exists();
 
     // if ($role === 'detc') {
     //     $redirectUrl = route('detc.dashboard');
+    // } elseif ($role === 'excise inspector') {
+    //     $redirectUrl = route('inspector.dashboard'); 
     // } elseif ($recordExists || $role === 'user') {
     //     $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
     // } else {
     //     $redirectUrl = route('home'); 
     // }
 
-   
+        // if ($role === 'detc') {
+        //     $redirectUrl = route('detc.dashboard');
+        // } elseif ($role === 'excise inspector') {
+        //     $redirectUrl = route('inspector.dashboard'); 
+        // } else {
+        //     $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
+        // } 
+        if ($role === 'detc') {
+            $redirectUrl = route('detc.dashboard');
+        } elseif ($role === 'excise inspector') {
+            $redirectUrl = route('inspector.dashboard'); 
+        } else {
+            $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
+        }
 
-    $recordExists = Complainant::where('complainant_phone', $mobile)
-        ->where('is_completed', 1)
-        ->exists();
-
-    if ($role === 'detc') {
-        $redirectUrl = route('detc.dashboard');
-    } elseif ($role === 'excise inspector') {
-        $redirectUrl = route('inspector.dashboard'); 
-    } elseif ($recordExists || $role === 'user') {
-        $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
-    } else {
-        $redirectUrl = route('home'); 
-    }
 
     return response()->json([
         'success' => true,

@@ -323,7 +323,7 @@
                 <div class="row">
                     <div class="col-half mb-3">
                         <label for="address_detail" class="form-label">
-                            Address <span class="text-danger">*</span>
+                            Firm Address <span class="text-danger">*</span>
                         </label>
                         <textarea name="address_detail" id="address_detail" 
                             class="form-control" rows="3" placeholder="Enter Address"

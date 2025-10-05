@@ -136,6 +136,8 @@
               <label class="form-label fw-semibold">Remarks <span class="text-danger">*</span></label>
               <textarea name="remarks" id="remarks" rows="1" class="form-control" placeholder="Enter remarks..." required></textarea>
             </div>
+
+            
           </div>
 
           <div id="acceptSection" class="mt-4 d-none">
@@ -145,12 +147,12 @@
                 <select name="proposed_action" id="proposed_action" class="form-select">
                   <option value="" selected disabled>Select Action</option>
                   <option value="conduct raid">Conduct Raid</option>
-                  <option value="search action">Search Action</option>
+                  <option value="search action">Search Operations</option>
                 </select>
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-semibold">Commodities Reported <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">Commodities Suspected <span class="text-danger">*</span></label>
                 <input type="text" name="commodities_reported" id="commodities_reported" class="form-control" placeholder="Enter commodities..." />
               </div>
 
@@ -159,14 +161,14 @@
                 <input type="number" name="estimated_value" id="estimated_value" class="form-control" placeholder="Enter estimated value..." />
               </div>
 
-              <div class="col-12">
-                <label class="form-label fw-semibold">Place Where Goods Are to Be Searched <span class="text-danger">*</span></label>
-                <textarea name="place_to_search" id="place_to_search" rows="3" class="form-control" placeholder="Enter place details..."></textarea>
+               <div class="col-6">
+                <label class="form-label fw-semibold">Upload File <span class="text-danger">*</span></label>
+                <input type="file" name="upload_file" id="upload_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-semibold">Upload File <span class="text-danger">*</span></label>
-                <input type="file" name="upload_file" id="upload_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
+                <label class="form-label fw-semibold">Place where goods are suspected to be secreted <span class="text-danger">*</span></label>
+                <textarea name="place_to_search" id="place_to_search" rows="3" class="form-control" placeholder="Enter place details..."></textarea>
               </div>
             </div>
           </div>
