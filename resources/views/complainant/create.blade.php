@@ -172,7 +172,7 @@
                  <h5>Details of Complainant / Informer</h5>
                 <div class="mb-3">
                     <label for="complaint_type" class="form-label">
-                        Complaint Type <span class="text-danger">*</span>
+                        Complaint Category <span class="text-danger">*</span>
                     </label>
                     <select name="complaint_type" id="complaint_type" class="form-select" required>
                         <option value="" selected disabled>Select Complaint Type</option>

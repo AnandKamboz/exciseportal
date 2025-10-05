@@ -11,6 +11,7 @@
         <div class="row g-3">
             <div class="col-md-6">
                 <p><strong>Complaint ID:</strong> {{ $complain->complaint_id }}</p>
+                
                 <p><strong>Complainant Name:</strong> {{ ucfirst($complain->complainant_name) }}</p>
                 <p><strong>Phone:</strong> {{ $complain->complainant_phone }}</p>
                 <p><strong>Email:</strong> {{ $complain->complainant_email }}</p>
@@ -18,6 +19,7 @@
             </div>
 
             <div class="col-md-6">
+               <p><strong>Complaint Date:</strong> {{ $complain->created_at->format('d-m-Y') }}</p>
                 <p><strong>Complainant District:</strong> {{ $complainantDistrictName }}</p>
                 <p><strong>Against District ID:</strong> {{ $againstDistrictId }}</p>
                 <p><strong>Complaint Type:</strong> {{ strtoupper($complain->complaint_type) }}</p>
@@ -66,12 +68,12 @@
 
         <hr>
 
-        <div class="row g-3">
+        <!-- <div class="row g-3">
             <div class="col-md-6">
                 <p><strong>Created At:</strong> {{ $complain->created_at->format('d-m-Y H:i') }}</p>
                 <p><strong>Updated At:</strong> {{ $complain->updated_at->format('d-m-Y H:i') }}</p>
             </div>
-        </div>
+        </div> -->
 
         <div class="mt-3">
             <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-danger">Back to Dashboard</a>
