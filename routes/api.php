@@ -39,4 +39,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/inspector/dashboard',[InspectorDashboardController::class, 'dashboard']);
     Route::get('/inspector/complaint/{secure_id}',[InspectorDashboardController::class, 'showComplaint']);
 
+    Route::post('/inspector/inspection-report',[InspectorController::class, 'storeInspectionReport']);
+
 });
