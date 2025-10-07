@@ -11,9 +11,16 @@ class UserDashboardController extends Controller
 {
     public function userDashboard(Request $request)
     {
+        // $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
+
         $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        ->with(['complainantDistrict:id,name', 'againstDistrict:id,name'])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        
 
         return response()->json([
             'status' => true,
