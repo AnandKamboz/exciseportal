@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\ComplainantController;
 use App\Http\Controllers\Api\LogoutController;
+use App\Http\Controllers\Api\UserDashboardController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -24,5 +25,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/districts', [ComplainantController::class, 'getAllDistricts']);
     Route::post('/complaints/step-third', [ComplainantController::class, 'storeThirdStep']);
     Route::post('/complaints/store', [ComplainantController::class, 'store']);
+
+    // Dashboard API
+    Route::get('/user/dashboard', [UserDashboardController::class, 'userDashboard']);
+
+
+
+
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 });
