@@ -181,7 +181,6 @@ class ComplainantController extends Controller
 
     public function storeThirdStep(Request $request)
     {
-        dd('sdsdsnds!');
         $validator = Validator::make($request->all(), [
             'fraud_check' => 'required|in:1,0',
         ]);
