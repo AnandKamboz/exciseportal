@@ -37,5 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/complaint/{secure_id}/update-status', [DetcController::class, 'updateComplaintStatus']);
 
     Route::get('/inspector/dashboard',[InspectorDashboardController::class, 'dashboard']);
+    Route::get('/inspector/complaint/{secure_id}',[InspectorDashboardController::class, 'showComplaint']);
 
 });
