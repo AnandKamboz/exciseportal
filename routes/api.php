@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ComplainantController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\UserDashboardController;
 use App\Http\Controllers\Api\DetcController;
+use App\Http\Controllers\Api\InspectorDashboardController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -33,7 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Detc Routes 
     Route::get('/detc/dashboard', [DetcController::class, 'getDashboardData']);
     Route::get('detc/complaint/{secure_id}', [DetcController::class, 'getComplaintDetails']);
-    Route::post('/complaint/{secure_id}/update-status', [DetcController::class, 'updateComplaintStatus']
-);
+    Route::post('/complaint/{secure_id}/update-status', [DetcController::class, 'updateComplaintStatus']);
+
+    Route::get('/inspector/dashboard',[InspectorDashboardController::class, 'dashboard']);
 
 });
