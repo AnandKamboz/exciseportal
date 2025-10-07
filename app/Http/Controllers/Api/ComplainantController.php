@@ -84,7 +84,7 @@ class ComplainantController extends Controller
     }
 
     // Get All Districts - API
-    public function getAllDistrictsApi(Request $request)
+    public function getAllDistricts(Request $request)
     {
         $districts = District::select('id', 'name')->orderBy('name')->get();
 
