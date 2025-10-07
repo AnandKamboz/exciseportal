@@ -89,7 +89,7 @@ class ComplainantController extends Controller
         $districts = District::select('id', 'name')->orderBy('name')->get();
 
         return response()->json([
-            'status' => 'success',
+            'status' => true,
             'message' => 'All districts fetched successfully',
             'data' => $districts
         ], 200);
