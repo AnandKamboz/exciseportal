@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class ComplainantController extends Controller
