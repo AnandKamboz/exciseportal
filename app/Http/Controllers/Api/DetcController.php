@@ -92,7 +92,6 @@ class DetcController extends Controller
 
     public function updateComplaintStatus(Request $request, $secure_id)
     {
-        dd($secure_id);
         try {
             $validator = \Validator::make($request->all(), [
                 'status'  => 'required|string',
