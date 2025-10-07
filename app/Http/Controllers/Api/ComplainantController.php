@@ -24,7 +24,7 @@ class ComplainantController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'error',
+                'status' => 0,
                 'message' => 'Validation failed.',
                 'errors' => $validator->errors()  
             ], 422);
@@ -34,7 +34,7 @@ class ComplainantController extends Controller
 
         if (!$userMobile) {
             return response()->json([
-                'status' => 'error',
+                'status' => 0,
                 'message' => 'User mobile not found.',
             ], 400);
         }
@@ -51,7 +51,7 @@ class ComplainantController extends Controller
             $existingComplaint->save();
 
             return response()->json([
-                'status' => 'updated',
+                'status' => 1,
                 'message' => 'Existing complaint updated successfully.',
                 'secure_id' => $existingComplaint->secure_id,
                 'complaint_id' => $existingComplaint->complaint_id,
@@ -74,7 +74,7 @@ class ComplainantController extends Controller
             ]);
 
             return response()->json([
-                'status' => 'created',
+                'status' => 1,
                 'message' => 'New complaint created successfully.',
                 'secure_id' => $complaint->secure_id,
                 'complaint_id' => $complaint->complaint_id,
