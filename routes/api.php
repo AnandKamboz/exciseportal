@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\ComplainantController;
+use App\Http\Controllers\Api\LogoutController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -23,11 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/districts', [ComplainantController::class, 'getAllDistricts']);
     Route::post('/complaints/step-third', [ComplainantController::class, 'storeThirdStep']);
     Route::post('/complaints/store', [ComplainantController::class, 'store']);
-
-
-
-
-
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 
     // Route::post('/complaints/step-first-x9f2kq', [ComplainantController::class, 'storeFirstStep']);
