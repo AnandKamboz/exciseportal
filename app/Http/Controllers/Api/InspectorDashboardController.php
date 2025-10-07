@@ -84,7 +84,7 @@ class InspectorDashboardController extends Controller
 
     public function storeInspectionReport(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'source_grading'         => 'required|string',
             'information_grading'    => 'required|string',
