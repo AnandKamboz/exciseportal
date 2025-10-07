@@ -132,8 +132,11 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: linear-gradient(rgb(0 0 0 / 50%), rgb(0 0 0 / 50%)),
-                url(/assets/images/banner/IT-Act.png) center / cover no-repeat;
+            /* background: linear-gradient(rgb(0 0 0 / 50%), rgb(0 0 0 / 50%)),
+                url(/assets/images/banner/IT-Act.png) center / cover no-repeat; */
+
+                background: linear-gradient(rgb(0 0 0 / 50%), rgb(0 0 0 / 50%)),
+                     url('{{ asset('assets/images/banner/IT-Act.png') }}') center / cover no-repeat;
 
 
 
