@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/complaints/step-second', [ComplainantController::class, 'storeSecondStep']);
     Route::get('/districts', [ComplainantController::class, 'getAllDistricts']);
     Route::post('/complaints/step-third', [ComplainantController::class, 'storeThirdStep']);
+    Route::post('/complaints/store', [ComplainantController::class, 'store']);
 
 
 

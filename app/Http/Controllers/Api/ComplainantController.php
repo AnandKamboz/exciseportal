@@ -227,7 +227,76 @@ class ComplainantController extends Controller
         ], 200);
     }
 
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'firm_name'           => 'required|string|max:255',
+            'firm_address'        => 'required|string|max:500',
+            'proof_document'      => 'required|file|mimes:jpg,jpeg,png,pdf|max:200',
+            'remarks'             => 'required|string|max:1000',
+            'gstin'               => 'required|string|max:15',
+            'against_district_id' => 'required',
+            'estimate_tax_amount' => 'required|numeric|min:1',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validation failed',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        $data = $validator->validated();
+
+        $secureId = Complainant::where('complainant_phone', Auth::user()->mobile)
+                                ->where('is_completed', 0)
+                                ->value('secure_id');
+
+        $complaint = Complainant::where('secure_id', $secureId)->first();
+
+        if (!$complaint) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Complaint not found.'
+            ], 404);
+        }
+
+        if ($complaint->is_completed == 1) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Complaint already submitted.'
+            ], 400);
+        }
+
+        if ($request->hasFile('proof_document')) {
+            if ($complaint->proof_document && Storage::disk('public')->exists($complaint->proof_document)) {
+                Storage::disk('public')->delete($complaint->proof_document);
+            }
+
+            $file = $request->file('proof_document');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs(
+                'complaints/' . $complaint->complaint_id,
+                $fileName,
+                'public'
+            );
+
+            $data['proof_document'] = $path;
+        } else {
+            unset($data['proof_document']);
+        }
+
+        $data['is_completed'] = 1;
+        $data['detc_updated_flag'] = 1;
+        $complaint->update($data);
+
+        return response()->json([
+            'status'       => true,
+            'message'      => 'Step final saved. Complaint submitted successfully!',
+            'complaint_id' => $complaint->complaint_id,
+        ], 200);
+    }
 
 
 
