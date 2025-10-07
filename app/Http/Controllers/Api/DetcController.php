@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Complainant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 class DetcController extends Controller
 {
@@ -84,6 +86,56 @@ class DetcController extends Controller
                 'status' => false,
                 'message' => 'Something went wrong',
                 'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updateComplaintStatus(Request $request, $secure_id)
+    {
+        try {
+            $validator = \Validator::make($request->all(), [
+                'status'  => 'required|string',
+                'remarks' => 'required|string|max:1000',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Validation failed',
+                    'errors'  => $validator->errors(),
+                ], 422);
+            }
+
+            $complaint = Complainant::where('secure_id', $secure_id)->first();
+
+            if (!$complaint) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Complaint not found',
+                ], 404);
+            }
+
+            $complaint->update([
+                'detc_status' => $request->status,
+                'detc_remarks' => $request->remarks,
+            ]);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Complaint status updated successfully',
+                'data'    => [
+                    'secure_id'     => $complaint->secure_id,
+                    'detc_status'   => $complaint->detc_status,
+                    'detc_remarks'  => $complaint->detc_remarks,
+                    'updated_at'    => $complaint->updated_at,
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage(),
             ], 500);
         }
     }
