@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Complainant;
+use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
 {
     public function userDashboard(Request $request)
     {
-        $allComplain = Complainant::where('complainant_phone', $request->user()->mobile)
+        $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
             ->orderBy('created_at', 'desc')
             ->get();
 
