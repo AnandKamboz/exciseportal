@@ -20,8 +20,6 @@ class UserDashboardController extends Controller
         ->orderBy('created_at', 'desc')
         ->get();
 
-        
-
         return response()->json([
             'status' => true,
             'message' => 'All complaints fetched successfully',

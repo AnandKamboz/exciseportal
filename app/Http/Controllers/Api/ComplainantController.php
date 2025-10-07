@@ -298,10 +298,31 @@ class ComplainantController extends Controller
         ], 200);
     }
 
+    // public function getComplaintBySecureId(Request $request, $secure_id)
+    // { 
+    //     $complaint = Complainant::where('secure_id', $secure_id)
+    //         ->where('complainant_phone', auth::user()->mobile)
+    //         ->first();
+
+    //     if (!$complaint) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Complaint not found'
+    //         ], 404);
+    //     }
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Complaint fetched successfully',
+    //         'data' => $complaint
+    //     ], 200);
+    // }
+
     public function getComplaintBySecureId(Request $request, $secure_id)
-    { 
+    {
         $complaint = Complainant::where('secure_id', $secure_id)
-            ->where('complainant_phone', auth::user()->mobile)
+            ->where('complainant_phone', Auth::user()->mobile)
+            ->with(['complainantDistrict:id,name', 'againstDistrict:id,name'])
             ->first();
 
         if (!$complaint) {
@@ -311,10 +332,18 @@ class ComplainantController extends Controller
             ], 404);
         }
 
+        // Complaint data as array
+        $data = $complaint->toArray();
+
+        // Add district names to response
+        $data['complainant_district_name'] = optional($complaint->complainantDistrict)->name;
+        $data['against_district_name'] = optional($complaint->againstDistrict)->name;
+
         return response()->json([
             'status' => true,
             'message' => 'Complaint fetched successfully',
-            'data' => $complaint
+            'data' => $data
         ], 200);
     }
+
 }
