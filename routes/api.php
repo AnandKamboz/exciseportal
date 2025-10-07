@@ -18,6 +18,7 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep']);
+      Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep']);
 
 
 
@@ -26,4 +27,3 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::post('/complaints/final-step-t6y9dw', [ComplainantController::class, 'store']);
     // Route::get('/districts', [DistrictController::class, 'getAllDistricts']);
 });
-  Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep']);

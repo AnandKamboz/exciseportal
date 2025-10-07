@@ -19,13 +19,6 @@ class AuthController extends Controller
             'mobile' => 'required|numeric|digits:10',
         ] );
 
-        // $complaint = Complainant::where( 'mobile', $request->mobile )->first();
-
-        // if ( $complaint && $complaint->is_completed == 1 ) {
-        //     return response()->json( [
-        //         'message' => 'Complaint already submitted for this mobile number.'
-        // ], 403 );
-        // }
 
         if ( env( 'APP_ENV' ) === 'local' ) {
             $otp = '111111';
@@ -39,9 +32,6 @@ class AuthController extends Controller
             'expires_at' => Carbon::now()->addMinutes( 5 ),
         ] );
 
-        // return response()->json( [
-        //     'message' => 'OTP sent successfully',
-        // ] );
 
         return response()->json([
             'success' => true,
@@ -146,7 +136,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('api_token')->plainTextToken;
 
-        $recordExists = Complainant::where('mobile', $request->mobile)
+        $recordExists = Complainant::where('complainant_phone', $request->mobile)
             ->where('is_completed', 1)
             ->exists();
 
