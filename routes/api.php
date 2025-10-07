@@ -18,7 +18,6 @@ Route::get('/test', function () {
 Route::post('/send-otp', [AuthController::class, 'sendOtp']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep']);
     Route::post('/complaints/step-second', [ComplainantController::class, 'storeSecondStep']);
@@ -26,5 +25,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/complaints/step-third', [ComplainantController::class, 'storeThirdStep']);
     Route::post('/complaints/store', [ComplainantController::class, 'store']);
     Route::get('/user/dashboard', [UserDashboardController::class, 'userDashboard']);
+   
+    Route::get('user/complaint/{secure_id}', [ComplainantController::class, 'getComplaintBySecureId']);
+    
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
 });
