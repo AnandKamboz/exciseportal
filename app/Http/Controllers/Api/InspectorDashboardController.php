@@ -145,4 +145,41 @@ class InspectorDashboardController extends Controller
             ], 500);
         }
     }
+
+    public function inspectorFeedback(Request $request)
+    {
+        try {
+            $secure_id = $request->query('secure_id');
+
+            if (!$secure_id) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'secure_id is required',
+                ], 400);
+            }
+
+            $inspectionReport = InspectionReport::where('complain_secure_id', $secure_id)->first();
+
+            if (!$inspectionReport) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Inspection report not found',
+                ], 404);
+            }
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Inspection report fetched successfully',
+                'data'    => $inspectionReport,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }
