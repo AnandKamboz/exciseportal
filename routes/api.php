@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/complaints/store', [ComplainantController::class, 'store']);
     Route::get('/user/dashboard', [UserDashboardController::class, 'userDashboard']);
     Route::get('user/complaint/{secure_id}', [ComplainantController::class, 'getComplaintBySecureId']);
-    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+    Route::post('/logout', [LogoutController::class, 'logout']);
 
 
     // Detc Routes 
