@@ -30,7 +30,7 @@ class ComplainantController extends Controller
             ], 422);
         }
 
-        $userMobile = trim(Auth::guard('api')->user()->mobile ?? $request->mobile);
+        $userMobile = trim(Auth::user()->mobile ?? $request->mobile);
 
         if (!$userMobile) {
             return response()->json([
