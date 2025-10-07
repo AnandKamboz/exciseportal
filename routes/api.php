@@ -16,9 +16,13 @@ Route::get('/test', function () {
 Route::post('/send-otp', [AuthController::class, 'sendOtp']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 
+
 Route::middleware('auth:sanctum')->group(function () {
-    // Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep']);
-      Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep']);
+    Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep']);
+    Route::post('/complaints/step-second', [ComplainantController::class, 'storeSecondStep']);
+    Route::get('/districts', [DistrictController::class, 'getAllDistricts']);
+
+
 
 
 

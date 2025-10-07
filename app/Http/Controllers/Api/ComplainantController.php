@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Models\District;
 
 
 
@@ -81,6 +82,108 @@ class ComplainantController extends Controller
             ], 201);
         }
     }
+
+    // Get All Districts - API
+    public function getAllDistrictsApi(Request $request)
+    {
+        $districts = District::select('id', 'name')->orderBy('name')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'All districts fetched successfully',
+            'data' => $districts
+        ], 200);
+    }
+
+    // Get All Districts - API
+
+    public function storeSecondStepApi(Request $request)
+   {
+    // 1️⃣ Validate request
+    $validator = Validator::make($request->all(), [
+        'complainant_name'     => 'required|string|max:255',
+        'complainant_email'    => 'required|email|unique:users,email,' . (Auth::guard('api')->id() ?? 0),
+        'complainant_aadhaar'  => 'required|digits:12',
+        'complainant_address'  => 'required|string',
+        'complainant_dist_id'  => 'required|exists:districts,id',  // assuming districts table
+        'upload_document'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120', // 5MB max
+    ]);
+
+    // 2️⃣ Return validation errors if any
+    if ($validator->fails()) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'Validation failed',
+            'errors'  => $validator->errors()
+        ], 422);
+    }
+
+    $data = $validator->validated();
+
+    // 3️⃣ Get authenticated user's mobile
+    $userMobile = Auth::user()->mobile ?? $request->mobile;
+    if (!$userMobile) {
+        return response()->json([
+            'status' => false,
+            'message' => 'User mobile not found',
+        ], 400);
+    }
+
+    $data['complainant_phone'] = $userMobile;
+    $data['is_fraud_related'] = false;
+
+    // 4️⃣ Find existing incomplete complaint
+    $complaint = Complainant::where('complainant_phone', $userMobile)
+        ->where('is_completed', 0)
+        ->first();
+
+    if ($complaint) {
+        $complaint->update($data);
+    } else {
+        // Generate unique IDs
+        do {
+            $complaintId = strtoupper('CMP-' . rand(100000, 999999));
+        } while (Complainant::where('complaint_id', $complaintId)->exists());
+
+        do {
+            $secureId = bin2hex(random_bytes(16));
+        } while (Complainant::where('secure_id', $secureId)->exists());
+
+        $data['complaint_id'] = $complaintId;
+        $data['secure_id']    = $secureId;
+        $data['is_completed'] = false;
+
+        $complaint = Complainant::create($data);
+    }
+
+    // 5️⃣ Handle file upload if exists
+    if ($request->hasFile('upload_document')) {
+        $file = $request->file('upload_document');
+        $fileName = time() . '_' . $file->getClientOriginalName(); // make unique
+        $path = $file->storeAs('complaints/' . $complaint->complaint_id, $fileName, 'public');
+
+        $complaint->upload_document = $path;
+        $complaint->save();
+    }
+
+    // 6️⃣ Update User details
+    User::where('mobile', $userMobile)->update([
+        'name'        => $data['complainant_name'],
+        'email'       => $data['complainant_email'],
+        'aadhaar'     => $data['complainant_aadhaar'],
+        'address'     => $data['complainant_address'],
+        'district_id' => $data['complainant_dist_id'],
+        'updated_at'  => now(),
+    ]);
+
+    // 7️⃣ Return JSON response
+    return response()->json([
+        'status'    => true,
+        'message'   => 'Step 2 saved successfully',
+        'complaint' => $complaint
+    ], 200);
+}
+
 
 
 
