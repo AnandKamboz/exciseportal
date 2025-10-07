@@ -150,7 +150,7 @@
     </li>
 
    <li class="nav-item">
-    <form method="POST" action="{{ route('logout.web') }}">
+    <form method="POST" action="{{ route('logout') }}">
       @csrf
       <button type="submit" class="nav-link text-white border-0 bg-transparent w-100 text-start">
         <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
