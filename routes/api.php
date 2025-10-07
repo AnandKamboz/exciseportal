@@ -32,4 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Detc Routes 
     Route::get('/detc/dashboard', [DetcController::class, 'getDashboardData']);
+    Route::get('detc/complaint/{secure_id}', [DetcController::class, 'getComplaintDetails']);
+
 });

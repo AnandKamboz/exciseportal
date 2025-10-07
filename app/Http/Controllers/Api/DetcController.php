@@ -43,4 +43,50 @@ class DetcController extends Controller
         }
     }
 
+    public function getComplaintDetails($secure_id)
+    {
+        try {
+            // Fetch complaint by secure_id
+            $complain = Complainant::where('secure_id', $secure_id)->first();
+
+            if (!$complain) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Complaint not found'
+                ], 404);
+            }
+
+            // Fetch complainant district name
+            $complainantDistrict = DB::table('districts')
+                ->select('id', 'name')
+                ->where('id', $complain->complainant_dist_id)
+                ->first();
+
+            // Fetch against district name
+            $againstDistrict = DB::table('districts')
+                ->select('id', 'name')
+                ->where('id', $complain->against_district_id)
+                ->first();
+
+            // Prepare response
+            return response()->json([
+                'status' => true,
+                'message' => 'Complaint details fetched successfully',
+                'data' => [
+                    'complaint' => $complain,
+                    'complainant_district' => $complainantDistrict ?? ['id' => null, 'name' => 'Not Found'],
+                    'against_district' => $againstDistrict ?? ['id' => null, 'name' => 'Not Found'],
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
 }
