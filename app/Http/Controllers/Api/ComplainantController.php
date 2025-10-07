@@ -99,7 +99,6 @@ class ComplainantController extends Controller
 
    public function storeSecondStep(Request $request)
    {
-
         $validator = Validator::make($request->all(), [
             'complainant_name'     => 'required|string|max:255',
             'complainant_email'    => 'required',
@@ -179,6 +178,58 @@ class ComplainantController extends Controller
             'complaint' => $complaint
         ], 200);
    }
+
+    public function storeThirdStep(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'fraud_check' => 'required|in:1,0',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $data = $validator->validated();
+
+        $secureId = Complainant::where('complainant_phone', Auth::user()->mobile)
+                                ->where('is_completed', 0)
+                                ->value('secure_id');
+
+        $complaint = Complainant::where('secure_id', $secureId)->first();
+
+        if (!$complaint) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Complaint not found.'
+            ], 404);
+        }
+
+        if ($complaint->is_completed == 1) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Complaint already submitted.'
+            ], 400);
+        }
+
+        // Update fraud info
+        $complaint->update([
+            'is_fraud_related' => $data['fraud_check'] == 1 ? true : false,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Step 3 saved successfully',
+            'complaint' => $complaint
+        ], 200);
+    }
+
+
+
+
 
 
 
