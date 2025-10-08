@@ -169,7 +169,8 @@
     <div class="card">
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
-                 <h5>Details of Complainant / Informer</h5>
+                 <!-- <h5>Details of Complainant / Informer</h5> -->
+                <h5>Complaint Status</h5>
                 <div class="mb-3">
                     <label for="complaint_type" class="form-label">
                         Complaint Category <span class="text-danger">*</span>
@@ -189,8 +190,8 @@
             {{-- Select 1 --}}
 
             <div class="step" id="step2">
-                <h5>Complainant Details</h5>
-
+                <h5>Details of Complainant / Informer</h5>
+                
                 <div class="row">
                     <div class="col-half mb-3">
                         <label for="complainant_name" class="form-label">
@@ -662,7 +663,6 @@
             $('#loader').removeClass('d-none');
 
             const firm_name = document.querySelector('input[name="firm_name"]').value.trim();
-            // const firm_address = document.querySelector('input[name="address_detail"]').value.trim();
             const firm_address = document.querySelector('[name="address_detail"]').value.trim();
             const proof_document = document.querySelector('input[name="document"]').files[0];
             const remarks = document.querySelector('textarea[name="remarks"]').value.trim();
