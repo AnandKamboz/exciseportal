@@ -169,7 +169,7 @@
     <div class="card">
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
-                 <!-- <h5>Details of Complainant / Informer</h5> -->
+              
                 <h5>Complaint Status</h5>
                 <div class="mb-3">
                     <label for="complaint_type" class="form-label">
@@ -177,9 +177,9 @@
                     </label>
                     <select name="complaint_type" id="complaint_type" class="form-select" required>
                         <option value="" selected disabled>Select Complaint Type</option>
-                        <option value="vat">VAT</option>
-                        <option value="gst">GST</option>
-                        <option value="excise">Excise</option>
+                        <option value="vat">Value Added Tax (VAT)</option>
+                        <option value="gst">Goods & Services Tax (GST)</option>
+                        <option value="excise">Excise/ Central Sales Tax (CST)</option>
                     </select>
                 </div>
 
@@ -187,7 +187,30 @@
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
-            {{-- Select 1 --}}
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <div class="step" id="step2">
                 <h5>Details of Complainant / Informer</h5>
@@ -230,6 +253,37 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-half mb-3">
+                        <label for="pin_code" class="form-label">Pin Code <span class="text-danger">*</span></label>
+                        <input type="text" name="pin_code" id="pin_code" class="form-control"  
+                            placeholder="Enter 6-digit Pin Code" required 
+                            oninput="handlePinInput(this)">
+                        <small class="text-muted">Only 6 digits allowed</small>
+                    </div>
+                </div>
+                <!-- Pin Code -->
+
+                <div class="row d-none" id="locationFields">
+                    <div class="col-half mb-3">
+                        <label for="complainant_district" class="form-label">
+                            District <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" id="complainant_district" name="complainant_district"  class="form-control" readonly>
+                    </div>
+                    <div class="col-half mb-3">
+                        <label for="complainant_state" class="form-label">
+                            State <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" id="complainant_state" name="complainant_state" class="form-control" readonly>
+                    </div>
+                </div>
+
+
+                <!-- Dist And State -->
+
+
+
+                <div class="row">
                       <div class="">
                         <label for="complainant_address" class="form-label">
                             Address <span class="text-danger">*</span>
@@ -240,18 +294,49 @@
                 </div>
 
                 <div class="row">
-                    <div class="mb-2">
-                        <label for="complainant_dist_id" class="form-label">
-                            District <span class="text-danger">*</span>
-                        </label>
-                        <select name="complainant_dist_id" id="complainant_dist_id" class="form-select" required>
-                            <option value="" disabled selected>Select District</option>
-                            @foreach($districts as $district)
-                                <option value="{{ $district->id }}">
-                                    {{ $district->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                    <div class="col-half mb-3">
+                        <label for="bank_account" class="form-label">Bank Account No. *</label>
+                        <input type="text" id="bank_account" name="bank_account" class="form-control"
+                        placeholder="Enter Bank Account No."
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,16);">
+                        <small class="text-muted">8 to 16 digits</small>
+                    </div>
+
+                    <!-- Confirm Bank Account No -->
+                    <div class="col-half mb-3">
+                        <label for="confirm_bank_account" class="form-label">Confirm Bank Account No. *</label>
+                        <input type="text" id="confirm_bank_account" name="confirm_bank_account" class="form-control"
+                        placeholder="Re-enter Bank Account No."
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,16);">
+                    </div>
+                    </div>
+
+                    <div class="row">
+                    <!-- Bank Name -->
+                    <div class="col-half mb-3">
+                        <label for="bank_name" class="form-label">Bank Name *</label>
+                        <input type="text" id="bank_name" name="bank_name" class="form-control"
+                        placeholder="Enter Bank Name"
+                        oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');">
+                    </div>
+
+                    <!-- IFSC Code -->
+                    <div class="col-half mb-3">
+                        <label for="ifsc_code" class="form-label">IFSC Code *</label>
+                        <input type="text" id="ifsc_code" name="ifsc_code" class="form-control"
+                        placeholder="Enter IFSC Code"
+                        oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0,11);">
+                        <small class="text-muted">Max 11 characters</small>
+                    </div>
+                    </div>
+
+                    <div class="row">
+                    <!-- Bank Branch Address -->
+                    <div class="mb-3">
+                        <label for="bank_branch_address" class="form-label">Bank Branch Address *</label>
+                        <textarea id="bank_branch_address" name="bank_branch_address" class="form-control" rows="3"
+                        placeholder="Enter Bank Branch Address"
+                        oninput="this.value = this.value.replace(/[^A-Za-z0-9 ,.-/]/g, '');"></textarea>
                     </div>
                 </div>
 
@@ -278,7 +363,39 @@
                 </div>
             </div>
 
-            <!-- Step 2 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           
             <div class="step" id="step3">
                 <h5>GST Fraud/Evasion Check</h5>
                 <p>Is complaint related to Fraud/Evasion?</p>
@@ -295,7 +412,7 @@
             </div>
             
 
-            <!-- Step 3 -->
+            
             <div class="step" id="step4">
                 <h5>Details of Suspect</h5>
                 <div class="row">
@@ -333,22 +450,7 @@
                 </div>
 
 
-                <!-- <div class="row">
-                    <div class="mb-2">
-                        <label for="against_district_id" class="form-label">
-                            District <span class="text-danger">*</span>
-                        </label>
-                        <select name="against_district_id" id="against_district_id" class="form-select">
-                            <option value="" disabled selected>Select District</option>
-                            @foreach($districts as $district)
-                                <option value="{{ $district->id }}">
-                                    {{ $district->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div> -->
-
+               
                 <div class="row">
                     <div class="mb-2">
                         <label for="against_district_id" class="form-label">
@@ -385,7 +487,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- h -->
+               
             
                 <div class="mb-3">
                     <label for="remarks" class="form-label">
@@ -431,13 +533,6 @@
                 currentStep--;
                 showStep(currentStep);
             }  
-            
-
-
-            // if (currentStep === 3 && category !== 'gst') currentStep -= 2;
-            // else currentStep--;
-            // if (currentStep < 1) currentStep = 1;
-            // showStep(currentStep);
         }
         
         // Submit Step First 
@@ -489,6 +584,19 @@
             const category = document.getElementById('complaint_type')?.value;
 
 
+          
+
+            const pin_code = document.querySelector('input[name="pin_code"]').value.trim();
+            const complainant_district = document.querySelector('input[name="complainant_district"]').value.trim(); // from API
+            const complainant_state = document.querySelector('input[name="complainant_state"]').value.trim(); // from API
+            const bank_account = document.querySelector('input[name="bank_account"]').value.trim();
+            const confirm_bank_account = document.querySelector('input[name="confirm_bank_account"]').value.trim();
+            const bank_name = document.querySelector('input[name="bank_name"]').value.trim();
+            const ifsc_code = document.querySelector('input[name="ifsc_code"]').value.trim();
+            const bank_branch_address = document.querySelector('textarea[name="bank_branch_address"]').value.trim();
+
+
+
             if (!complainant_name) {
                 $('#loader').addClass('d-none');
                 return Swal.fire({
@@ -530,15 +638,15 @@
                 });
             }
 
-            if(!complainant_dist_id) {
-                $('#loader').addClass('d-none');
-                return Swal.fire({
-                    icon: 'warning',
-                    title: 'Error',
-                    text: 'Select your District!',
-                    confirmButtonText: 'OK'
-                });
-            }
+            // if(!complainant_dist_id) {
+            //     $('#loader').addClass('d-none');
+            //     return Swal.fire({
+            //         icon: 'warning',
+            //         title: 'Error',
+            //         text: 'Select your District!',
+            //         confirmButtonText: 'OK'
+            //     });
+            // }
 
             if (!complainant_address) {
                 $('#loader').addClass('d-none');
@@ -549,6 +657,98 @@
                     confirmButtonText: 'OK'
                 });
             }
+
+
+            // New Field 
+
+            // Pin Code
+            if (!pin_code || pin_code.length !== 6) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter a valid 6-digit Pin Code!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // District (from API)
+            if (!complainant_district) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'District not found for this Pin Code!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // State (from API)
+            if (!complainant_state) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'State not found for this Pin Code!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // Bank Account
+            if (!bank_account || bank_account.length < 8 || bank_account.length > 16) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter a valid Bank Account number (8-16 digits)!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // Confirm Bank Account
+            if (!confirm_bank_account || confirm_bank_account !== bank_account) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Bank Account numbers do not match!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // Bank Name
+            if (!bank_name) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter Bank Name!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // IFSC Code
+            if (!ifsc_code) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter IFSC Code!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+            // Bank Branch Address
+            if (!bank_branch_address) {
+                $('#loader').addClass('d-none');
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Enter Bank Branch Address!',
+                    confirmButtonText: 'OK'
+                });
+            }
+
 
             const userData = @json($userData);
 
@@ -565,10 +765,9 @@
             if (upload_document) {
                 const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 
-                // Check file type
                 if (!allowedTypes.includes(upload_document.type)) {
                     $('#loader').addClass('d-none');
-                    $('#upload_document').val(''); // reset file input
+                    $('#upload_document').val(''); 
                     return Swal.fire({
                         icon: 'warning',
                         title: 'Error',
@@ -577,11 +776,11 @@
                     });
                 }
 
-                // Check file size (50KB)
+             
                 const maxSize = 50 * 1024; 
                 if (upload_document.size > maxSize) {
                     $('#loader').addClass('d-none');
-                    $('#upload_document').val(''); // reset file input
+                    $('#upload_document').val(''); 
                     return Swal.fire({
                         icon: 'warning',
                         title: 'Error',
@@ -600,6 +799,16 @@
             formData.append('complainant_aadhaar', complainant_aadhaar);
             formData.append('upload_document', upload_document);
             formData.append('complainant_dist_id', complainant_dist_id);
+
+
+            formData.append('pin_code', pin_code);
+            formData.append('complainant_district', complainant_district);
+            formData.append('complainant_state', complainant_state);
+            formData.append('bank_account', bank_account);
+            formData.append('confirm_bank_account', confirm_bank_account);
+            formData.append('bank_name', bank_name);
+            formData.append('ifsc_code', ifsc_code);
+            formData.append('bank_branch_address', bank_branch_address);
 
             axios.post("{{ route('complaints.step-second') }}", formData, {
                     headers: {
@@ -814,9 +1023,7 @@
             nameInput.addEventListener('input', () => {
                 nameInput.value = nameInput.value.replace(/[^a-zA-Z\s]/g, '');
             });
-            // addressInput.addEventListener('input', () => {
-            //     addressInput.value = addressInput.value.replace(/[^a-zA-Z0-9\s]/g, '');
-            // });
+            
             phoneInput.addEventListener('input', () => {
                 phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '').slice(0, 10);
             });
@@ -923,6 +1130,22 @@
                     $('#complaint_type').val(response.data.complaints.complaint_type);
                     $('#fraudCheck').val(response.data.complaints.is_fraud_related);
 
+                    // here 
+                    $('input[name="pin_code"]').val(response.data.complaints.pin_code);
+                    $('input[name="complainant_district"]').val(response.data.complaints.complainant_district);
+                    $('input[name="complainant_state"]').val(response.data.complaints.complainant_state);
+                    $('input[name="bank_account"]').val(response.data.complaints.bank_account);
+                    $('input[name="confirm_bank_account"]').val(response.data.complaints.confirm_bank_account);
+                    $('input[name="bank_name"]').val(response.data.complaints.bank_name);
+                    $('input[name="ifsc_code"]').val(response.data.complaints.ifsc_code);
+                    $('textarea[name="bank_branch_address"]').val(response.data.complaints.bank_branch_address);
+
+                    if(response.data.complaints.complainant_district && response.data.complaints.complainant_state) {
+                        $('#locationFields').removeClass('d-none');
+                    } else {
+                        $('#locationFields').addClass('d-none');
+                    }
+
 
                     $('#loader').addClass("d-none");
                     const existingImg = document.getElementById('existing-image');
@@ -931,7 +1154,7 @@
                 })
                 .catch(function(error) {
                     $('#loader').addClass("d-none");
-                    console.error('Error:', error.response);
+                    // console.error('Error:', error.response);
                 });
         })
 
@@ -966,7 +1189,39 @@
                 return;
             }
         });
-    </script>
+   
+        function handlePinInput(input) {
+            input.value = input.value.replace(/[^0-9]/g, '').slice(0, 6);
+
+            if(input.value.length === 6){
+                fetchLocation(input.value);
+            } else {
+                document.getElementById('locationFields').classList.add('d-none');
+                document.getElementById('complainant_district').value = '';
+                document.getElementById('complainant_state').value = '';
+            }
+        }
+
+        function fetchLocation(pincode) {
+                $('#loader').removeClass('d-none');
+                fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data[0].Status === "Success" && data[0].PostOffice.length > 0){
+                            document.getElementById('locationFields').classList.remove('d-none');
+                            document.getElementById('complainant_district').value = data[0].PostOffice[0].District;
+                            document.getElementById('complainant_state').value = data[0].PostOffice[0].State;
+                              $('#loader').addClass('d-none');
+                        } else {
+                            document.getElementById('locationFields').classList.add('d-none');
+                            document.getElementById('complainant_district').value = '';
+                            document.getElementById('complainant_state').value = '';
+                            $('#loader').addClass('d-none');
+                        }
+                    })
+                    .catch(err => console.error(err));
+        }
+</script>
 
 
 </body>

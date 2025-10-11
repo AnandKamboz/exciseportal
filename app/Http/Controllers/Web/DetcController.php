@@ -12,7 +12,7 @@ class DetcController extends Controller
 {
     public function dashboard()
     {
-        $allComplain = Complainant::where('against_district_id', Auth::user()->district_id)->where('is_completed',1)->orderBy('created_at', 'desc')->get();
+        $allComplain = Complainant::where('against_district_id', Auth::user()->district)->where('is_completed',1)->orderBy('created_at', 'desc')->get();
         return view('detc.dashboard',compact('allComplain','allComplain'));
     }
 

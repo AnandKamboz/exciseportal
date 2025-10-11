@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $name = ["Kapil Sir", "Anand Kamboj"];
         $email = ["kapilsir@gmail.com", "anand@gmail.com"];
         $mobile = ["9999999999", "8888888888"];
-        $district_id = ["11", null];
+        $district = ["Saharanpur", null];
 
         $secureIds = [];
 
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
                 'name' => $userName,
                 'email' => $email[$index],
                 'mobile' => $mobile[$index],
-                'district_id' => $district_id[$index],
+                'district' => $district[$index],
             ];
         }
 

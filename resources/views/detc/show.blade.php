@@ -8,6 +8,7 @@
     <div class="card p-4 mb-4" style="background: #FFFBF5;">
         <h4 class="fw-bold text-danger mb-3">Complaint Details</h4>
 
+        <!-- Complainant Details -->
         <div class="row g-3">
             <div class="col-md-6">
                 <p><strong>Complaint ID:</strong> {{ $complain->complaint_id }}</p>
@@ -19,14 +20,11 @@
             </div>
 
             <div class="col-md-6">
-                <!-- <p><strong>Created At:</strong> {{ $complain->created_at->format('d-m-Y H:i') }}</p> -->
-                 <p><strong>Complaint Date:</strong> {{ $complain->created_at->format('d-m-Y') }}</p>
+                <p><strong>Complaint Date:</strong> {{ $complain->created_at->format('d-m-Y') }}</p>
                 <p><strong>Complainant District:</strong> {{ $complainantDistrictName }}</p>
-                <p><strong>Against District ID:</strong> {{ $againstDistrictId }}</p>
+                <p><strong>Complainant State:</strong> {{ strtoupper($complain->complainant_state) }}</p>
+                <p><strong>Pin Code:</strong> {{ $complain->pin_code }}</p>
                 <p><strong>Complaint Type:</strong> {{ strtoupper($complain->complaint_type) }}</p>
-
-
-
                 <p><strong>Status:</strong>
                     @if($complain->is_completed)
                         <span class="badge bg-success">Completed</span>
@@ -34,12 +32,12 @@
                         <span class="badge bg-warning text-dark">Pending</span>
                     @endif
                 </p>
-               
             </div>
         </div>
 
         <hr>
 
+        <!-- Firm / Tax Details -->
         <div class="row g-3">
             <div class="col-md-6">
                 <p><strong>Firm Name:</strong> {{ ucfirst($complain->firm_name) }}</p>
@@ -69,12 +67,21 @@
 
         <hr>
 
-        <!-- <div class="row g-3">
+        <!-- Bank Details -->
+        <div class="row g-3">
             <div class="col-md-6">
-                <p><strong>Created At:</strong> {{ $complain->created_at->format('d-m-Y H:i') }}</p>
-                <p><strong>Updated At:</strong> {{ $complain->updated_at->format('d-m-Y H:i') }}</p>
+                <p><strong>Bank Account Number:</strong> {{ $complain->bank_account }}</p>
+                <p><strong>Bank Name:</strong> {{ $complain->bank_name }}</p>
+             
             </div>
-        </div> -->
+
+            <div class="col-md-6">
+                <p><strong>IFSC Code:</strong> {{ $complain->ifsc_code }}</p>
+                <p><strong>Bank Branch Address:</strong> {{ $complain->bank_branch_address }}</p>
+            </div>
+        </div>
+
+        <hr>
 
         <div class="mt-3">
             <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-danger">Back to Dashboard</a>
@@ -96,7 +103,7 @@
                         <select name="status" id="status" class="form-select" required>
                             <option value="" disabled selected>Select Action</option>
                             <option value="forward_to_inspector">Forward to Inspector</option>
-                            <option value="rejected">Rejected</option>
+                            <option value="rejected">Reject</option>
                         </select>
                     </div>
 

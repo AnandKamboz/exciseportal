@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('complainants', function (Blueprint $table) {
             $table->id();
             $table->string('secure_id');
-            $table->integer('complainant_dist_id')->nullable();
+            // $table->integer('complainant_dist_id')->nullable();
             $table->string('complainant_name')->nullable();
             $table->string('complainant_phone');
             $table->string('complainant_email')->nullable();
@@ -22,6 +22,15 @@ return new class extends Migration
             $table->text('complainant_address')->nullable();
             $table->string('upload_document')->nullable();
             $table->enum('complaint_type', ['vat', 'gst', 'excise'])->nullable();
+
+            $table->string('pin_code')->nullable();
+            $table->string('complainant_state')->nullable();
+            $table->string('complainant_district')->nullable();
+            $table->string('bank_account')->nullable();
+            $table->string('confirm_bank_account')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('ifsc_code')->nullable();
+            $table->text('bank_branch_address')->nullable();
 
             // Firm being reported
             $table->string('firm_name')->nullable();

@@ -23,7 +23,7 @@
         <div class="col-md-3">
             <div class="card text-center p-3" style="background: #FF8A73; color: #fff;">
                 <!-- <h5>Approved</h5> -->
-                 <h5>Forwarded for Admin</h5>
+                 <h5>Forwarded for Action</h5>
                 <h2>0</h2>
             </div>
         </div>
@@ -40,32 +40,6 @@
     <div class="card p-3">
         <h5 class="fw-bold text-danger mb-3">Complaint Details</h5>
         <div class="table-responsive">
-            <!-- <table id="complaintsTable" class="table table-hover table-striped">
-                <thead style="background: #FF8A73; color: #fff;">
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>AAdhaar</th>
-                        <th>Submission Date</th>
-                        <th>View</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($allComplain as $index => $complain)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ ucfirst($complain->complainant_name) }}</td>
-                        <td>{{ $complain->complainant_phone }}</td>
-                        <td>{{ $complain->complainant_aadhaar }}</td>
-                        <td>{{ $complain->created_at->format('d-m-Y') }}</td>
-                        <td>
-                          <a href="{{ route('detc.details', [$complain->secure_id]) }}" class="btn btn-sm btn-primary">View</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table> -->
             <table id="complaintsTable" class="table table-hover table-striped">
                 <thead style="background: #FF8A73; color: #fff;">
                     <tr>
