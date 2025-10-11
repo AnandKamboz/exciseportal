@@ -49,7 +49,7 @@
             </div>
 
             <div class="col-md-6">
-                <p class="mb-2"><strong>Process Complaint:</strong> {{ ucfirst($inspectionReport->process_complain) }}</p>
+                <p class="mb-2"><strong>Complaint Status:</strong> {{ ucfirst($inspectionReport->process_complain) }}</p>
             </div>
             <div class="col-md-6">
                 <p class="mb-2"><strong>Remarks:</strong> {{ $inspectionReport->remarks }}</p>
@@ -127,8 +127,8 @@
               <label class="form-label fw-semibold">Process Complaint <span class="text-danger">*</span></label>
               <select name="process_complain" id="process_complain" class="form-select" required>
                 <option value="" selected disabled>Select Action</option>
-                <option value="accept">Accept</option>
-                <option value="reject">Reject</option>
+                <option value="accept">Complaint is found genuine</option>
+                <option value="reject">Non-genuine/ Fake complaint</option>
               </select>
             </div>
 

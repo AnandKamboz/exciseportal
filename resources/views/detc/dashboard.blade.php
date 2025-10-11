@@ -22,7 +22,6 @@
 
         <div class="col-md-3">
             <div class="card text-center p-3" style="background: #FF8A73; color: #fff;">
-                <!-- <h5>Approved</h5> -->
                  <h5>Forwarded for Action</h5>
                 <h2>0</h2>
             </div>
