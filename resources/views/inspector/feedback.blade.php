@@ -146,10 +146,31 @@
                 <label class="form-label fw-semibold">Proposed Action <span class="text-danger">*</span></label>
                 <select name="proposed_action" id="proposed_action" class="form-select">
                   <option value="" selected disabled>Select Action</option>
-                  <option value="conduct raid">Conduct Raid</option>
-                  <option value="search action">Search Operations</option>
+                  <!-- <option value="conduct raid">Monetary Penalty / Fine</option>
+                  <option value="search action">Imprisonment</option> -->
+                   <option value="monetary_penalty">Monetary Penalty / Fine</option>
+                   <option value="imprisonment">Imprisonment</option>
                 </select>
               </div>
+
+              <div class="col-md-6 mt-3" id="penalty_amount_box" style="display: none;">
+                <label class="form-label fw-semibold">Penalty Amount (in ₹) <span class="text-danger">*</span></label>
+                <input type="number" name="penalty_amount" id="penalty_amount" class="form-control" placeholder="Enter penalty amount">
+              </div>
+
+              <div class="col-md-6 mt-3" id="imprisonment_duration_box" style="display: none;">
+              <label class="form-label fw-semibold">Imprisonment Duration <span class="text-danger">*</span></label>
+              <select name="imprisonment_duration" id="imprisonment_duration" class="form-select">
+                <option value="" selected disabled>Select Duration</option>
+                <option value="3 months">3 Months</option>
+                <option value="6 months">6 Months</option>
+                <option value="1 year">1 Year</option>
+                <option value="2 years">2 Years</option>
+                <option value="3 years">3 Years</option>
+                <option value="4 years">4 Years</option>
+                <option value="5 years">5 Years</option>
+              </select>
+            </div>
 
               <div class="col-md-6">
                 <label class="form-label fw-semibold">Commodities Suspected <span class="text-danger">*</span></label>
@@ -157,7 +178,7 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-semibold">Estimated Value <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">Estimated Value of Commodities / Goods (in Rupees) <span class="text-danger">*</span></label>
                 <input type="number" name="estimated_value" id="estimated_value" class="form-control" placeholder="Enter estimated value..." />
               </div>
 
@@ -167,16 +188,13 @@
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-semibold">Place where goods are suspected to be secreted <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">Place where goods are  found secreted <span class="text-danger">*</span></label>
                 <textarea name="place_to_search" id="place_to_search" rows="3" class="form-control" placeholder="Enter place details..."></textarea>
               </div>
             </div>
           </div>
 
           <div class="text-center mt-4">
-            <!-- <button type="submit" class="btn btn-proceed px-4">
-              <i class="bi bi-check-circle me-1"></i> Submit Report
-            </button> -->
             <button type="submit" class="btn btn-proceed px-4">
     <i class="bi bi-check-circle me-1"></i> Submit Report
 </button>
@@ -405,6 +423,26 @@ $(document).ready(function() {
         {{ session('success') }}
     </div>
 @endif
+
+
+
+  document.getElementById('proposed_action').addEventListener('change', function() {
+    const value = this.value;
+    const penaltyBox = document.getElementById('penalty_amount_box');
+    const imprisonmentBox = document.getElementById('imprisonment_duration_box');
+
+    // Hide both first
+    penaltyBox.style.display = 'none';
+    imprisonmentBox.style.display = 'none';
+
+    // Show based on selected value
+    if (value === 'monetary_penalty') {
+      penaltyBox.style.display = 'block';
+    } else if (value === 'imprisonment') {
+      imprisonmentBox.style.display = 'block';
+    }
+  });
+
 
 </script>
 @endsection
