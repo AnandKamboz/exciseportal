@@ -170,7 +170,7 @@
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
               
-                <h5>Complaint Status</h5>
+                <h5>Type of Complaint</h5>
                 <div class="mb-3">
                     <label for="complaint_type" class="form-label">
                         Complaint Category <span class="text-danger">*</span>
