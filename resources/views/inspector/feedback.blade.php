@@ -183,7 +183,7 @@
               </div>
 
                <div class="col-6">
-                <label class="form-label fw-semibold">Upload File <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">Upload document <span class="text-danger">*</span></label>
                 <input type="file" name="upload_file" id="upload_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
               </div>
 
