@@ -8,22 +8,24 @@
     <div class="card p-4 mb-4" style="background: #FFFBF5;">
         <h4 class="fw-bold text-danger mb-3">Complaint Details</h4>
 
-        <div class="row g-3">
+        <!-- Complainant Info -->
+        <div class="row g-3 mb-3">
             <div class="col-md-6">
                 <p><strong>Complaint ID:</strong> {{ $complain->complaint_id }}</p>
                 <p><strong>Complainant Name:</strong> {{ ucfirst($complain->complainant_name) }}</p>
                 <p><strong>Phone:</strong> {{ $complain->complainant_phone }}</p>
                 <p><strong>Email:</strong> {{ $complain->complainant_email }}</p>
                 <p><strong>Aadhaar:</strong> {{ $complain->complainant_aadhaar }}</p>
+                <p><strong>Pin Code:</strong> {{ $complain->pin_code }}</p>
+                <p><strong>Fraud Related:</strong> {{ $complain->is_fraud_related ? 'Yes' : 'No' }}</p>
             </div>
 
             <div class="col-md-6">
-                <p><strong>Complainant District:</strong> {{ $complainantDistrictName }}</p>
+                <p><strong>Complaint Date:</strong> {{ $complain->created_at->format('d-m-Y') }}</p>
+                <p><strong>District:</strong> {{ strtoupper($complain->complainant_district) }}</p>
+                <p><strong>State:</strong> {{ strtoupper($complain->complainant_state) }}</p>
                 <p><strong>Against District ID:</strong> {{ $againstDistrictId }}</p>
                 <p><strong>Complaint Type:</strong> {{ strtoupper($complain->complaint_type) }}</p>
-
-
-
                 <p><strong>Status:</strong>
                     @if($complain->is_completed)
                         <span class="badge bg-success">Completed</span>
@@ -31,13 +33,13 @@
                         <span class="badge bg-warning text-dark">Pending</span>
                     @endif
                 </p>
-                <p><strong>Fraud Related:</strong> {{ $complain->is_fraud_related ? 'Yes' : 'No' }}</p>
             </div>
         </div>
 
         <hr>
 
-        <div class="row g-3">
+        <!-- Firm Info -->
+        <div class="row g-3 mb-3">
             <div class="col-md-6">
                 <p><strong>Firm Name:</strong> {{ ucfirst($complain->firm_name) }}</p>
                 <p><strong>GSTIN:</strong> {{ $complain->gstin }}</p>
@@ -63,13 +65,19 @@
                 </p>
             </div>
         </div>
-
         <hr>
 
-        <div class="row g-3">
+        <!-- Bank Details -->
+        <div class="row g-3 mb-3">
             <div class="col-md-6">
-                <p><strong>Created At:</strong> {{ $complain->created_at->format('d-m-Y H:i') }}</p>
-                <p><strong>Updated At:</strong> {{ $complain->updated_at->format('d-m-Y H:i') }}</p>
+                <p><strong>Bank Account No.:</strong> {{ $complain->bank_account }}</p>
+                <p><strong>Confirm Bank Account No.:</strong> {{ $complain->confirm_bank_account }}</p>
+                <p><strong>Bank Name:</strong> {{ $complain->bank_name }}</p>
+            </div>
+
+            <div class="col-md-6">
+                <p><strong>IFSC Code:</strong> {{ $complain->ifsc_code }}</p>
+                <p><strong>Bank Branch Address:</strong> {{ $complain->bank_branch_address }}</p>
             </div>
         </div>
 
@@ -78,5 +86,4 @@
         </div>
     </div>
 </div>
-
 @endsection

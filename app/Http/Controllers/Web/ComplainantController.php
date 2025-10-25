@@ -51,8 +51,14 @@ class ComplainantController extends Controller
                 'complaint_id' => $existingComplaint->complaint_id,
             ]);
         } else {
+            // do {
+            //     $complaintId = strtoupper('CMP-' . rand(100000, 999999));
+            // } while (Complainant::where('complaint_id', $complaintId)->exists());
+
+            $prefix = strtoupper($request->complaint_type);
+
             do {
-                $complaintId = strtoupper('CMP-' . rand(100000, 999999));
+                $complaintId = $prefix . '-' . rand(100000, 999999);
             } while (Complainant::where('complaint_id', $complaintId)->exists());
 
             do {
@@ -78,13 +84,23 @@ class ComplainantController extends Controller
 
     public function storeSecondStep(Request $request)
     {
+        // dd($request->all());
         $data = $request->validate([
             'complainant_name' => 'required|string|max:255',
             'complainant_phone'           => 'required|numeric|digits:10',
             'complainant_email'            => 'required|email|unique:users,email,' . Auth::id(),
             'complainant_aadhaar'          => 'required|digits:12',
             'complainant_address'          => 'required|string',
-            'complainant_dist_id'     => 'required',
+            // 'complainant_dist_id'     => 'required',
+
+            'pin_code'                => 'required|digits:6',
+            'complainant_state'       => 'required|string|max:255',
+            'complainant_district'       => 'required|string|max:255',
+            'bank_account'            => 'required|numeric|digits_between:8,16',
+            'confirm_bank_account'    => 'required|same:bank_account',
+            'bank_name'               => 'required|string|max:255',
+            'ifsc_code'               => 'required|string|max:20',
+            'bank_branch_address'     => 'required|string|max:500',
         ]);
 
         $userMobile = Auth::user()->mobile;
@@ -126,7 +142,7 @@ class ComplainantController extends Controller
                 'email'      => $data['complainant_email'],
                 'aadhaar'    => $data['complainant_aadhaar'],
                 'address'    => $data['complainant_address'],
-                'district_id'=> $data['complainant_dist_id'],
+                'district'=> $data['complainant_district'],
                 'updated_at' => now(),
             ]);
 

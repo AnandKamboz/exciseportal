@@ -49,7 +49,7 @@
             </div>
 
             <div class="col-md-6">
-                <p class="mb-2"><strong>Process Complaint:</strong> {{ ucfirst($inspectionReport->process_complain) }}</p>
+                <p class="mb-2"><strong>Complaint Status:</strong> {{ ucfirst($inspectionReport->process_complain) }}</p>
             </div>
             <div class="col-md-6">
                 <p class="mb-2"><strong>Remarks:</strong> {{ $inspectionReport->remarks }}</p>
@@ -127,8 +127,8 @@
               <label class="form-label fw-semibold">Process Complaint <span class="text-danger">*</span></label>
               <select name="process_complain" id="process_complain" class="form-select" required>
                 <option value="" selected disabled>Select Action</option>
-                <option value="accept">Accept</option>
-                <option value="reject">Reject</option>
+                <option value="accept">Complaint is found genuine</option>
+                <option value="reject">Non-genuine/ Fake complaint</option>
               </select>
             </div>
 
@@ -146,10 +146,31 @@
                 <label class="form-label fw-semibold">Proposed Action <span class="text-danger">*</span></label>
                 <select name="proposed_action" id="proposed_action" class="form-select">
                   <option value="" selected disabled>Select Action</option>
-                  <option value="conduct raid">Conduct Raid</option>
-                  <option value="search action">Search Operations</option>
+                  <!-- <option value="conduct raid">Monetary Penalty / Fine</option>
+                  <option value="search action">Imprisonment</option> -->
+                   <option value="monetary_penalty">Monetary Penalty / Fine</option>
+                   <option value="imprisonment">Imprisonment</option>
                 </select>
               </div>
+
+              <div class="col-md-6 mt-3" id="penalty_amount_box" style="display: none;">
+                <label class="form-label fw-semibold">Penalty Amount (in ₹) <span class="text-danger">*</span></label>
+                <input type="number" name="penalty_amount" id="penalty_amount" class="form-control" placeholder="Enter penalty amount">
+              </div>
+
+              <div class="col-md-6 mt-3" id="imprisonment_duration_box" style="display: none;">
+              <label class="form-label fw-semibold">Imprisonment Duration <span class="text-danger">*</span></label>
+              <select name="imprisonment_duration" id="imprisonment_duration" class="form-select">
+                <option value="" selected disabled>Select Duration</option>
+                <option value="3 months">3 Months</option>
+                <option value="6 months">6 Months</option>
+                <option value="1 year">1 Year</option>
+                <option value="2 years">2 Years</option>
+                <option value="3 years">3 Years</option>
+                <option value="4 years">4 Years</option>
+                <option value="5 years">5 Years</option>
+              </select>
+            </div>
 
               <div class="col-md-6">
                 <label class="form-label fw-semibold">Commodities Suspected <span class="text-danger">*</span></label>
@@ -157,17 +178,17 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-semibold">Estimated Value <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">Estimated Value of Commodities / Goods (in Rupees) <span class="text-danger">*</span></label>
                 <input type="number" name="estimated_value" id="estimated_value" class="form-control" placeholder="Enter estimated value..." />
               </div>
 
                <div class="col-6">
-                <label class="form-label fw-semibold">Upload File <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">Upload document <span class="text-danger">*</span></label>
                 <input type="file" name="upload_file" id="upload_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-semibold">Place where goods are suspected to be secreted <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold">Place where goods are  found secreted <span class="text-danger">*</span></label>
                 <textarea name="place_to_search" id="place_to_search" rows="3" class="form-control" placeholder="Enter place details..."></textarea>
               </div>
             </div>
@@ -175,14 +196,29 @@
 
           <div class="text-center mt-4">
             <button type="submit" class="btn btn-proceed px-4">
-              <i class="bi bi-check-circle me-1"></i> Submit Report
-            </button>
+    <i class="bi bi-check-circle me-1"></i> Submit Report
+</button>
+
           </div>
 
         </form>
       </div>
     </div>
 @endif
+
+<style>
+  .btn-proceed {
+    background-color: #0d6efd; /* Bootstrap primary color */
+    color: #fff;               /* Text color white */
+    border: 1px solid #0d6efd;
+}
+
+.btn-proceed:hover {
+    background-color: #0b5ed7; /* Thicker shade on hover */
+    border-color: #0b5ed7;
+}
+
+</style>
 
 
 
@@ -387,6 +423,26 @@ $(document).ready(function() {
         {{ session('success') }}
     </div>
 @endif
+
+
+
+  document.getElementById('proposed_action').addEventListener('change', function() {
+    const value = this.value;
+    const penaltyBox = document.getElementById('penalty_amount_box');
+    const imprisonmentBox = document.getElementById('imprisonment_duration_box');
+
+    // Hide both first
+    penaltyBox.style.display = 'none';
+    imprisonmentBox.style.display = 'none';
+
+    // Show based on selected value
+    if (value === 'monetary_penalty') {
+      penaltyBox.style.display = 'block';
+    } else if (value === 'imprisonment') {
+      imprisonmentBox.style.display = 'block';
+    }
+  });
+
 
 </script>
 @endsection
