@@ -105,6 +105,7 @@ class ComplainantController extends Controller
             'complainant_aadhaar'  => 'required|digits:12',
             'complainant_address'  => 'required|string',
             // 'complainant_dist_id'  => 'required',
+            'complainant_district' => 'required|string|max:255',
             'upload_document'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
@@ -169,7 +170,7 @@ class ComplainantController extends Controller
             'aadhaar'     => $data['complainant_aadhaar'],
             'address'     => $data['complainant_address'],
             // 'district_id' => $data['complainant_dist_id'],
-            'district'=> $data['complainant_district'],
+            'district'=> $data['complainant_district'] ?? "",
             'updated_at'  => now(),
         ]);
 
