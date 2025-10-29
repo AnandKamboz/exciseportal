@@ -58,9 +58,19 @@ class ComplainantController extends Controller
                 'complaint_id' => $existingComplaint->complaint_id,
             ], 200);
         } else {
+            // do {
+            //     $complaintId = strtoupper('CMP-' . rand(100000, 999999));
+            // } while (Complainant::where('complaint_id', $complaintId)->exists());
+
+
+            // Here
+            $prefix = strtoupper($request->complaint_type);
+
             do {
-                $complaintId = strtoupper('CMP-' . rand(100000, 999999));
+                $complaintId = $prefix . '-' . rand(100000, 999999);
             } while (Complainant::where('complaint_id', $complaintId)->exists());
+
+            // Here
 
             do {
                 $secureId = bin2hex(random_bytes(16));
