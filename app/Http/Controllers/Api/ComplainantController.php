@@ -168,7 +168,8 @@ class ComplainantController extends Controller
             'email'       => $data['complainant_email'],
             'aadhaar'     => $data['complainant_aadhaar'],
             'address'     => $data['complainant_address'],
-            'district_id' => $data['complainant_dist_id'],
+            // 'district_id' => $data['complainant_dist_id'],
+            'district'=> $data['complainant_district'],
             'updated_at'  => now(),
         ]);
 
