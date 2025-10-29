@@ -27,7 +27,7 @@ class ComplainantController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Validation failed.',
-                'errors' => $validator->errors()  
+                'errors' => $validator->errors()
             ], 422);
         }
 
@@ -104,11 +104,11 @@ class ComplainantController extends Controller
             'complainant_email'    => 'required',
             'complainant_aadhaar'  => 'required|digits:12',
             'complainant_address'  => 'required|string',
-            'complainant_dist_id'  => 'required',
+            // 'complainant_dist_id'  => 'required',
             'upload_document'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
-   
+
         if ($validator->fails()) {
             return response()->json([
                 'status'  => false,
@@ -130,7 +130,7 @@ class ComplainantController extends Controller
         $data['complainant_phone'] = $userMobile;
         $data['is_fraud_related'] = false;
 
-   
+
         $complaint = Complainant::where('complainant_phone', $userMobile)
             ->where('is_completed', 0)
             ->first();
@@ -153,7 +153,7 @@ class ComplainantController extends Controller
             $complaint = Complainant::create($data);
         }
 
-    
+
         if ($request->hasFile('upload_document')) {
             $file = $request->file('upload_document');
             $fileName = time() . '_' . $file->getClientOriginalName();
@@ -299,7 +299,7 @@ class ComplainantController extends Controller
     }
 
     // public function getComplaintBySecureId(Request $request, $secure_id)
-    // { 
+    // {
     //     $complaint = Complainant::where('secure_id', $secure_id)
     //         ->where('complainant_phone', auth::user()->mobile)
     //         ->first();
