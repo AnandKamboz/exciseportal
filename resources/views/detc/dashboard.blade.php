@@ -5,7 +5,7 @@
 
 @section('content')
      <div class="container-fluid">
-    {{--  <div class="row g-4 mb-4">
+    <div class="row g-4 mb-4">
         <div class="col-md-3">
             <div class="card text-center p-3" style="background: #FF9983; color: #fff;">
                 <h5>Total Complaints</h5>
@@ -26,14 +26,14 @@
                 <h2>0</h2>
             </div>
         </div>
-       
+
         <div class="col-md-3">
             <div class="card text-center p-3" style="background: #FF6F5E; color: #fff;">
                 <h5>Rejected</h5>
                 <h2>0</h2>
             </div>
         </div>
-    </div>  --}}
+    </div>
 
     <!-- DataTable -->
     <div class="card p-3">
