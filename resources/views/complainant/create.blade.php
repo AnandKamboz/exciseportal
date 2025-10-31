@@ -45,7 +45,7 @@
         }
 
         h5 {
-            color: #ff6a00;
+            color: #7386ff;
             font-weight: 700;
             margin-bottom: 1.5rem;
             text-align: center;
@@ -89,16 +89,15 @@
             border-radius: 20px;
             font-weight: 600;
             padding: 0.6rem 2rem;
-            background: #ff6a00;
+            background: #7386ff;
             border: none;
             color: #fff;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.3);
         }
 
         .btn-step:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(255, 106, 0, 0.5);
+
+            background: #4b59ba;
+            color: #fff;
         }
 
         .d-flex.justify-content-between {
@@ -191,9 +190,6 @@
       <h1>Excise and Taxation Department </h1>
       <p>Government of Haryana</p>
     </div>
-    <img src="https://www.itu.int/wtsa/tests/wp-content/uploads/sites/4/2023/08/517627_WTSA24_logo_E-02.svg" alt="Government of Haryana Logo" style="
-    height: 50px;
-">
   </header>
 
 
@@ -210,7 +206,8 @@ ease;
 
     /* Top Bar */
     .top-bar {
-      background-color: #ff6a00;
+          background: linear-gradient(135deg, #7386ff, #262626);
+
       color: #fff;
       display: flex;
       justify-content: space-between;
@@ -235,7 +232,7 @@ ease;
       justify-content: space-between;
       align-items: center;
       padding: 25px 40px;
-          border-bottom: 2px solid #ff6a00;
+      border-bottom: 2px solid #7386ff;
       background: linear-gradient(to right, #ffffff, #f1f1f1);
       flex-wrap: wrap;
     }

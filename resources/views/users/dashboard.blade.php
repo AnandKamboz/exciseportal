@@ -35,7 +35,7 @@
 
     <!-- DataTable -->
     <div class="card p-3">
-        <h5 class="fw-bold text-danger mb-3">Complaint Details</h5>
+        <h5 class="fw-bold  mb-3">Complaint Details</h5>
         <div class="table-responsive">
             <table id="complaintsTable" class="table table-hover table-striped">
                 <thead style="background: #FF8A73; color: #fff;">
