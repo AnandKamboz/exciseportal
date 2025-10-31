@@ -12,17 +12,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <style>
-        body {
+        .body-main {
             {{-- background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e, #ff6a00); --}} font-family: 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding: 3rem 0;
+            padding: 2rem;
             min-height: 100vh;
         }
 
         .card {
-            width: 600px;
+            {{--  width: 600px;  --}}
             padding: 3rem 2rem;
             border-radius: 25px;
             background: rgba(255, 255, 255, 0.95);
@@ -89,7 +89,7 @@
             border-radius: 20px;
             font-weight: 600;
             padding: 0.6rem 2rem;
-            background: linear-gradient(90deg, #ffecd2, #fcb69f, #ff9a9e, #ff6a00);
+            background: #ff6a00;
             border: none;
             color: #fff;
             transition: all 0.3s;
@@ -166,12 +166,157 @@
         <div class="spinner"></div>
     </div>
 
+
+
+
+
+
+
+
+
+     <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="contact-item">
+      <i>📧</i> excisehry@gmail.com
+    </div>
+    <div class="contact-item">
+      <i>📞</i> 0123-4567890
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Emblem_of_Haryana.svg" alt="Sports Haryana Logo">
+    <div class="header-content">
+      <h1>Excise and Taxation Department </h1>
+      <p>Government of Haryana</p>
+    </div>
+    <img src="https://www.itu.int/wtsa/tests/wp-content/uploads/sites/4/2023/08/517627_WTSA24_logo_E-02.svg" alt="Government of Haryana Logo" style="
+    height: 50px;
+">
+  </header>
+
+
+  <style>
+
+     {{--  .mew-box {
+    padding: 3rem 2rem;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s
+ease;
+}  --}}
+
+    /* Top Bar */
+    .top-bar {
+      background-color: #ff6a00;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 20px;
+      flex-wrap: wrap;
+    }
+
+    .top-bar .contact-item {
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+    }
+
+    .top-bar .contact-item i {
+      margin-right: 8px;
+    }
+
+    /* Header Section */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 40px;
+          border-bottom: 2px solid #ff6a00;
+      background: linear-gradient(to right, #ffffff, #f1f1f1);
+      flex-wrap: wrap;
+    }
+
+    .header img {
+      height: 90px;
+    }
+
+    .header-content {
+      text-align: center;
+      flex: 1;
+    }
+
+    .header-content h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 5px 0;
+      letter-spacing: 1px;
+    }
+
+    .header-content p {
+      font-size: 17px;
+      color: #555;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .header img {
+        height: 70px;
+        margin: 10px 0;
+      }
+
+      .header-content h1 {
+        font-size: 22px;
+      }
+
+      .header-content p {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .top-bar {
+        flex-direction: column;
+        text-align: center;
+        padding: 10px;
+      }
+
+      .top-bar .contact-item {
+        margin: 3px 0;
+      }
+    }
+  </style>
+
+
+
+
+
+
+
+ <div class="body-main">
+<div class="container">
+    <h6 class="card-title mb-3 text-danger" style="font-weight: 700; font-size: 14px;">Note: All fields with
+                            <span class="text-danger">*</span>  are mandatory
+                        </h6>
     <div class="card">
         <form id="complaintForm" onsubmit="submitFinalStep(event)" enctype="multipart/form-data">
             <div class="step active" id="step1">
-              
+
                 <h5>Type of Complaint</h5>
-                <div class="mb-3">
+
+
+
+                <div class=" col-md-6 mb-3">
                     <label for="complaint_type" class="form-label">
                         Complaint Category <span class="text-danger">*</span>
                     </label>
@@ -183,44 +328,22 @@
                     </select>
                 </div>
 
+
                 <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
             <div class="step" id="step2">
                 <h5>Details of Complainant / Informer</h5>
-                
+
                 <div class="row">
                     <div class="col-half mb-3">
                         <label for="complainant_name" class="form-label">
                             Name <span class="text-danger">*</span>
                         </label>
-                        <input type="text" name="complainant_name" id="complainant_name" 
+                        <input type="text" name="complainant_name" id="complainant_name"
                             class="form-control" placeholder="Enter your Name" required>
                     </div>
 
@@ -228,8 +351,8 @@
                         <label for="complainant_phone" class="form-label">
                             Phone <span class="text-danger">*</span>
                         </label>
-                        <input type="text" name="complainant_phone" id="complainant_phone" 
-                            class="form-control" value="{{ $userMobile }}" 
+                        <input type="text" name="complainant_phone" id="complainant_phone"
+                            class="form-control" value="{{ $userMobile }}"
                             placeholder="Enter your Phone" readonly>
                     </div>
                 </div>
@@ -239,7 +362,7 @@
                         <label for="complainant_email" class="form-label">
                             Email <span class="text-danger">*</span>
                         </label>
-                        <input type="complainant_email" name="complainant_email" id="complainant_email" 
+                        <input type="complainant_email" name="complainant_email" id="complainant_email"
                             class="form-control" placeholder="Enter your Email" required>
                     </div>
 
@@ -247,7 +370,7 @@
                         <label for="complainant_aadhaar" class="form-label">
                             Aadhaar No. <span class="text-danger">*</span>
                         </label>
-                        <input type="text" name="complainant_aadhaar" id="complainant_aadhaar" 
+                        <input type="text" name="complainant_aadhaar" id="complainant_aadhaar"
                             class="form-control" placeholder="Enter your Aadhaar No." required>
                     </div>
                 </div>
@@ -255,8 +378,8 @@
                 <div class="row">
                     <div class="col-half mb-3">
                         <label for="pin_code" class="form-label">Pin Code <span class="text-danger">*</span></label>
-                        <input type="text" name="pin_code" id="pin_code" class="form-control"  
-                            placeholder="Enter 6-digit Pin Code" required 
+                        <input type="text" name="pin_code" id="pin_code" class="form-control"
+                            placeholder="Enter 6-digit Pin Code" required
                             oninput="handlePinInput(this)">
                         <small class="text-muted">Only 6 digits allowed</small>
                     </div>
@@ -288,7 +411,7 @@
                         <label for="complainant_address" class="form-label">
                             Address <span class="text-danger">*</span>
                         </label>
-                        <textarea name="complainant_address" id="complainant_address" 
+                        <textarea name="complainant_address" id="complainant_address"
                             class="form-control mb-3" placeholder="Enter your Address" rows="3" required></textarea>
                     </div>
                 </div>
@@ -344,8 +467,8 @@
                     <label for="document_upload" class="form-label">
                         Upload Document (ID Proof)<span class="text-danger">*</span>
                     </label>
-                    <input type="file" name="document_upload" id="document_upload" 
-                        class="form-control mb-2" 
+                    <input type="file" name="document_upload" id="document_upload"
+                        class="form-control mb-2"
                         accept=".jpg,.jpeg,.png,.pdf"
                         onchange="checkFileSize(this)">
                 </div>
@@ -363,39 +486,6 @@
                 </div>
             </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-           
             <div class="step" id="step3">
                 <h5>GST Fraud/Evasion Check</h5>
                 <p>Is complaint related to Fraud/Evasion?</p>
@@ -410,9 +500,8 @@
                     <button type="button" class="btn btn-step" onclick="nextStep()">Next</button>
                 </div>
             </div>
-            
 
-            
+
             <div class="step" id="step4">
                 <h5>Details of Suspect</h5>
                 <div class="row">
@@ -421,8 +510,8 @@
                                 <label for="firm_name" class="form-label">
                                     Firm Name <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="firm_name" id="firm_name" 
-                                    class="form-control" placeholder="Enter Firm Name" 
+                                <input type="text" name="firm_name" id="firm_name"
+                                    class="form-control" placeholder="Enter Firm Name"
                                     oninput="sanitizeFirmName(this)">
                             </div>
                     </div>
@@ -432,7 +521,7 @@
                             <label for="gstin" class="form-label">
                                 GSTIN <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="gstin" id="gstin" 
+                            <input type="text" name="gstin" id="gstin"
                                 class="form-control" placeholder="Enter GSTIN">
                         </div>
                     </div>
@@ -443,14 +532,14 @@
                         <label for="address_detail" class="form-label">
                             Firm Address <span class="text-danger">*</span>
                         </label>
-                        <textarea name="address_detail" id="address_detail" 
+                        <textarea name="address_detail" id="address_detail"
                             class="form-control" rows="3" placeholder="Enter Address"
                             oninput="sanitizeAddress(this)"></textarea>
                     </div>
                 </div>
 
 
-               
+
                 <div class="row">
                     <div class="mb-2">
                         <label for="against_district_id" class="form-label">
@@ -470,7 +559,7 @@
                         <label for="estimate_tax_amount" class="form-label">
                             Estimated amount of Tax Evasion (in Rupees) <span class="text-danger">*</span>
                         </label>
-                        <input type="number" name="estimate_tax_amount" id="estimate_tax_amount" 
+                        <input type="number" name="estimate_tax_amount" id="estimate_tax_amount"
                             class="form-control" placeholder="Enter estimated tax amount" min="0" step="any">
                     </div>
                 </div>
@@ -482,19 +571,19 @@
                             <label for="document" class="form-label">
                                 Upload Proof Document <span class="text-danger">*</span>
                             </label>
-                            <input type="file" name="document" id="document" 
+                            <input type="file" name="document" id="document"
                                 class="form-control" accept=".jpg,.jpeg,.png,.pdf">
                         </div>
                     </div>
                 </div>
-               
-            
+
+
                 <div class="mb-3">
                     <label for="remarks" class="form-label">
                         Remarks <span class="text-danger">*</span>
                     </label>
-                    <textarea name="remarks" id="remarks" 
-                            class="form-control mb-2" placeholder="Remarks" 
+                    <textarea name="remarks" id="remarks"
+                            class="form-control mb-2" placeholder="Remarks"
                             oninput="sanitizeRemarks(this)" rows="3" ></textarea>
                 </div>
 
@@ -505,10 +594,11 @@
             </div>
         </form>
     </div>
-
+</div>
+ </div>
     <script>
         let currentStep = 1;
-        
+
         function showStep(step) {
             document.querySelectorAll('.step').forEach((el, i) => {
                 el.classList.remove('active');
@@ -532,10 +622,10 @@
             }else{
                 currentStep--;
                 showStep(currentStep);
-            }  
+            }
         }
-        
-        // Submit Step First 
+
+        // Submit Step First
         function submitStep1() {
             $('#loader').removeClass('d-none');
             let complaint_type = $('#complaint_type').val();
@@ -548,7 +638,7 @@
                     text: 'Select your Complaint Type!',
                     confirmButtonText: 'OK'
                 });
-                return; 
+                return;
             }
 
             axios.post("{{ route('complaints.step-first') }}", {
@@ -584,7 +674,7 @@
             const category = document.getElementById('complaint_type')?.value;
 
 
-          
+
 
             const pin_code = document.querySelector('input[name="pin_code"]').value.trim();
             const complainant_district = document.querySelector('input[name="complainant_district"]').value.trim(); // from API
@@ -626,7 +716,7 @@
                     confirmButtonText: 'OK'
                 });
             }
-            
+
 
            if (!complainant_aadhaar || !/^\d{12}$/.test(complainant_aadhaar)) {
                 $('#loader').addClass('d-none');
@@ -659,7 +749,7 @@
             }
 
 
-            // New Field 
+            // New Field
 
             // Pin Code
             if (!pin_code || pin_code.length !== 6) {
@@ -767,7 +857,7 @@
 
                 if (!allowedTypes.includes(upload_document.type)) {
                     $('#loader').addClass('d-none');
-                    $('#upload_document').val(''); 
+                    $('#upload_document').val('');
                     return Swal.fire({
                         icon: 'warning',
                         title: 'Error',
@@ -776,11 +866,11 @@
                     });
                 }
 
-             
-                const maxSize = 50 * 1024; 
+
+                const maxSize = 50 * 1024;
                 if (upload_document.size > maxSize) {
                     $('#loader').addClass('d-none');
-                    $('#upload_document').val(''); 
+                    $('#upload_document').val('');
                     return Swal.fire({
                         icon: 'warning',
                         title: 'Error',
@@ -1023,7 +1113,7 @@
             nameInput.addEventListener('input', () => {
                 nameInput.value = nameInput.value.replace(/[^a-zA-Z\s]/g, '');
             });
-            
+
             phoneInput.addEventListener('input', () => {
                 phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '').slice(0, 10);
             });
@@ -1130,7 +1220,7 @@
                     $('#complaint_type').val(response.data.complaints.complaint_type);
                     $('#fraudCheck').val(response.data.complaints.is_fraud_related);
 
-                    // here 
+                    // here
                     $('input[name="pin_code"]').val(response.data.complaints.pin_code);
                     $('input[name="complainant_district"]').val(response.data.complaints.complainant_district);
                     $('input[name="complainant_state"]').val(response.data.complaints.complainant_state);
@@ -1163,7 +1253,7 @@
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
             const maxSize = 200 * 1024;
 
-            if (!file) return; 
+            if (!file) return;
 
             // File type validation
             if (!allowedTypes.includes(file.type)) {
@@ -1189,7 +1279,7 @@
                 return;
             }
         });
-   
+
         function handlePinInput(input) {
             input.value = input.value.replace(/[^0-9]/g, '').slice(0, 6);
 
