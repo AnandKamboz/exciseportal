@@ -7,7 +7,7 @@
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
+
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -27,7 +27,7 @@
     /* Sidebar */
     .sidebar {
       min-height: 100vh;
-      background: linear-gradient(180deg, #ff9983, #FF8A73);
+         background: linear-gradient(145deg, #000000, #7e7e7e);
       transition: width 0.3s;
       color: #fff;
       width: 230px;
@@ -70,14 +70,14 @@
 
     /* Topbar */
     .topbar {
-      background: linear-gradient(135deg, #FF8A73, #FFEEDC);
+        background: linear-gradient(135deg, #7386ff, #262626);
       padding: 12px 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      color: #333;
+      color: #ffffff;
       font-weight: bold;
     }
     .topbar h4 {
-      color: #FF3200;
+      color: #ffffff;
       font-weight: 700;
     }
 
@@ -99,6 +99,7 @@
     }
     .card h5 {
       color: #555;
+      font-size: 16px;
     }
 
     /* Table */
@@ -125,7 +126,7 @@
 
     /* Footer */
     footer {
-      background: linear-gradient(135deg, #FF8A73, #FFEEDC);
+        background: linear-gradient(135deg, #7386ff, #262626);
       color: #fff;
       padding: 15px;
       text-align: center;
@@ -133,6 +134,15 @@
       margin-top: auto;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
     }
+
+    .new-butt {
+    text-decoration: none;
+    background-color: #55d06a;
+    padding: 5px 10px;
+    color: #ffffff;
+    font-size: 14px;
+    border-radius: 10px;
+}
   </style>
 </head>
 <body>
@@ -173,7 +183,7 @@
       </div>
     </div>
 
-   
+
     <div class="container-fluid mt-4 flex-grow-1">
         @yield('content')
     </div>
@@ -202,7 +212,7 @@
             responsive: true,
             pageLength: 5,
             lengthMenu: [5, 10, 25, 50],
-            order: [[4, 'desc']], 
+            order: [[4, 'desc']],
             columnDefs: [
                 { orderable: false, targets: 3 }
             ]

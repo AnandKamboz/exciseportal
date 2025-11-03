@@ -6,7 +6,7 @@
 @section('content')
 <!-- <div class="container-fluid">
     <div class="card p-4 mb-4" style="background: #FFFBF5;">
-        <h4 class="fw-bold text-danger mb-3">Complaint Details</h4>
+        <h4 class="fw-bold  mb-3">Complaint Details</h4>
 
         <div class="row g-3">
             <div class="col-md-6">
@@ -75,7 +75,7 @@
 
 <div class="container-fluid">
     <div class="card p-4 mb-4" style="background: #FFFBF5;">
-        <h4 class="fw-bold text-danger mb-3">Complaint Details</h4>
+        <h4 class="fw-bold  mb-3">Complaint Details</h4>
 
         <!-- Complainant Details -->
         <div class="row g-3">
@@ -178,7 +178,7 @@
                 </div>
 
                 <div class="mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm">Update Status</button>
+                    <button type="submit" class="btn-proceed">Update Status</button>
                 </div>
             </form>
         </div>
@@ -221,7 +221,7 @@
     <hr>
 
     <div class="text-center">
-        <a href="{{ route('inspector.feedback', ['secure_id' => $complain->secure_id]) }}" 
+        <a href="{{ route('inspector.feedback', ['secure_id' => $complain->secure_id]) }}"
         class="btn btn-proceed mt-2 mb-2">
             <i class="bi bi-arrow-right-circle me-1"></i> Proceed
         </a>
@@ -230,27 +230,23 @@
 
 <style>
 .btn-proceed {
-  background: linear-gradient(135deg, #FF8A73, #FF3200);
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(255, 100, 50, 0.3);
+    border-radius: 20px;
+    font-weight: 600;
+    padding: 0.6rem 2rem;
+    background: #7386ff;
+    border: none;
+    color: #fff;
 }
 .btn-proceed:hover {
-  background: linear-gradient(135deg, #FF3200, #FF8A73);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(255, 100, 50, 0.4);
-  color: #fff;
+     background: #4b59ba;
+    color: #fff;
 }
 </style>
 
 
 
 
-   
+
 
 <!-- Include this at the bottom of your Blade, before </body> -->
     @if(session('success'))

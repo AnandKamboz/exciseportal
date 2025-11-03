@@ -137,7 +137,7 @@
               <textarea name="remarks" id="remarks" rows="1" class="form-control" placeholder="Enter remarks..." required></textarea>
             </div>
 
-            
+
           </div>
 
           <div id="acceptSection" class="mt-4 d-none">
@@ -208,14 +208,17 @@
 
 <style>
   .btn-proceed {
-    background-color: #0d6efd; /* Bootstrap primary color */
-    color: #fff;               /* Text color white */
-    border: 1px solid #0d6efd;
+       border-radius: 20px;
+    font-weight: 600;
+    padding: 0.6rem 2rem;
+    background: #7386ff;
+    border: none;
+    color: #fff;
 }
 
 .btn-proceed:hover {
-    background-color: #0b5ed7; /* Thicker shade on hover */
-    border-color: #0b5ed7;
+   background: #4b59ba;
+    color: #fff;
 }
 
 </style>
@@ -323,7 +326,7 @@
 //     let formData = new FormData(this);
 
 //     $.ajax({
-//       url: "{{ route('inspector.action') }}", 
+//       url: "{{ route('inspector.action') }}",
 //       method: "POST",
 //       data: formData,
 //       processData: false,
@@ -387,7 +390,7 @@ $(document).ready(function() {
     }
 
     $.ajax({
-      url: "{{ route('inspector.action') }}", 
+      url: "{{ route('inspector.action') }}",
       method: "POST",
       data: formData,
       processData: false,
