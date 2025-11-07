@@ -13,8 +13,8 @@ class ComplainantController extends Controller
 {
     public function complainant()
     {
-        if (!Auth::check()) {
-          return redirect('/');
+        if (!Auth::check() || !$request->session()->has('mobile')) {
+            return redirect('/')->with('error', 'Unauthorized access!');
         }
 
         $districts = DB::table('districts')->get();
@@ -31,7 +31,7 @@ class ComplainantController extends Controller
 
         $userMobile = trim(Auth::user()->mobile);
 
-        // Existing complaint check (is_completed = 0 OR NULL)
+
         $existingComplaint = Complainant::where('complainant_phone', $userMobile)
             ->where(function($q) {
                 $q->where('is_completed', 0)
@@ -40,7 +40,6 @@ class ComplainantController extends Controller
             ->first();
 
         if ($existingComplaint) {
-            // 🔹 Update existing record
             $existingComplaint->complaint_type = $request->complaint_type;
             $existingComplaint->save();
 
@@ -51,10 +50,6 @@ class ComplainantController extends Controller
                 'complaint_id' => $existingComplaint->complaint_id,
             ]);
         } else {
-            // do {
-            //     $complaintId = strtoupper('CMP-' . rand(100000, 999999));
-            // } while (Complainant::where('complaint_id', $complaintId)->exists());
-
             $prefix = strtoupper($request->complaint_type);
 
             do {
@@ -70,7 +65,7 @@ class ComplainantController extends Controller
             $complaint->complainant_phone = $userMobile;
             $complaint->secure_id = $secureId;
             $complaint->complaint_id = $complaintId;
-            $complaint->is_completed = 0; // default set
+            $complaint->is_completed = 0;
             $complaint->save();
 
             return response()->json([
@@ -84,15 +79,12 @@ class ComplainantController extends Controller
 
     public function storeSecondStep(Request $request)
     {
-        // dd($request->all());
         $data = $request->validate([
             'complainant_name' => 'required|string|max:255',
             'complainant_phone'           => 'required|numeric|digits:10',
             'complainant_email'            => 'required|email|unique:users,email,' . Auth::id(),
             'complainant_aadhaar'          => 'required|digits:12',
             'complainant_address'          => 'required|string',
-            // 'complainant_dist_id'     => 'required',
-
             'pin_code'                => 'required|digits:6',
             'complainant_state'       => 'required|string|max:255',
             'complainant_district'       => 'required|string|max:255',
@@ -157,7 +149,7 @@ class ComplainantController extends Controller
         $data = $request->validate([
             'fraud_check' => 'required|in:1,0',
         ]);
-        
+
         $secureId = Complainant::where('complainant_phone', auth::user()->mobile)->where('is_completed',0)->value('secure_id');
         $complaint = Complainant::where('secure_id', $secureId)->first();
 
@@ -180,7 +172,7 @@ class ComplainantController extends Controller
     }
 
     public function store(Request $request)
-    {       
+    {
             $data = $request->validate([
                 'firm_name'      => 'required|string|max:255',
                 'firm_address'    => 'required|string|max:500',
@@ -190,17 +182,17 @@ class ComplainantController extends Controller
                 'against_district_id' => 'required',
                 'estimate_tax_amount' => 'required|numeric|min:1',
             ]);
-          
+
             $secureId = Complainant::where('complainant_phone', auth()->user()->mobile)
                         ->where('is_completed', 0)
                         ->value('secure_id');
-        
+
             $complaint = Complainant::where('secure_id', $secureId)->first();
-          
+
             if (!$complaint) {
                 return redirect()->back()->with('error', 'Complaint not found.');
             }
-           
+
 
             if ($complaint->is_completed == '1') {
                 return redirect()->back()->with('error', 'Complaint already submitted.');
@@ -224,11 +216,11 @@ class ComplainantController extends Controller
                 unset($data['proof_document']);
             }
 
-    
+
             $data['is_completed'] = 1;
             $data['detc_updated_flag'] = 1;
             $complaint->update($data);
-            
+
             // $request->session()->flush();
 
            return response()->json([

@@ -351,8 +351,8 @@
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
                             <div class="text-center mb-4">
-                                <img src="./assets/images/haryana-logo.png" alt="Logo" width="80" height="80"
-                                    class="rounded-circle">
+                                <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo" width="80"
+                                    height="80" class="rounded-circle">
                             </div>
                             <h4 class="text-center mb-4 fw-bold">Excise and Taxation Department</h4>
 
@@ -367,8 +367,11 @@
 
                                 <div id="successMsg" class="alert alert-success mt-3 hidden"></div>
 
-                                <div class="form-outline mb-4 d-flex align-items-center justify-content-between">
-                                    <div class="captcha bg-white text-dark px-3 py-2 rounded fw-bold">A7D5K</div>
+                                <div class="form-outline mb-4 d-flex align-items-center justify-content-between d-none"
+                                    id="captcha_code">
+                                    <div class="captcha bg-white text-dark px-3 py-2 rounded fw-bold">
+                                        {{session('captcha') }}
+                                    </div>
                                     <input type="text" id="captchaInput" class="form-control w-50"
                                         placeholder="Enter Captcha" />
                                 </div>
@@ -390,6 +393,7 @@
     <script>
         const mobileInput = document.getElementById('mobile');
         const otpInput = document.getElementById('otp');
+        const captchaInput = document.getElementById('captchaInput');
         const sendOtpBtn = document.getElementById('sendOtpBtn');
         const loginBtn = document.getElementById('loginBtn');
         const successMsg = document.getElementById('successMsg');
@@ -428,6 +432,7 @@
                         successMsg.classList.remove('hidden');
                         otpSection.classList.remove('hidden');
                         mobileSection.classList.add('hidden');
+                        $('#captcha_code').removeClass('d-none');
                     } else {
                         $('#loader').addClass('d-none');
                         Swal.fire({
@@ -458,6 +463,7 @@
             $('#loader').removeClass('d-none');
             loginBtn.disabled = true;
             loginBtn.innerText = 'Please Wait...';
+
             if (otpInput.value.length !== 6) {
                 $('#loader').addClass('d-none');
                 Swal.fire({
@@ -466,12 +472,30 @@
                     text: 'Enter 6-digit OTP',
                     confirmButtonText: 'OK'
                 });
+                loginBtn.disabled = false;
+                loginBtn.innerText = 'Login';
                 return;
             }
+
+            // Captcha validation
+            if (captchaInput.value.trim() === '') {
+                $('#loader').addClass('d-none');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please Enter 6 Digit Captcha',
+                    confirmButtonText: 'OK'
+                });
+                loginBtn.disabled = false;
+                loginBtn.innerText = 'Login';
+                return;
+            }
+
 
             axios.post("{{ route('verify-otp') }}", {
                 mobile: mobileInput.value,
                 otp: otpInput.value,
+                captcha: captchaInput.value,
                 _token: document.querySelector('input[name="_token"]').value
             })
                 .then(res => {
@@ -499,6 +523,9 @@
                         text: err.response?.data?.message || 'Server error!',
                         confirmButtonText: 'OK'
                     });
+                    loginBtn.disabled = false;
+                    loginBtn.innerText = 'Login';
+                    return;
                 });
         });
     </script>

@@ -41,168 +41,24 @@ class AuthController extends Controller
         ]);
     }
 
-    // public function verifyOtp(Request $request)
-    // {
-    //     $request->validate([
-    //         'mobile' => 'required|numeric|digits:10',
-    //         'otp' => 'required|numeric|digits:6',
-    //     ]);
-
-    //     $mobile = $request->mobile;
-    //     $otpInput = $request->otp;
-
-       
-    //     $otpRecord = Otp::where('mobile', $mobile)
-    //         ->where('otp', $otpInput)
-    //         ->where('is_used', false)
-    //         ->where('expires_at', '>=', Carbon::now())
-    //         ->latest()
-    //         ->first();
-
-    //     if (!$otpRecord) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Invalid or expired OTP'
-    //         ]);
-    //     }
-
-    //     $otpRecord->update(['is_used' => true]);
-
-      
-    //     $recordExists = Complainant::where('complainant_phone', $mobile)
-    //         ->where('is_completed', 1)
-    //         ->exists();
-
-    //     if ($recordExists) {
-    //         $user = User::firstOrCreate(['mobile' => $mobile]);
-    //         auth()->login($user);
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'redirect_url' => route('user.dashboard'),
-    //             'message' => 'Login successful!',
-    //         ]);
-    //     }
-
-       
-    //     do {
-    //         $secureId = Str::random(32);
-    //     } while (User::where('secure_id', $secureId)->exists());
-
-    //     $user = User::firstOrCreate(
-    //         ['mobile' => $mobile],
-    //         ['secure_id' => $secureId]
-    //     );
-
-       
-    //     if ($user->wasRecentlyCreated) {
-    //         $defaultRole = RoleGroup::where('role_name', 'user')->first();
-    //         if ($defaultRole) {
-    //             $user->roles()->attach($defaultRole->id);
-    //         }
-    //     }
-
-       
-    //     auth()->login($user);
-
-       
-    //     $request->session()->put('mobile', $mobile);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'redirect_url' => route('complainant'),
-    //         'message' => 'Login successful!',
-    //     ]);
-    // }
-
-    // public function verifyOtp(Request $request)
-    // {
-    //     $request->validate([
-    //         'mobile' => 'required|numeric|digits:10',
-    //         'otp' => 'required|numeric|digits:6',
-    //     ]);
-
-    //     $mobile = $request->mobile;
-    //     $otpInput = $request->otp;
-
-    //     $otpRecord = Otp::where('mobile', $mobile)
-    //         ->where('otp', $otpInput)
-    //         ->where('is_used', false)
-    //         ->where('expires_at', '>=', Carbon::now())
-    //         ->latest()
-    //         ->first();
-
-    //     if (!$otpRecord) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Invalid or expired OTP'
-    //         ]);
-    //     }
-
-    //     $otpRecord->update(['is_used' => true]);
-
-    //     $recordExists = Complainant::where('complainant_phone', $mobile)
-    //         ->where('is_completed', 1)
-    //         ->exists();
-
-    //     if ($recordExists) {
-    //         $user = User::firstOrCreate(['mobile' => $mobile]);
-
-    //         // **Role check for existing user**
-    //         $role = $user->roles()->pluck('role_name')->first(); 
-
-    //         auth()->login($user);
-
-    //         $redirectUrl = route('user.dashboard'); // default
-
-    //         if ($role === 'detc') {
-    //             $redirectUrl = route('detc.dashboard');
-    //         }
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'redirect_url' => $redirectUrl,
-    //             'message' => 'Login successful!',
-    //         ]);
-    //     }
-
-    //     do {
-    //         $secureId = Str::random(32);
-    //     } while (User::where('secure_id', $secureId)->exists());
-
-    //     $user = User::firstOrCreate(
-    //         ['mobile' => $mobile],
-    //         ['secure_id' => $secureId]
-    //     );
-
-    //     if ($user->wasRecentlyCreated) {
-    //         $defaultRole = RoleGroup::where('role_name', 'user')->first();
-    //         if ($defaultRole) {
-    //             $user->roles()->attach($defaultRole->id);
-    //         }
-    //     }
-
-    //     auth()->login($user);
-
-    //     $request->session()->put('mobile', $mobile);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'redirect_url' => route('complainant'),
-    //         'message' => 'Login successful!',
-    //     ]);
-    // }
-
-
     public function verifyOtp(Request $request)
     {
         $request->validate([
             'mobile' => 'required|numeric|digits:10',
             'otp' => 'required|numeric|digits:6',
+            'captcha' => 'required|size:6',
         ]);
 
         $mobile = $request->mobile;
         $otpInput = $request->otp;
+        $captcha = $request->captcha;
+
+        if ($captcha !== session('captcha')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid captcha'
+            ]);
+        }
 
         $otpRecord = Otp::where('mobile', $mobile)
             ->where('otp', $otpInput)
@@ -239,7 +95,7 @@ class AuthController extends Controller
         auth()->login($user);
         $request->session()->put('mobile', $mobile);
 
-        $role = $user->roles()->pluck('role_name')->first(); 
+        $role = $user->roles()->pluck('role_name')->first();
 
         $recordExists = Complainant::where('complainant_phone', $mobile)
             ->where('is_completed', 1)
@@ -248,7 +104,7 @@ class AuthController extends Controller
             if ($role === 'detc') {
                 $redirectUrl = route('detc.dashboard');
             } elseif ($role === 'excise inspector') {
-                $redirectUrl = route('inspector.dashboard'); 
+                $redirectUrl = route('inspector.dashboard');
             } else {
                 $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
             }

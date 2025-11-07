@@ -8,8 +8,11 @@ use App\Http\Controllers\Web\LogoutController;
 use App\Http\Controllers\Web\UserComplaintController;
 use App\Http\Controllers\Web\DetcController;
 use App\Http\Controllers\Web\InspectorDashboard;
+use Illuminate\Support\Str;
 
 Route::get('/', function () {
+    $captcha_value = Str::random(6);
+    session(['captcha' => $captcha_value]);
     return view('welcome');
 })->name('login');
 
@@ -33,7 +36,7 @@ Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show
 Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
 Route::get('detc/complaint/{secure_id}', [DetcController::class, 'show'])->name('detc.details');
 
-// Here 
+// Here
 Route::post('/user/complaint/update/{secure_id}', [DetcController::class, 'updateComplaintStatus'])
     ->name('user.updateComplaintStatus');
 
