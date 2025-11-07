@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ComplainantController extends Controller
 {
-    public function complainant()
+    public function complainant(Request $request)
     {
         if (!Auth::check() || !$request->session()->has('mobile')) {
             return redirect('/')->with('error', 'Unauthorized access!');
