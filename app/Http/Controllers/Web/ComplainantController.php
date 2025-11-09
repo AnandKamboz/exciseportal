@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
+
+
 
 class ComplainantController extends Controller
 {
@@ -19,238 +23,366 @@ class ComplainantController extends Controller
 
         $districts = DB::table('districts')->get();
         $userMobile = Auth::user()->mobile;
-        $userData = Complainant::where('complainant_phone', $userMobile)->where('is_completed',0)->first();
-        return view('complainant.create',compact('userMobile','userData','districts'));
+        $userDataForNewApplication = Complainant::where('complainant_phone', $userMobile)->where('is_completed', 0)->first();
+
+        $userData = Complainant::where('complainant_phone', $userMobile)->first();
+        return view('complainant.create',compact('userMobile','userData','districts','userDataForNewApplication'));
     }
 
-    public function storeFirstStep(Request $request)
+    public function saveInformer(Request $request)
     {
         $request->validate([
-            'complaint_type' => 'required|in:vat,gst,excise',
+            'informer_name' => 'required|string|max:100',
+            'informer_aadhar' => 'required|digits:12',
+            'informer_address' => 'required|string',
+            'informer_email' => 'nullable|email',
         ]);
 
-        $userMobile = trim(Auth::user()->mobile);
+        $mobile = auth()->user()->mobile;
 
-
-        $existingComplaint = Complainant::where('complainant_phone', $userMobile)
-            ->where(function($q) {
-                $q->where('is_completed', 0)
-                ->orWhereNull('is_completed');
-            })
+        $existingComplaint = Complainant::where('complainant_phone', $mobile)
+            ->where('is_completed', 0)
             ->first();
 
         if ($existingComplaint) {
-            $existingComplaint->complaint_type = $request->complaint_type;
-            $existingComplaint->save();
-
-            return response()->json([
-                'status' => 'updated',
-                'message' => 'Existing complaint updated successfully.',
-                'secure_id' => $existingComplaint->secure_id,
-                'complaint_id' => $existingComplaint->complaint_id,
+            $existingComplaint->update([
+                'complainant_name' => $request->informer_name,
+                'complainant_aadhar' => $request->informer_aadhar,
+                'complainant_address' => $request->informer_address,
+                'complainant_email' => $request->informer_email ?? null,
             ]);
+
+            $message = 'Existing complaint updated successfully!';
         } else {
-            $prefix = strtoupper($request->complaint_type);
-
-            do {
-                $complaintId = $prefix . '-' . rand(100000, 999999);
-            } while (Complainant::where('complaint_id', $complaintId)->exists());
-
-            do {
-                $secureId = bin2hex(random_bytes(16));
-            } while (Complainant::where('secure_id', $secureId)->exists());
-
             $complaint = new Complainant();
-            $complaint->complaint_type = $request->complaint_type;
-            $complaint->complainant_phone = $userMobile;
-            $complaint->secure_id = $secureId;
-            $complaint->complaint_id = $complaintId;
+            $complaint->secure_id = Str::random(32);
+            $complaint->complainant_name = $request->informer_name;
+            $complaint->complainant_aadhar = $request->informer_aadhar;
+            $complaint->complainant_address = $request->informer_address;
+            $complaint->complainant_email = $request->informer_email ?? null;
+            $complaint->complainant_phone = $mobile;
+            $complaint->user_id = auth()->id();
             $complaint->is_completed = 0;
             $complaint->save();
 
-            return response()->json([
-                'status' => 'created',
-                'message' => 'New complaint created successfully.',
-                'secure_id' => $complaint->secure_id,
-                'complaint_id' => $complaint->complaint_id,
-            ]);
+            $message = 'New informer record created successfully!';
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+        ]);
     }
 
-    public function storeSecondStep(Request $request)
+
+    public function saveComplaintType(Request $request)
     {
-        $data = $request->validate([
-            'complainant_name' => 'required|string|max:255',
-            'complainant_phone'           => 'required|numeric|digits:10',
-            'complainant_email'            => 'required|email|unique:users,email,' . Auth::id(),
-            'complainant_aadhaar'          => 'required|digits:12',
-            'complainant_address'          => 'required|string',
-            'pin_code'                => 'required|digits:6',
-            'complainant_state'       => 'required|string|max:255',
-            'complainant_district'       => 'required|string|max:255',
-            'bank_account'            => 'required|numeric|digits_between:8,16',
-            'confirm_bank_account'    => 'required|same:bank_account',
-            'bank_name'               => 'required|string|max:255',
-            'ifsc_code'               => 'required|string|max:20',
-            'bank_branch_address'     => 'required|string|max:500',
+        $request->validate([
+            'complaint_type' => 'required|in:gst,excise,vat',
         ]);
 
-        $userMobile = Auth::user()->mobile;
-        $data['complainant_phone'] = $userMobile;
-        $data['is_fraud_related'] = false;
+        $user = Auth::user();
+        $mobile = $user->mobile;
 
-        $complaint = Complainant::where('complainant_phone', $userMobile)->where('is_completed',0)->first();
+        $complaint = Complainant::where('complainant_phone', $mobile)
+            ->where('is_completed', 0)
+            ->first();
 
         if ($complaint) {
-            $complaint->update($data);
-        } else {
-            do {
-                $complaintId = strtoupper('CMP-' . rand(100000, 999999));
-            } while (Complainant::where('complaint_id', $complaintId)->exists());
-
-            do {
-                $secureId = bin2hex(random_bytes(16));
-            } while (Complainant::where('secure_id', $secureId)->exists());
-
-            $data['complaint_id'] = $complaintId;
-            $data['secure_id']    = $secureId;
-            $data['is_completed'] = false;
-
-            $complaint = Complainant::create($data);
-        }
-
-        if ($request->hasFile('upload_document')) {
-            $file = $request->file('upload_document');
-            $fileName = $file->getClientOriginalName();
-            $path = $file->storeAs('complaints/' . $complaint->complaint_id, $fileName, 'public');
-
-            $complaint->upload_document = $path;
+            $complaint->complaint_type = $request->complaint_type;
             $complaint->save();
+            $message = 'Complaint type updated successfully!';
         }
-
-        User::where('mobile', $userMobile)
-            ->update([
-                'name'       => $data['complainant_name'],
-                'email'      => $data['complainant_email'],
-                'aadhaar'    => $data['complainant_aadhaar'],
-                'address'    => $data['complainant_address'],
-                'district'=> $data['complainant_district'],
-                'updated_at' => now(),
-            ]);
 
         return response()->json([
-            'message'   => 'Step 2 saved',
-            'complaint' => $complaint
+            'success' => true,
+            'message' => $message,
         ]);
     }
 
-    public function storeThirdStep(Request $request)
+
+    // public function submitComplaint(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'taxType' => 'required|in:gst,vat,excise',
+    //     ], [
+    //         'taxType.required' => 'Complaint type is required.',
+    //         'taxType.in' => 'Invalid complaint type selected.',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $validator->errors()->first(),
+    //         ]);
+    //     }
+
+    //     $type = strtolower($request->taxType);
+    //     $mobile = Auth::user()->mobile;
+
+    //     $rules = [];
+    //     if ($type === 'gst') {
+    //         $rules = [
+    //             'gstFirmName'   => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+    //             'gstGstin'      => 'required|alpha_num|size:15',
+    //             'gstFirmAddress'=> 'required|string',
+    //             'gstProof'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024',
+    //         ];
+    //     } elseif ($type === 'vat') {
+    //         $rules = [
+    //             'vatFirmName'   => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+    //             'vatTin'        => 'required|alpha_num',
+    //             'vatFirmAddress'=> 'required|string',
+    //             'vatProof'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024',
+    //         ];
+    //     } elseif ($type === 'excise') {
+    //         $rules = [
+    //             'exciseName' => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+    //             'exciseDetails' => 'required|string|max:2000',
+    //             'exciseDesc' => 'nullable|string|max:255',
+    //             'excisePlace' => 'nullable|string|max:255',
+    //             'exciseTime' => 'nullable|string|max:255',
+    //         ];
+    //     }
+
+    //     $validator = Validator::make($request->all(), $rules);
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $validator->errors()->first(),
+    //         ]);
+    //     }
+
+        
+    //     $complaint = Complainant::where('complainant_phone', $mobile)
+    //         ->where('is_completed', 0)
+    //         ->first();
+
+    //     if (!$complaint) {
+         
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'No pending complaint found for update.',
+    //         ]);
+    //     }
+
+    //     if (empty($complaint->application_id)) {
+    //         do {
+    //             $randomDigits = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+    //             $applicationId = strtoupper($type) . '-' . $randomDigits;
+    //         } while (Complainant::where('application_id', $applicationId)->exists());
+
+    //         $complaint->application_id = $applicationId;
+    //     }
+
+       
+    //     $complaint->complaint_type = $type;
+
+       
+    //     if ($type === 'gst') {
+    //         $complaint->gst_firm_name = $request->gstFirmName;
+    //         $complaint->gst_gstin = strtoupper($request->gstGstin);
+    //         $complaint->gst_firm_address = $request->gstFirmAddress;
+
+    //         if ($request->hasFile('gstProof')) {
+    //             $file = $request->file('gstProof');
+    //             $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+    //             $file->storeAs('public/complaints/gst/', $fileName);
+    //             $complaint->gst_proof = $fileName;
+    //         }
+    //     }
+
+    //     if ($type === 'vat') {
+    //         $complaint->vat_firm_name = $request->vatFirmName;
+    //         $complaint->vat_tin = strtoupper($request->vatTin);
+    //         $complaint->vat_firm_address = $request->vatFirmAddress;
+
+    //         if ($request->hasFile('vatProof')) {
+    //             $file = $request->file('vatProof');
+    //             $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+    //             $file->storeAs('public/complaints/vat/', $fileName);
+    //             $complaint->vat_proof = $fileName;
+    //         }
+    //     }
+
+    //     if ($type === 'excise') {
+    //         $complaint->excise_name = $request->exciseName;
+    //         $complaint->excise_desc = $request->exciseDesc;
+    //         $complaint->excise_place = $request->excisePlace;
+    //         $complaint->excise_time = $request->exciseTime;
+    //         $complaint->excise_details = $request->exciseDetails;
+    //     }
+
+    //     $complaint->is_completed = 1;
+    //     $complaint->save();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Complaint updated successfully.',
+    //         'application_id' => $complaint->application_id,
+    //     ]);
+    // }
+
+    public function submitComplaint(Request $request)
     {
-        $data = $request->validate([
-            'fraud_check' => 'required|in:1,0',
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'taxType' => 'required|in:gst,vat,excise',
+        ], [
+            'taxType.required' => 'Complaint type is required.',
+            'taxType.in' => 'Invalid complaint type selected.',
         ]);
 
-        $secureId = Complainant::where('complainant_phone', auth::user()->mobile)->where('is_completed',0)->value('secure_id');
-        $complaint = Complainant::where('secure_id', $secureId)->first();
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+
+        $type = strtolower($request->taxType);
+        $mobile = Auth::user()->mobile;
+
+        $rules = match ($type) {
+            'gst' => [
+                'gstFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+                'gstGstin'       => 'required|alpha_num|size:15',
+                'gstFirmAddress' => 'required|string',
+                'gstProof'       => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            ],
+            'vat' => [
+                'vatFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+                'vatTin'         => 'required|alpha_num',
+                'vatFirmAddress' => 'required|string',
+                'vatProof'       => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            ],
+            'excise' => [
+                'exciseName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+                'exciseDetails' => 'required|string|max:2000',
+                'exciseDesc'    => 'nullable|string|max:255',
+                'excisePlace'   => 'nullable|string|max:255',
+                'exciseTime'    => 'nullable|string|max:255',
+            ],
+            default => [],
+        };
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+
+        $complaint = Complainant::where('complainant_phone', $mobile)
+            ->where('is_completed', 0)
+            ->first();
 
         if (!$complaint) {
-            return redirect()->back()->with('error', 'Complaint not found.');
-        }
-
-        if ($complaint->is_completed == '1') {
-            return redirect()->back()->with('error', 'Complaint already submitted.');
-        }
-
-        $complaint->update([
-            'is_fraud_related' => $data['fraud_check'] == 1 ? true : false,
-        ]);
-
-        return response()->json([
-            'message'   => 'Step 3 saved',
-            'complaint' => $complaint
-        ]);
-    }
-
-    public function store(Request $request)
-    {
-            $data = $request->validate([
-                'firm_name'      => 'required|string|max:255',
-                'firm_address'    => 'required|string|max:500',
-                'proof_document'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:200',
-                'remarks'         => 'required|string|max:1000',
-                'gstin'           => 'required|string|max:15',
-                'against_district_id' => 'required',
-                'estimate_tax_amount' => 'required|numeric|min:1',
-            ]);
-
-            $secureId = Complainant::where('complainant_phone', auth()->user()->mobile)
-                        ->where('is_completed', 0)
-                        ->value('secure_id');
-
-            $complaint = Complainant::where('secure_id', $secureId)->first();
-
-            if (!$complaint) {
-                return redirect()->back()->with('error', 'Complaint not found.');
-            }
-
-
-            if ($complaint->is_completed == '1') {
-                return redirect()->back()->with('error', 'Complaint already submitted.');
-            }
-
-            if ($request->hasFile('proof_document')) {
-                if ($complaint->proof_document && Storage::disk('public')->exists($complaint->proof_document)) {
-                    Storage::disk('public')->delete($complaint->proof_document);
-                }
-
-                $file = $request->file('proof_document');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs(
-                    'complaints/' . $complaint->complaint_id,
-                    $fileName,
-                    'public'
-                );
-
-                $data['proof_document'] = $path;
-            } else {
-                unset($data['proof_document']);
-            }
-
-
-            $data['is_completed'] = 1;
-            $data['detc_updated_flag'] = 1;
-            $complaint->update($data);
-
-            // $request->session()->flush();
-
-           return response()->json([
-                'success'       => true,
-                'message'       => 'Step final saved. Complaint submitted successfully!',
-                'complaint_id'  => $complaint->complaint_id,
-            ]);
-
-    }
-
-    public function getUserData(Request $request)
-    {
-        $user = Auth::user();
-
-        if (!$user) {
             return response()->json([
-                'message' => 'User not authenticated'
-            ], 401);
+                'success' => false,
+                'message' => 'No pending complaint found for update.',
+            ]);
         }
 
-        $complaints = Complainant::where('complainant_phone', auth()->user()->mobile)
-                          ->where('is_completed', 0)
-                          ->first();
+        if (empty($complaint->application_id)) {
+            do {
+                $randomDigits = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+                $applicationId = strtoupper($type) . '-' . $randomDigits;
+            } while (Complainant::where('application_id', $applicationId)->exists());
+
+            $complaint->application_id = $applicationId;
+        } else {
+            $applicationId = $complaint->application_id;
+        }
+
+        $complaint->complaint_type = $type;
+
+        if ($type === 'gst') {
+            $complaint->gst_firm_name = $request->gstFirmName;
+            $complaint->gst_gstin = strtoupper($request->gstGstin);
+            $complaint->gst_firm_address = $request->gstFirmAddress;
+
+            if ($request->hasFile('gstProof')) {
+                $file = $request->file('gstProof');
+                $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+
+                $file->storeAs("public/complaints/{$applicationId}/", $fileName);
+
+                $complaint->gst_proof = $fileName;
+            }
+        }
+
+        // ✅ VAT Complaint Data
+        if ($type === 'vat') {
+            $complaint->vat_firm_name = $request->vatFirmName;
+            $complaint->vat_tin = strtoupper($request->vatTin);
+            $complaint->vat_firm_address = $request->vatFirmAddress;
+
+            if ($request->hasFile('vatProof')) {
+                $file = $request->file('vatProof');
+                $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+
+                $file->storeAs("public/complaints/{$applicationId}/", $fileName);
+
+                $complaint->vat_proof = $fileName;
+            }
+        }
+
+        if ($type === 'excise') {
+            $complaint->excise_name = $request->exciseName;
+            $complaint->excise_desc = $request->exciseDesc;
+            $complaint->excise_place = $request->excisePlace;
+            $complaint->excise_time = $request->exciseTime;
+            $complaint->excise_details = $request->exciseDetails;
+        }
+
+        $complaint->is_completed = 1;
+        $complaint->save();
+
+
+        // For creating user record if not exists
+        // $userMobile = Auth::user()->mobile;
+        // $userExists = User::where('mobile', $userMobile)->exists();
+
+        // if (!$userExists) {
+        //     User::create([
+        //         'email'      => $request->informerEmail ?? null,
+        //         'mobile'     => $userMobile,
+        //         'aadhaar'    => $request->informerAadhar,
+        //         'address'    => $request->informerAddress,
+        //         'district'   => 'Demo District',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ]);
+        // }
+
+        $userMobile = Auth::user()->mobile;
+        $user = User::where('mobile', $userMobile)->first();
+
+        if ($user && (empty($user->aadhaar) || is_null($user->aadhaar))) {
+            $user->update([
+                'email'      => $request->informerEmail ?? null,
+                'aadhaar'    => $request->informerAadhar,
+                'address'    => $request->informerAddress,
+                'district'   => 'Demo District',
+                'updated_at' => now(),
+            ]);
+        }
+
+
+
+
 
 
         return response()->json([
-            'status' => 'success',
-            'complaints' => $complaints
+            'success' => true,
+            'message' => 'Complaint updated successfully. Your Application ID is: ' . $complaint->application_id,
+            'application_id' => $complaint->application_id,
         ]);
     }
+
 
 
 }
+

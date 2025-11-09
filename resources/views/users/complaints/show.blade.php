@@ -4,85 +4,106 @@
 @section('page_title', 'Complaint Details')
 
 @section('content')
-<div class="container-fluid">
-    <div class="card p-4 mb-4" style="background: #FFFBF5;">
-        <h4 class="fw-bold text-danger mb-3">Complaint Details</h4>
+<div class="container-fluid py-4">
+    <div class="card shadow-lg border-0 rounded-4 p-4" style="background: #FFFDF8;">
+        <h4 class="fw-bold text-primary mb-4 border-bottom pb-2">📝 Complaint Details</h4>
 
-        <!-- Complainant Info -->
-        <div class="row g-3 mb-3">
-            <div class="col-md-6">
-                <p><strong>Complaint ID:</strong> {{ $complain->complaint_id }}</p>
-                <p><strong>Complainant Name:</strong> {{ ucfirst($complain->complainant_name) }}</p>
-                <p><strong>Phone:</strong> {{ $complain->complainant_phone }}</p>
-                <p><strong>Email:</strong> {{ $complain->complainant_email }}</p>
-                <p><strong>Aadhaar:</strong> {{ $complain->complainant_aadhaar }}</p>
-                <p><strong>Pin Code:</strong> {{ $complain->pin_code }}</p>
-                <p><strong>Fraud Related:</strong> {{ $complain->is_fraud_related ? 'Yes' : 'No' }}</p>
-            </div>
-
-            <div class="col-md-6">
-                <p><strong>Complaint Date:</strong> {{ $complain->created_at->format('d-m-Y') }}</p>
-                <p><strong>District:</strong> {{ strtoupper($complain->complainant_district) }}</p>
-                <p><strong>State:</strong> {{ strtoupper($complain->complainant_state) }}</p>
-                <p><strong>Against District ID:</strong> {{ $againstDistrictId }}</p>
-                <p><strong>Complaint Type:</strong> {{ strtoupper($complain->complaint_type) }}</p>
-                <p><strong>Status:</strong>
-                    @if($complain->is_completed)
-                        <span class="badge bg-success">Completed</span>
-                    @else
-                        <span class="badge bg-warning text-dark">Pending</span>
-                    @endif
-                </p>
-            </div>
-        </div>
-
-        <hr>
-
-        <!-- Firm Info -->
-        <div class="row g-3 mb-3">
-            <div class="col-md-6">
-                <p><strong>Firm Name:</strong> {{ ucfirst($complain->firm_name) }}</p>
-                <p><strong>GSTIN:</strong> {{ $complain->gstin }}</p>
-                <p><strong>Firm Address:</strong> {{ ucfirst($complain->firm_address) }}</p>
-                <p><strong>Estimate Tax Amount:</strong> ₹{{ number_format($complain->estimate_tax_amount, 2) }}</p>
-            </div>
-
-            <div class="col-md-6">
-                <p><strong>Remarks:</strong> {{ $complain->remarks }}</p>
-                <p><strong>Upload Document:</strong>
-                    @if($complain->upload_document)
-                        <a href="{{ asset('storage/' . $complain->upload_document) }}" target="_blank" class="btn btn-sm btn-primary">View Document</a>
-                    @else
-                        <span class="text-muted">No Document</span>
-                    @endif
-                </p>
-                <p><strong>Proof Document:</strong>
-                    @if($complain->proof_document)
-                        <a href="{{ asset('storage/' . $complain->proof_document) }}" target="_blank" class="btn btn-sm btn-secondary">View Proof</a>
-                    @else
-                        <span class="text-muted">No Proof</span>
-                    @endif
-                </p>
-            </div>
-        </div>
-        <hr>
-
-        <!-- Bank Details -->
-        <div class="row g-3 mb-3">
-            <div class="col-md-6">
-                <p><strong>Bank Account No.:</strong> {{ $complain->bank_account }}</p>
-                <p><strong>Confirm Bank Account No.:</strong> {{ $complain->confirm_bank_account }}</p>
-                <p><strong>Bank Name:</strong> {{ $complain->bank_name }}</p>
-            </div>
-
-            <div class="col-md-6">
-                <p><strong>IFSC Code:</strong> {{ $complain->ifsc_code }}</p>
-                <p><strong>Bank Branch Address:</strong> {{ $complain->bank_branch_address }}</p>
+        {{-- Complaint Info --}}
+        <div class="row g-3 mb-4">
+            @if($complain->application_id)
+                <div class="col-md-4"><strong>Application ID:</strong> {{ $complain->application_id }}</div>
+            @endif
+            @if($complain->complainant_name)
+                <div class="col-md-4"><strong>Name:</strong> {{ ucfirst($complain->complainant_name) }}</div>
+            @endif
+            @if($complain->complainant_phone)
+                <div class="col-md-4"><strong>Phone:</strong> {{ $complain->complainant_phone }}</div>
+            @endif
+            @if($complain->complainant_email)
+                <div class="col-md-4"><strong>Email:</strong> {{ $complain->complainant_email }}</div>
+            @endif
+            @if($complain->complainant_aadhaar)
+                <div class="col-md-4"><strong>Aadhaar:</strong> {{ $complain->complainant_aadhaar }}</div>
+            @endif
+            @if($complain->complainant_address)
+                <div class="col-md-8"><strong>Address:</strong> {{ ucfirst($complain->complainant_address) }}</div>
+            @endif
+            @if($complain->complaint_type)
+                <div class="col-md-4"><strong>Complaint Type:</strong> {{ strtoupper($complain->complaint_type) }}</div>
+            @endif
+            <div class="col-md-4">
+                <strong>Date:</strong> {{ $complain->created_at ? $complain->created_at->format('d-m-Y') : 'N/A' }}
             </div>
         </div>
 
-        <div class="mt-3">
-            <a href="{{ route('user.dashboard') }}" class="btn btn-sm btn-danger">Back to Dashboard</a>
+        {{-- GST / VAT / EXCISE Info --}}
+        @if($complain->gst_firm_name || $complain->vat_firm_name || $complain->excise_name)
+            <hr>
+            <h5 class="fw-semibold text-secondary mb-3">🏢 Firm / Excise Information</h5>
+            <div class="row g-3 mb-4">
+                @if($complain->gst_firm_name)
+                    <div class="col-md-4"><strong>GST Firm Name:</strong> {{ $complain->gst_firm_name }}</div>
+                @endif
+                @if($complain->gst_gstin)
+                    <div class="col-md-4"><strong>GSTIN:</strong> {{ $complain->gst_gstin }}</div>
+                @endif
+                @if($complain->gst_firm_address)
+                    <div class="col-md-8"><strong>Firm Address:</strong> {{ $complain->gst_firm_address }}</div>
+                @endif
+
+                @if($complain->vat_firm_name)
+                    <div class="col-md-4"><strong>VAT Firm Name:</strong> {{ $complain->vat_firm_name }}</div>
+                @endif
+                @if($complain->vat_tin)
+                    <div class="col-md-4"><strong>VAT TIN:</strong> {{ $complain->vat_tin }}</div>
+                @endif
+                @if($complain->vat_firm_address)
+                    <div class="col-md-8"><strong>VAT Firm Address:</strong> {{ $complain->vat_firm_address }}</div>
+                @endif
+
+                @if($complain->excise_name)
+                    <div class="col-md-4"><strong>Excise Name:</strong> {{ $complain->excise_name }}</div>
+                @endif
+                @if($complain->excise_place)
+                    <div class="col-md-4"><strong>Excise Place:</strong> {{ $complain->excise_place }}</div>
+                @endif
+                @if($complain->excise_time)
+                    <div class="col-md-4"><strong>Excise Time:</strong> {{ $complain->excise_time }}</div>
+                @endif
+                @if($complain->excise_details)
+                    <div class="col-md-12"><strong>Excise Details:</strong> {{ $complain->excise_details }}</div>
+                @endif
+            </div>
+        @endif
+
+        {{-- Proof Files --}}
+        @if($complain->gst_proof || $complain->vat_proof)
+            <hr>
+            <h5 class="fw-semibold text-secondary mb-3">📎 Attached Documents</h5>
+            <div class="row g-3 mb-3">
+                @if($complain->gst_proof)
+                    <div class="col-md-4">
+                        <a href="{{ asset('storage/complaints/'.$complain->application_id.'/'.$complain->gst_proof) }}"
+                           target="_blank" class="btn btn-sm btn-outline-primary">
+                           View GST Proof
+                        </a>
+                    </div>
+                @endif
+                @if($complain->vat_proof)
+                    <div class="col-md-4">
+                        <a href="{{ asset('storage/complaints/'.$complain->application_id.'/'.$complain->vat_proof) }}"
+                           target="_blank" class="btn btn-sm btn-outline-success">
+                           View VAT Proof
+                        </a>
+                    </div>
+                @endif
+            </div>
+        @endif
+
+        <div class="mt-4 text-center">
+            <a href="{{ route('user.dashboard') }}" class="btn btn-danger px-4">
+                ← Back to Dashboard
+            </a>
         </div>
     </div>
 </div>

@@ -17,7 +17,7 @@ class UserDashboard extends Controller
           return redirect('/');
         }
         
-        $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
+        $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)->where('is_completed', 1)
         ->orderBy('created_at', 'desc')
         ->get();
 

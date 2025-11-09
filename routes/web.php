@@ -16,9 +16,24 @@ Route::get('/', function () {
     return view('welcome');
 })->name('login');
 
+Route::get('/demo', function () {
+    return view('demo');
+})->name('demo');
+
+
+
 Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
-Route::get('/complainant', [ComplainantController::class, 'complainant'])->name('complainant');
+
+
+
+Route::get('user/complainant', [ComplainantController::class, 'complainant'])->name('complainant');
+Route::post('/save-informer', [ComplainantController::class, 'saveInformer'])->name('save.informer');
+Route::post('/save-complaint-type', [ComplainantController::class, 'saveComplaintType'])
+    ->name('save.complaint.type');
+
+Route::post('/submit-complaint', [ComplainantController::class, 'submitComplaint']);
+
 
 
 Route::post('/complaints/step-first', [ComplainantController::class, 'storeFirstStep'])->name('complaints.step-first');

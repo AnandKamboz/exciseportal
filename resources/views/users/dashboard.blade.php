@@ -6,36 +6,16 @@
 @section('content')
 
 <div class="container-fluid">
-    <!-- <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="card text-center p-3" style="background: #FF9983; color: #fff;">
-                <h5>Total Complaints</h5>
-                <h2>1</h2>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-3" style="background: #FF8A73; color: #fff;">
-                <h5>Approved</h5>
-                <h2>0</h2>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-3" style="background: #FFBDA3; color: #fff;">
-                <h5>Pending</h5>
-                <h2>1</h2>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-3" style="background: #FF6F5E; color: #fff;">
-                <h5>Rejected</h5>
-                <h2>0</h2>
-            </div>
-        </div>
-    </div> -->
-
     <!-- DataTable -->
     <div class="card p-3">
-        <h5 class="fw-bold  mb-3">Complaint Details</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">Complaint Details</h5>
+            <a href="{{ route('complainant') }}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Add Complaint
+            </a>
+        </div>
+
+
         <div class="table-responsive">
             <table id="complaintsTable" class="table table-hover table-striped">
                 <thead style="background: #FF8A73; color: #fff;">
@@ -43,9 +23,8 @@
                         <th>#</th>
                         <th>Complaint Date</th>
                         <th>Complaint Id</th>
-                        <th>Firm Name</th>
                         <th>Complaint Category</th>
-                         <th>Status</th>
+                        <th>Status</th>
                         <th>View</th>
                     </tr>
                 </thead>
@@ -54,12 +33,12 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $complain->created_at->format('d-m-Y') }}</td>
-                        <td>{{ $complain->complaint_id }}</td>
-                        <td>{{ $complain->firm_name }}</td>
+                        <td>{{ $complain->application_id  }}</td>
                         <td>{{ ucfirst($complain->complaint_type) }}</td>
                         <td>{{ "Pending" }}</td>
                         <td>
-                          <a href="{{ route('user.setails', [$complain->secure_id]) }}" class="btn btn-sm btn-primary">View</a>
+                            <a href="{{ route('user.setails', [$complain->secure_id]) }}"
+                                class="btn btn-sm btn-primary">View</a>
                         </td>
                     </tr>
                     @endforeach

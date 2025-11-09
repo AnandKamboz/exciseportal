@@ -13,47 +13,84 @@ return new class extends Migration
     {
         Schema::create('complainants', function (Blueprint $table) {
             $table->id();
-            $table->string('secure_id');
-            // $table->integer('complainant_dist_id')->nullable();
-            $table->string('complainant_name')->nullable();
-            $table->string('complainant_phone');
-            $table->string('complainant_email')->nullable();
-            $table->string('complainant_aadhaar', 12)->nullable();
-            $table->text('complainant_address')->nullable();
-            $table->string('upload_document')->nullable();
-            $table->enum('complaint_type', ['vat', 'gst', 'excise'])->nullable();
+            // $table->string('secure_id');
 
-            $table->string('pin_code')->nullable();
-            $table->string('complainant_state')->nullable();
-            $table->string('complainant_district')->nullable();
-            $table->string('bank_account')->nullable();
-            $table->string('confirm_bank_account')->nullable();
-            $table->string('bank_name')->nullable();
-            $table->string('ifsc_code')->nullable();
-            $table->text('bank_branch_address')->nullable();
+            // $table->string('complainant_name')->nullable();
+            // $table->string('complainant_phone');
+            // $table->string('complainant_email')->nullable();
+            // $table->string('complainant_aadhaar', 12)->nullable();
+            // $table->text('complainant_address')->nullable();
+            // $table->string('upload_document')->nullable();
+            // $table->enum('complaint_type', ['vat', 'gst', 'excise'])->nullable();
 
-            // Firm being reported
-            $table->string('firm_name')->nullable();
-            $table->string('gstin')->nullable();
-            $table->text('firm_address')->nullable();
-            $table->decimal('estimate_tax_amount', 15, 2)->nullable();
+            // $table->string('pin_code')->nullable();
+            // $table->string('complainant_state')->nullable();
+            // $table->string('complainant_district')->nullable();
+            // $table->string('bank_account')->nullable();
+            // $table->string('confirm_bank_account')->nullable();
+            // $table->string('bank_name')->nullable();
+            // $table->string('ifsc_code')->nullable();
+            // $table->text('bank_branch_address')->nullable();
 
-            // Optional document and remarks
-            $table->string('proof_document')->nullable();
-            $table->text('remarks')->nullable();
-             
-            // Fraud/Evasion question (from screen 1)
-            $table->boolean('is_fraud_related')->default(false);
 
-            // Confirmation page
+            // $table->string('firm_name')->nullable();
+            // $table->string('gstin')->nullable();
+            // $table->text('firm_address')->nullable();
+            // $table->decimal('estimate_tax_amount', 15, 2)->nullable();
 
-            $table->string('complaint_id')->unique();
-            $table->integer('against_district_id')->nullable();
-            $table->string('detc_status')->nullable();
-            $table->string('detc_remarks')->nullable();
-            $table->boolean('detc_updated_flag')->default(0)->comment('0 = Not Updated, 1 = Updated');
-            $table->boolean('is_completed')->default(false);
-            $table->timestamps();
+
+            // $table->string('proof_document')->nullable();
+            // $table->text('remarks')->nullable();
+
+
+            // $table->boolean('is_fraud_related')->default(false);
+
+
+
+            // $table->string('complaint_id')->unique();
+            // $table->integer('against_district_id')->nullable();
+            // $table->string('detc_status')->nullable();
+            // $table->string('detc_remarks')->nullable();
+            // $table->boolean('detc_updated_flag')->default(0)->comment('0 = Not Updated, 1 = Updated');
+            // $table->boolean('is_completed')->default(false);
+            // $table->timestamps();
+
+                $table->string('secure_id', 64)->unique(); // random secure ID (e.g., Str::uuid() ya Str::random(32))
+                $table->string('application_id', 50)->unique()->nullable(); // complaint application number
+
+                // 🔹 Step 1 — Informer Details
+                $table->string('complainant_name');
+                $table->string('complainant_phone', 10);
+                $table->string('complainant_email')->nullable();
+                $table->string('complainant_aadhar', 12);
+                $table->text('complainant_address');
+
+                // 🔹 Step 2 — Tax Information
+                $table->enum('complaint_type', ['gst', 'excise', 'vat']);
+
+                // 🔹 Step 3 — GST-related Fields
+                $table->string('gst_firm_name')->nullable();
+                $table->string('gst_gstin', 15)->nullable();
+                $table->text('gst_firm_address')->nullable();
+                $table->string('gst_proof')->nullable(); // file path
+
+                // 🔹 Step 3 — VAT-related Fields
+                $table->string('vat_firm_name')->nullable();
+                $table->string('vat_tin')->nullable();
+                $table->text('vat_firm_address')->nullable();
+                $table->string('vat_proof')->nullable(); // file path
+
+                // 🔹 Step 3 — Excise-related Fields
+                $table->string('excise_name')->nullable();
+                $table->string('excise_desc')->nullable();
+                $table->string('excise_place')->nullable();
+                $table->string('excise_time')->nullable();
+                $table->text('excise_details')->nullable();
+
+                // 🔹 System Fields
+                $table->unsignedBigInteger('user_id')->nullable()->comment('Linked user ID if logged in');
+                $table->boolean('is_completed')->default(false);
+                $table->timestamps();
         });
     }
 
