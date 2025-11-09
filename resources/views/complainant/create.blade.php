@@ -369,17 +369,7 @@
                         </div>
 
 
-                        <!-- <div class="mb-3">
-                            <label class="form-label required">Locality</label>
-                            <input type="text" id="gstLocality" name="gstLocality" class="form-control"
-                                placeholder="Enter locality or area name">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label required">District</label>
-                            <input type="text" id="gstDistrict" name="gstDistrict" class="form-control"
-                                placeholder="Enter district name">
-                        </div> -->
+                      
 
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -403,13 +393,42 @@
                             <small class="text-muted" id="descCount">0 / 200 words</small>
                         </div>
 
-
                         <div class="mb-3">
-                            <label class="form-label required">Upload Proof</label>
-                            <input id="gstProof" name="gstProof" type="file" accept=".pdf,.jpg,.jpeg,.png"
-                                class="form-control">
+                            <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
+                            <input id="gstProof" name="gstProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control" multipleonchange="validateFiles(this)" multiple>
                         </div>
                     </div>
+
+                    <script>
+                        function validateFiles(input) {
+                            const maxFiles = 5;
+                            const maxSize = 1 * 1024 * 1024; // 1 MB
+                            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+                            const files = input.files;
+
+                            if (files.length > maxFiles) {
+                                Swal.fire('Error', `You can upload a maximum of ${maxFiles} files.`, 'error');
+                                input.value = '';
+                                return;
+                            }
+
+                            for (let i = 0; i < files.length; i++) {
+                                const file = files[i];
+
+                                if (!allowedTypes.includes(file.type)) {
+                                    Swal.fire('Error', `File type not allowed: ${file.name}`, 'error');
+                                    input.value = '';
+                                    return;
+                                }
+
+                                if (file.size > maxSize) {
+                                    Swal.fire('Error', `File size exceeds 1 MB: ${file.name}`, 'error');
+                                    input.value = '';
+                                    return;
+                                }
+                            }
+                        }
+                    </script>
 
                     <!-- VAT Fields -->
                     <!-- <div id="vatFields" style="display:none;">
@@ -469,11 +488,50 @@
                                 <small class="text-muted" id="vatDescCount">0 / 200 words</small>
                             </div>
 
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label class="form-label required">Upload Proof</label>
                                 <input id="vatProof" name="vatProof" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control">
+                            </div> -->
+
+                            <div class="mb-3">
+                                    <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
+                                    <input id="vatProof" 
+                                        name="vatProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control" multiple
+                                onchange="validateVatFiles(this)">
                             </div>
+
+
+
                     </div>
+                    <script>
+function validateVatFiles(input) {
+    const files = input.files;
+
+    // Check number of files
+    if (files.length > 5) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'You can upload a maximum of 5 files.'
+        });
+        input.value = ''; // clear selection
+        return false;
+    }
+
+    // Check file size (max 1MB)
+    for (let i = 0; i < files.length; i++) {
+        if (files[i].size > 1024 * 1024) { // 1 MB in bytes
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Each file must be less than 1 MB.'
+            });
+            input.value = ''; // clear selection
+            return false;
+        }
+    }
+}
+</script>
 
 
                     <!-- Excise Fields -->

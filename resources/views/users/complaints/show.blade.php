@@ -103,22 +103,37 @@
             <hr>
             <h5 class="fw-semibold text-secondary mb-3">📎 Attached Documents</h5>
             <div class="row g-3 mb-3">
+
+                {{-- GST Proof --}}
                 @if($complain->gst_proof)
-                    <div class="col-md-4">
-                        <a href="{{ asset('storage/complaints/'.$complain->application_id.'/'.$complain->gst_proof) }}"
-                           target="_blank" class="btn btn-sm btn-outline-primary">
-                           View GST Proof
-                        </a>
-                    </div>
+                    @php
+                        $gstFiles = json_decode($complain->gst_proof, true);
+                    @endphp
+                    @foreach($gstFiles as $file)
+                        <div class="col-md-4">
+                            <a href="{{ asset('storage/complaints/'.$complain->application_id.'/'.$file) }}"
+                               target="_blank" class="btn btn-sm btn-outline-primary mb-1">
+                               View GST Proof
+                            </a>
+                        </div>
+                    @endforeach
                 @endif
+
+                {{-- VAT Proof --}}
                 @if($complain->vat_proof)
-                    <div class="col-md-4">
-                        <a href="{{ asset('storage/complaints/'.$complain->application_id.'/'.$complain->vat_proof) }}"
-                           target="_blank" class="btn btn-sm btn-outline-success">
-                           View VAT Proof
-                        </a>
-                    </div>
+                    @php
+                        $vatFiles = json_decode($complain->vat_proof, true);
+                    @endphp
+                    @foreach($vatFiles as $file)
+                        <div class="col-md-4">
+                            <a href="{{ asset('storage/complaints/'.$complain->application_id.'/'.$file) }}"
+                               target="_blank" class="btn btn-sm btn-outline-success mb-1">
+                               View VAT Proof
+                            </a>
+                        </div>
+                    @endforeach
                 @endif
+
             </div>
         @endif
 
