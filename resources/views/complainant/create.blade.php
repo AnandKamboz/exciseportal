@@ -541,16 +541,16 @@ function validateVatFiles(input) {
                             <input id="exciseName" name="exciseName" type="text" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Licensee Description</label>
+                            <label class="form-label required">Licensee Description</label>
                             <input id="exciseDesc" name="exciseDesc" type="text" class="form-control">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Place of Offence</label>
+                                <label class="form-label required">Place of Offence</label>
                                 <input id="excisePlace" name="excisePlace" type="text" class="form-control">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Time of Offence</label>
+                                <label class="form-label required">Time of Offence</label>
                                 <input id="exciseTime" name="exciseTime" type="text" class="form-control"
                                     placeholder="e.g. 2025-11-06 21:00">
                             </div>
