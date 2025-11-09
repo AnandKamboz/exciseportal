@@ -439,7 +439,7 @@ class ComplainantController extends Controller
         'excise' => [
             'exciseName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
             'exciseDetails' => 'required|string|max:2000',
-            'exciseDesc'    => 'required|string|max:255',
+            'exciseDesc'    => 'nullable|string|max:255',
             'excisePlace'   => 'required|string|max:255',
             'exciseTime'    => 'required|string|max:255',
         ],

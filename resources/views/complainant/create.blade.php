@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Step Complaint / Informer Form</title>
-
-    <!-- Bootstrap & SweetAlert -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,9 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <style>
-        /* General Layout */
         body {
-            /* background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e, #ff6a00); */
             font-family: 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
@@ -26,7 +22,6 @@
             padding: 0;
         }
 
-        /* Top Bar */
         .top-bar {
             width: 100%;
             background: linear-gradient(135deg, #7386ff, #262626);
@@ -48,7 +43,6 @@
             margin-right: 8px;
         }
 
-        /* Header Section */
         .header {
             width: 100%;
             display: flex;
@@ -84,7 +78,6 @@
             font-weight: 500;
         }
 
-        /* Card */
         .card {
             max-width: 1270px;
             margin: 2rem auto;
@@ -105,7 +98,6 @@
             font-weight: 700;
         }
 
-        /* Input fields */
         input,
         select,
         textarea {
@@ -121,7 +113,6 @@
         select:focus,
         textarea:focus {
             outline: none;
-            /* border-color: #ff6a00; */
             box-shadow: 0 0 8px rgba(255, 106, 0, 0.3);
         }
 
@@ -135,7 +126,6 @@
             color: red;
         }
 
-        /* Steps */
         .step {
             display: none;
             animation: fadeIn 0.5s ease-in-out;
@@ -145,7 +135,6 @@
             display: block;
         }
 
-        /* Buttons */
         .btn-step {
             border-radius: 20px;
             font-weight: 600;
@@ -168,7 +157,6 @@
             color: #666;
         }
 
-        /* Loader */
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -541,7 +529,7 @@ function validateVatFiles(input) {
                             <input id="exciseName" name="exciseName" type="text" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label required">Licensee Description</label>
+                            <label class="form-label">Licensee Description</label>
                             <input id="exciseDesc" name="exciseDesc" type="text" class="form-control">
                         </div>
                         <div class="row">
