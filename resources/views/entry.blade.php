@@ -29,7 +29,8 @@
     /* ========== HERO SECTION ========== */
     .hero-section {
       position: relative;
-      background: url('./assets/images/excise-dep.JPG') no-repeat center center/cover;
+      /* background: url('./assets/images/excise-dep.JPG') no-repeat center center/cover; */
+      background: url('./assets/images/entery_page_image/excise-dep.JPG') no-repeat center center/cover;
       height: 100vh;
       display: flex;
       align-items: center;
