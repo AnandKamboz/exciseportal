@@ -337,7 +337,7 @@
 
                     <!-- GST Fields -->
                     <div id="gstFields" style="display:none;">
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label class="form-label required">Firm Name</label>
                             <input id="gstFirmName" name="gstFirmName" type="text" class="form-control">
                         </div>
@@ -347,13 +347,63 @@
                             <label class="form-label">GSTIN</label>
                             <input id="gstGstin" name="gstGstin" type="text" class="form-control"
                                 placeholder="15 character GSTIN">
+                        </div> -->
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label required">Firm Name</label>
+                                <input id="gstFirmName" name="gstFirmName" type="text" class="form-control" placeholder="Enter firm name">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">GSTIN</label>
+                                <input id="gstGstin" name="gstGstin" type="text" class="form-control" placeholder="15 character GSTIN">
+                            </div>
                         </div>
+
 
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
                             <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control"
                                 rows="2"></textarea>
                         </div>
+
+
+                        <!-- <div class="mb-3">
+                            <label class="form-label required">Locality</label>
+                            <input type="text" id="gstLocality" name="gstLocality" class="form-control"
+                                placeholder="Enter locality or area name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label required">District</label>
+                            <input type="text" id="gstDistrict" name="gstDistrict" class="form-control"
+                                placeholder="Enter district name">
+                        </div> -->
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label required">Locality</label>
+                                <input type="text" id="gstLocality" name="gstLocality" class="form-control"
+                                    placeholder="Enter locality or area name">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">District</label>
+                                <input type="text" id="gstDistrict" name="gstDistrict" class="form-control"
+                                    placeholder="Enter district name">
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label class="form-label required">Description of Information <small class="text-muted">(Max 200 words)</small></label>
+                            <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3"
+                                maxlength="2000" placeholder="Provide details about the complaint or information"></textarea>
+                            <small class="text-muted" id="descCount">0 / 200 words</small>
+                        </div>
+
+
                         <div class="mb-3">
                             <label class="form-label required">Upload Proof</label>
                             <input id="gstProof" name="gstProof" type="file" accept=".pdf,.jpg,.jpeg,.png"
@@ -362,7 +412,7 @@
                     </div>
 
                     <!-- VAT Fields -->
-                    <div id="vatFields" style="display:none;">
+                    <!-- <div id="vatFields" style="display:none;">
                         <div class="mb-3">
                             <label class="form-label required">Firm Name</label>
                             <input id="vatFirmName" name="vatFirmName" type="text" class="form-control">
@@ -382,7 +432,49 @@
                             <input id="vatProof" name="vatProof" type="file" accept=".pdf,.jpg,.jpeg,.png"
                                 class="form-control">
                         </div>
+                    </div> -->
+
+                    <div id="vatFields" style="display:none;">
+                            <div class="mb-3">
+                                <label class="form-label required">Firm Name</label>
+                                <input id="vatFirmName" name="vatFirmName" type="text" class="form-control" placeholder="Enter firm name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">TIN</label>
+                                <input id="vatTin" name="vatTin" type="text" class="form-control" placeholder="Tax Identification Number">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label required">Firm Address</label>
+                                <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2" placeholder="Enter firm address"></textarea>
+                            </div>
+
+                            <!-- ✅ New Fields -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label required">Locality</label>
+                                    <input type="text" id="vatLocality" name="vatLocality" class="form-control" placeholder="Enter locality or area name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">District</label>
+                                    <input type="text" id="vatDistrict" name="vatDistrict" class="form-control" placeholder="Enter district name">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label required">Description of Information <small class="text-muted">(Max 200 words)</small></label>
+                                <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3"
+                                    maxlength="2000" placeholder="Provide details about the complaint or information"></textarea>
+                                <small class="text-muted" id="vatDescCount">0 / 200 words</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label required">Upload Proof</label>
+                                <input id="vatProof" name="vatProof" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control">
+                            </div>
                     </div>
+
 
                     <!-- Excise Fields -->
                     <div id="exciseFields" style="display:none;">
@@ -539,15 +631,16 @@
                 const firmName = gstFirmName.value.trim();
                 const gstin = gstGstin.value.trim();
                 const firmAddress = gstFirmAddress.value.trim();
-               let gstProof = $('#gstProof')[0].files[0]; // Get selected file
+                let gstProof = $('#gstProof')[0].files[0];
+                const locality = gstLocality.value.trim();
+                const district = gstDistrict.value.trim();
+                const description = gstDescription.value.trim();
 
                 if(!firmName){
                      $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Firm Name.', 'error');
                     return false;
                 }
-
-              
 
                 if (gstin) { 
                     if (gstin.length !== 15) {
@@ -579,29 +672,74 @@
                 if (!allowedExtensions.includes(fileExtension)) {
                      $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Invalid file type. Only PDF, JPG, JPEG, or PNG are allowed.', 'error');
-                    $('#gstProof').val(''); // clear invalid file
+                    $('#gstProof').val(''); 
                     return false;
                 }
 
-                // Check file size (1 MB = 1024 * 1024 bytes)
                 if (gstProof.size > 1024 * 1024) {
                      $('#loader').addClass('d-none');
                     Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
-                    $('#gstProof').val(''); // clear large file
+                    $('#gstProof').val(''); 
                     return false;
                 }
+
+
+                if (!locality) {
+                            $('#loader').addClass('d-none');
+                            Swal.fire('Error', 'Please enter Locality.', 'error');
+                            return false;
+                        }
+
+                        // === District ===
+                        if (!district) {
+                            $('#loader').addClass('d-none');
+                            Swal.fire('Error', 'Please enter District.', 'error');
+                            return false;
+                        }
+
+                        // === Description of Information ===
+                        if (!description) {
+                            $('#loader').addClass('d-none');
+                            Swal.fire('Error', 'Please enter Description of Information.', 'error');
+                            return false;
+                }
+
             }
+
+
+
 
             if(tax == 'vat'){
                 const firmName = vatFirmName.value.trim();
                 const tin = vatTin.value.trim();
                 const firmAddress = vatFirmAddress.value.trim();
                 let vatProof = $('#vatProof')[0].files[0];
+                const locality = vatLocality.value.trim();
+                const district = vatDistrict.value.trim();
+                const description = vatDescription.value.trim();
 
 
                 if(!firmName){
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Firm Name.', 'error');
+                    return false;
+                }
+
+                if (!locality) {
+                        $('#loader').addClass('d-none');
+                        Swal.fire('Error', 'Please enter Locality.', 'error');
+                        return false;
+                }
+
+                if (!district) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please enter District.', 'error');
+                    return false;
+                }
+
+                if (!description) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please enter Description of Information.', 'error');
                     return false;
                 }
 
@@ -611,11 +749,11 @@
                     return false;
                 }
 
-                    if (!vatProof) {
-                        $('#loader').addClass('d-none');
-                        Swal.fire('Error', 'Please upload your VAT/CST Proof document.', 'error');
-                        return false;
-                    }
+                if (!vatProof) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please upload your VAT/CST Proof document.', 'error');
+                    return false;
+                }
 
                     let allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
                     let fileExtension = vatProof.name.split('.').pop().toLowerCase();
@@ -776,7 +914,23 @@
                     this.value = cleaned;
                 }
         });
+
+
+        $('#gstDescription').on('input', function() {
+            let text = $(this).val().trim();
+            let words = text.split(/\s+/).filter(word => word.length > 0);
+            $('#descCount').text(words.length + ' / 200 words');
+
+            if (words.length > 200) {
+                Swal.fire('Error', 'Description cannot exceed 200 words.', 'error');
+                $(this).val(words.slice(0, 200).join(' ')); // truncate extra words
+                $('#descCount').text('200 / 200 words');
+            }
+        });
+
     </script>
+
+    
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 </body>

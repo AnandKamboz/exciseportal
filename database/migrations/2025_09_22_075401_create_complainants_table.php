@@ -87,6 +87,15 @@ return new class extends Migration
                 $table->string('excise_time')->nullable();
                 $table->text('excise_details')->nullable();
 
+                $table->string('gst_locality')->nullable();
+                $table->string('gst_district')->nullable();
+                $table->text('gst_description')->nullable();
+
+                // 🔹 Step 3 — VAT Additional Fields
+                $table->string('vat_locality')->nullable();
+                $table->string('vat_district')->nullable();
+                $table->text('vat_description')->nullable();
+
                 // 🔹 System Fields
                 $table->unsignedBigInteger('user_id')->nullable()->comment('Linked user ID if logged in');
                 $table->boolean('is_completed')->default(false);

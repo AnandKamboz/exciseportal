@@ -41,6 +41,8 @@
             <hr>
             <h5 class="fw-semibold text-secondary mb-3">🏢 Firm / Excise Information</h5>
             <div class="row g-3 mb-4">
+
+                {{-- GST Details --}}
                 @if($complain->gst_firm_name)
                     <div class="col-md-4"><strong>GST Firm Name:</strong> {{ $complain->gst_firm_name }}</div>
                 @endif
@@ -50,7 +52,17 @@
                 @if($complain->gst_firm_address)
                     <div class="col-md-8"><strong>Firm Address:</strong> {{ $complain->gst_firm_address }}</div>
                 @endif
+                @if($complain->gst_locality)
+                    <div class="col-md-4"><strong>Locality:</strong> {{ $complain->gst_locality }}</div>
+                @endif
+                @if($complain->gst_district)
+                    <div class="col-md-4"><strong>District:</strong> {{ $complain->gst_district }}</div>
+                @endif
+                @if($complain->gst_description)
+                    <div class="col-md-12"><strong>Description of Information:</strong> {{ $complain->gst_description }}</div>
+                @endif
 
+                {{-- VAT Details --}}
                 @if($complain->vat_firm_name)
                     <div class="col-md-4"><strong>VAT Firm Name:</strong> {{ $complain->vat_firm_name }}</div>
                 @endif
@@ -60,7 +72,17 @@
                 @if($complain->vat_firm_address)
                     <div class="col-md-8"><strong>VAT Firm Address:</strong> {{ $complain->vat_firm_address }}</div>
                 @endif
+                @if($complain->vat_locality)
+                    <div class="col-md-4"><strong>Locality:</strong> {{ $complain->vat_locality }}</div>
+                @endif
+                @if($complain->vat_district)
+                    <div class="col-md-4"><strong>District:</strong> {{ $complain->vat_district }}</div>
+                @endif
+                @if($complain->vat_description)
+                    <div class="col-md-12"><strong>Description of Information:</strong> {{ $complain->vat_description }}</div>
+                @endif
 
+                {{-- Excise Details --}}
                 @if($complain->excise_name)
                     <div class="col-md-4"><strong>Excise Name:</strong> {{ $complain->excise_name }}</div>
                 @endif

@@ -100,7 +100,6 @@ class ComplainantController extends Controller
         ]);
     }
 
-
     // public function submitComplaint(Request $request)
     // {
     //     $validator = Validator::make($request->all(), [
@@ -120,30 +119,28 @@ class ComplainantController extends Controller
     //     $type = strtolower($request->taxType);
     //     $mobile = Auth::user()->mobile;
 
-    //     $rules = [];
-    //     if ($type === 'gst') {
-    //         $rules = [
-    //             'gstFirmName'   => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-    //             'gstGstin'      => 'required|alpha_num|size:15',
-    //             'gstFirmAddress'=> 'required|string',
-    //             'gstProof'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024',
-    //         ];
-    //     } elseif ($type === 'vat') {
-    //         $rules = [
-    //             'vatFirmName'   => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-    //             'vatTin'        => 'required|alpha_num',
-    //             'vatFirmAddress'=> 'required|string',
-    //             'vatProof'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024',
-    //         ];
-    //     } elseif ($type === 'excise') {
-    //         $rules = [
-    //             'exciseName' => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+    //     $rules = match ($type) {
+    //         'gst' => [
+    //             'gstFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+    //             'gstGstin'       => 'nullable|alpha_num|size:15',
+    //             'gstFirmAddress' => 'required|string',
+    //             'gstProof'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+    //         ],
+    //         'vat' => [
+    //             'vatFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+    //             'vatTin'         => 'nullable|alpha_num',
+    //             'vatFirmAddress' => 'required|string',
+    //             'vatProof'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+    //         ],
+    //         'excise' => [
+    //             'exciseName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
     //             'exciseDetails' => 'required|string|max:2000',
-    //             'exciseDesc' => 'nullable|string|max:255',
-    //             'excisePlace' => 'nullable|string|max:255',
-    //             'exciseTime' => 'nullable|string|max:255',
-    //         ];
-    //     }
+    //             'exciseDesc'    => 'required|string|max:255',
+    //             'excisePlace'   => 'required|string|max:255',
+    //             'exciseTime'    => 'required|string|max:255',
+    //         ],
+    //         default => [],
+    //     };
 
     //     $validator = Validator::make($request->all(), $rules);
     //     if ($validator->fails()) {
@@ -153,13 +150,11 @@ class ComplainantController extends Controller
     //         ]);
     //     }
 
-        
     //     $complaint = Complainant::where('complainant_phone', $mobile)
     //         ->where('is_completed', 0)
     //         ->first();
 
     //     if (!$complaint) {
-         
     //         return response()->json([
     //             'success' => false,
     //             'message' => 'No pending complaint found for update.',
@@ -173,12 +168,12 @@ class ComplainantController extends Controller
     //         } while (Complainant::where('application_id', $applicationId)->exists());
 
     //         $complaint->application_id = $applicationId;
+    //     } else {
+    //         $applicationId = $complaint->application_id;
     //     }
 
-       
     //     $complaint->complaint_type = $type;
 
-       
     //     if ($type === 'gst') {
     //         $complaint->gst_firm_name = $request->gstFirmName;
     //         $complaint->gst_gstin = strtoupper($request->gstGstin);
@@ -187,7 +182,9 @@ class ComplainantController extends Controller
     //         if ($request->hasFile('gstProof')) {
     //             $file = $request->file('gstProof');
     //             $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-    //             $file->storeAs('public/complaints/gst/', $fileName);
+
+    //             $file->storeAs("public/complaints/{$applicationId}/", $fileName);
+
     //             $complaint->gst_proof = $fileName;
     //         }
     //     }
@@ -200,7 +197,9 @@ class ComplainantController extends Controller
     //         if ($request->hasFile('vatProof')) {
     //             $file = $request->file('vatProof');
     //             $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-    //             $file->storeAs('public/complaints/vat/', $fileName);
+
+    //             $file->storeAs("public/complaints/{$applicationId}/", $fileName);
+
     //             $complaint->vat_proof = $fileName;
     //         }
     //     }
@@ -216,16 +215,27 @@ class ComplainantController extends Controller
     //     $complaint->is_completed = 1;
     //     $complaint->save();
 
+    //     $userMobile = Auth::user()->mobile;
+    //     $user = User::where('mobile', $userMobile)->first();
+
+    //     if ($user && (empty($user->aadhaar) || is_null($user->aadhaar))) {
+    //         $user->update([
+    //             'email'      => $request->informerEmail ?? null,
+    //             'aadhaar'    => $request->informerAadhar,
+    //             'address'    => $request->informerAddress,
+    //             'district'   => 'Demo District',
+    //             'updated_at' => now(),
+    //         ]);
+    //     }
     //     return response()->json([
     //         'success' => true,
-    //         'message' => 'Complaint updated successfully.',
+    //         'message' => 'Complaint updated successfully. Your Application ID is: ' . $complaint->application_id,
     //         'application_id' => $complaint->application_id,
     //     ]);
     // }
 
     public function submitComplaint(Request $request)
     {
-        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'taxType' => 'required|in:gst,vat,excise',
         ], [
@@ -243,17 +253,24 @@ class ComplainantController extends Controller
         $type = strtolower($request->taxType);
         $mobile = Auth::user()->mobile;
 
+        // 🔹 Validation Rules for Each Complaint Type
         $rules = match ($type) {
             'gst' => [
                 'gstFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
                 'gstGstin'       => 'nullable|alpha_num|size:15',
                 'gstFirmAddress' => 'required|string',
+                'gstLocality'    => 'required|string|max:255',
+                'gstDistrict'    => 'required|string|max:255',
+                'gstDescription' => 'required|string|max:2000',
                 'gstProof'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             ],
             'vat' => [
                 'vatFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
                 'vatTin'         => 'nullable|alpha_num',
                 'vatFirmAddress' => 'required|string',
+                'vatLocality'    => 'required|string|max:255',
+                'vatDistrict'    => 'required|string|max:255',
+                'vatDescription' => 'required|string|max:2000',
                 'vatProof'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             ],
             'excise' => [
@@ -285,6 +302,7 @@ class ComplainantController extends Controller
             ]);
         }
 
+        // 🔹 Generate Unique Application ID (if not set)
         if (empty($complaint->application_id)) {
             do {
                 $randomDigits = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
@@ -298,37 +316,41 @@ class ComplainantController extends Controller
 
         $complaint->complaint_type = $type;
 
+        // 🔹 GST Complaint Data
         if ($type === 'gst') {
             $complaint->gst_firm_name = $request->gstFirmName;
             $complaint->gst_gstin = strtoupper($request->gstGstin);
             $complaint->gst_firm_address = $request->gstFirmAddress;
+            $complaint->gst_locality = $request->gstLocality;
+            $complaint->gst_district = $request->gstDistrict;
+            $complaint->gst_description = $request->gstDescription;
 
             if ($request->hasFile('gstProof')) {
                 $file = $request->file('gstProof');
                 $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-
                 $file->storeAs("public/complaints/{$applicationId}/", $fileName);
-
                 $complaint->gst_proof = $fileName;
             }
         }
 
-        // ✅ VAT Complaint Data
+        // 🔹 VAT Complaint Data
         if ($type === 'vat') {
             $complaint->vat_firm_name = $request->vatFirmName;
             $complaint->vat_tin = strtoupper($request->vatTin);
             $complaint->vat_firm_address = $request->vatFirmAddress;
+            $complaint->vat_locality = $request->vatLocality;
+            $complaint->vat_district = $request->vatDistrict;
+            $complaint->vat_description = $request->vatDescription;
 
             if ($request->hasFile('vatProof')) {
                 $file = $request->file('vatProof');
                 $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-
                 $file->storeAs("public/complaints/{$applicationId}/", $fileName);
-
                 $complaint->vat_proof = $fileName;
             }
         }
 
+        // 🔹 Excise Complaint Data
         if ($type === 'excise') {
             $complaint->excise_name = $request->exciseName;
             $complaint->excise_desc = $request->exciseDesc;
@@ -340,23 +362,7 @@ class ComplainantController extends Controller
         $complaint->is_completed = 1;
         $complaint->save();
 
-
-        // For creating user record if not exists
-        // $userMobile = Auth::user()->mobile;
-        // $userExists = User::where('mobile', $userMobile)->exists();
-
-        // if (!$userExists) {
-        //     User::create([
-        //         'email'      => $request->informerEmail ?? null,
-        //         'mobile'     => $userMobile,
-        //         'aadhaar'    => $request->informerAadhar,
-        //         'address'    => $request->informerAddress,
-        //         'district'   => 'Demo District',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ]);
-        // }
-
+        // 🔹 Update User Info if Missing
         $userMobile = Auth::user()->mobile;
         $user = User::where('mobile', $userMobile)->first();
 
@@ -370,18 +376,12 @@ class ComplainantController extends Controller
             ]);
         }
 
-
-
-
-
-
         return response()->json([
             'success' => true,
             'message' => 'Complaint updated successfully. Your Application ID is: ' . $complaint->application_id,
             'application_id' => $complaint->application_id,
         ]);
     }
-
 
 
 }
