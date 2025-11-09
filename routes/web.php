@@ -10,17 +10,6 @@ use App\Http\Controllers\Web\DetcController;
 use App\Http\Controllers\Web\InspectorDashboard;
 use Illuminate\Support\Str;
 
-Route::get('/', function () {
-    $captcha_value = Str::random(6);
-    session(['captcha' => $captcha_value]);
-    return view('welcome');
-})->name('login');
-
-Route::get('/demo', function () {
-    return view('demo');
-})->name('demo');
-
-
 
 
 
@@ -58,11 +47,20 @@ Route::get('/demo', function () {
 
 
 // Here Is Route '
+Route::get('/', function () {
+    return view('entry');
+})->name('entry');
+
+Route::get('/login', function () {
+    $captcha_value = Str::random(6);
+    session(['captcha' => $captcha_value]);
+    return view('welcome');
+})->name('login');
+
 
 Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
 // here midelware
-
 
 Route::middleware(['auth','userrole'])->group(function () {
     Route::get('user/complainant', [ComplainantController::class, 'complainant'])->name('complainant');
