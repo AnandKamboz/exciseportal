@@ -57,7 +57,6 @@ Route::get('/login', function () {
     return view('welcome');
 })->name('login');
 
-
 Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
 // here midelware

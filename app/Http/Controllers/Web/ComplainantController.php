@@ -246,22 +246,22 @@ class ComplainantController extends Controller
         $rules = match ($type) {
             'gst' => [
                 'gstFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-                'gstGstin'       => 'required|alpha_num|size:15',
+                'gstGstin'       => 'nullable|alpha_num|size:15',
                 'gstFirmAddress' => 'required|string',
-                'gstProof'       => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+                'gstProof'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             ],
             'vat' => [
                 'vatFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-                'vatTin'         => 'required|alpha_num',
+                'vatTin'         => 'nullable|alpha_num',
                 'vatFirmAddress' => 'required|string',
-                'vatProof'       => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+                'vatProof'       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             ],
             'excise' => [
                 'exciseName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
                 'exciseDetails' => 'required|string|max:2000',
-                'exciseDesc'    => 'nullable|string|max:255',
-                'excisePlace'   => 'nullable|string|max:255',
-                'exciseTime'    => 'nullable|string|max:255',
+                'exciseDesc'    => 'required|string|max:255',
+                'excisePlace'   => 'required|string|max:255',
+                'exciseTime'    => 'required|string|max:255',
             ],
             default => [],
         };

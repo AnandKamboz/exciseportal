@@ -259,7 +259,7 @@
 
                 <!-- STEP 1 -->
                 <div class="step active" data-step="1">
-                    <h5>Step 1 — Informer Details</h5>
+                    <h5>Step 1 — Details of Informer </h5>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -341,18 +341,21 @@
                             <label class="form-label required">Firm Name</label>
                             <input id="gstFirmName" name="gstFirmName" type="text" class="form-control">
                         </div>
+
+                        
                         <div class="mb-3">
-                            <label class="form-label required">GSTIN</label>
+                            <label class="form-label">GSTIN</label>
                             <input id="gstGstin" name="gstGstin" type="text" class="form-control"
                                 placeholder="15 character GSTIN">
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
                             <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control"
                                 rows="2"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Upload Proof</label>
+                            <label class="form-label required">Upload Proof</label>
                             <input id="gstProof" name="gstProof" type="file" accept=".pdf,.jpg,.jpeg,.png"
                                 class="form-control">
                         </div>
@@ -365,7 +368,7 @@
                             <input id="vatFirmName" name="vatFirmName" type="text" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label required">TIN</label>
+                            <label class="form-label">TIN</label>
                             <input id="vatTin" name="vatTin" type="text" class="form-control"
                                 placeholder="Tax Identification Number">
                         </div>
@@ -375,7 +378,7 @@
                                 rows="2"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Upload Proof</label>
+                            <label class="form-label required">Upload Proof</label>
                             <input id="vatProof" name="vatProof" type="file" accept=".pdf,.jpg,.jpeg,.png"
                                 class="form-control">
                         </div>
@@ -536,6 +539,7 @@
                 const firmName = gstFirmName.value.trim();
                 const gstin = gstGstin.value.trim();
                 const firmAddress = gstFirmAddress.value.trim();
+               let gstProof = $('#gstProof')[0].files[0]; // Get selected file
 
                 if(!firmName){
                      $('#loader').addClass('d-none');
@@ -543,16 +547,18 @@
                     return false;
                 }
 
-                if(!gstin){
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter GSTIN.', 'error');
-                    return false;
-                }
+              
 
-                if(gstin.length != 15){
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'GSTIN must be 15 characters long.', 'error');
-                    return false;
+                if (gstin) { 
+                    if (gstin.length !== 15) {
+                        $('#loader').addClass('d-none');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid GSTIN',
+                            text: 'GSTIN must be exactly 15 characters long.'
+                        });
+                        return false;
+                    }
                 }
 
                 if(!firmAddress){
@@ -561,16 +567,37 @@
                     return false;
                 }
 
-                // if(!gstProof){
-                //     Swal.fire('Error', 'Please upload Proof document.', 'error');
-                //     return false;
-                // }
+                if (!gstProof) {
+                     $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please upload a proof document.', 'error');
+                    return false;
+                }
+
+                let allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
+                let fileExtension = gstProof.name.split('.').pop().toLowerCase();
+
+                if (!allowedExtensions.includes(fileExtension)) {
+                     $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Invalid file type. Only PDF, JPG, JPEG, or PNG are allowed.', 'error');
+                    $('#gstProof').val(''); // clear invalid file
+                    return false;
+                }
+
+                // Check file size (1 MB = 1024 * 1024 bytes)
+                if (gstProof.size > 1024 * 1024) {
+                     $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
+                    $('#gstProof').val(''); // clear large file
+                    return false;
+                }
             }
 
             if(tax == 'vat'){
                 const firmName = vatFirmName.value.trim();
                 const tin = vatTin.value.trim();
                 const firmAddress = vatFirmAddress.value.trim();
+                let vatProof = $('#vatProof')[0].files[0];
+
 
                 if(!firmName){
                     $('#loader').addClass('d-none');
@@ -578,23 +605,38 @@
                     return false;
                 }
 
-                if(!tin){
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter TIN.', 'error');
-                    return false;
-                }
-
                 if(!firmAddress){
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Firm Address.', 'error');
                     return false;
                 }
 
-                // if(!vatProof){
-                //     Swal.fire('Error', 'Please upload Proof document.', 'error');
-                //     return false;
-                // }
+                    if (!vatProof) {
+                        $('#loader').addClass('d-none');
+                        Swal.fire('Error', 'Please upload your VAT/CST Proof document.', 'error');
+                        return false;
+                    }
+
+                    let allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
+                    let fileExtension = vatProof.name.split('.').pop().toLowerCase();
+
+                    if (!allowedExtensions.includes(fileExtension)) {
+                        $('#loader').addClass('d-none');
+                        Swal.fire('Error', 'Invalid file type. Only PDF, JPG, JPEG, or PNG are allowed.', 'error');
+                        $('#vatProof').val(''); // clear invalid file
+                        return false;
+                    }
+
+                    // 🔹 File size check (max 1 MB)
+                    if (vatProof.size > 1024 * 1024) {
+                        $('#loader').addClass('d-none');
+                        Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
+                        $('#vatProof').val(''); // clear large file
+                        return false;
+                    }
             }
+
+
 
             if(tax == 'excise'){
                 const offender = exciseName.value.trim();
