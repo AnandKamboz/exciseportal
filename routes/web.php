@@ -63,15 +63,15 @@ Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
 // here midelware
 
-Route::get('user/complainant', [ComplainantController::class, 'complainant'])->name('complainant');
-Route::post('/save-informer', [ComplainantController::class, 'saveInformer'])->name('save.informer');
-Route::post('/save-complaint-type', [ComplainantController::class, 'saveComplaintType'])->name('save.complaint.type');
-Route::post('/submit-complaint', [ComplainantController::class, 'submitComplaint']);
-Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show'])->name('user.setails');
-Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
-Route::get('/user/dashboard', [UserDashboard::class, 'userDashboard'])->name('user.dashboard');
 
-
-
+Route::middleware(['auth','userrole'])->group(function () {
+    Route::get('user/complainant', [ComplainantController::class, 'complainant'])->name('complainant');
+    Route::post('/save-informer', [ComplainantController::class, 'saveInformer'])->name('save.informer');
+    Route::post('/save-complaint-type', [ComplainantController::class, 'saveComplaintType'])->name('save.complaint.type');
+    Route::post('/submit-complaint', [ComplainantController::class, 'submitComplaint']);
+    Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show'])->name('user.setails');
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+    Route::get('/user/dashboard', [UserDashboard::class, 'userDashboard'])->name('user.dashboard');
+});
 
 
