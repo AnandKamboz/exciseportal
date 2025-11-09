@@ -291,6 +291,16 @@
       </div>
     </div>
   </section>
+   @if(session('status'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Logged Out',
+            text: '{{ session('status') }}',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    @endif
 
 </body>
 
