@@ -618,7 +618,8 @@ function validateVatFiles(input) {
                 informer_email: email
             };
 
-            axios.post('/save-informer', formData)
+            // axios.post('/save-informer', formData)
+            axios.post("{{ route('save.informer') }}", formData)
                     .then(response => {
                         if (response.data.success) {
                              showStep(2);
@@ -650,7 +651,8 @@ function validateVatFiles(input) {
                 );
 
                 // 🔹 Send complaint type to backend
-                axios.post('/save-complaint-type', { complaint_type: complaintType })
+                // axios.post('/save-complaint-type', { complaint_type: complaintType })
+                axios.post("{{ route('save.complaint.type') }}", { complaint_type: complaintType })
                     .then(response => {
                         $('#loader').addClass('d-none');
 
@@ -858,7 +860,8 @@ function validateVatFiles(input) {
 
             const formData = new FormData(multiStepForm);
             try {
-                const res = await axios.post('/submit-complaint', formData);
+                // const res = await axios.post('/submit-complaint', formData);
+                const res = await axios.post("{{ route('submit.complaint') }}", formData);
              
                 if (res.data.success) {
                         $('#loader').addClass('d-none');
