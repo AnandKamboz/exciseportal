@@ -351,8 +351,8 @@
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
                             <div class="text-center mb-4">
-                                <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo" width="80"
-                                    height="80" class="rounded-circle">
+                                <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo"
+                                    width="80" height="80" class="rounded-circle">
                             </div>
                             <h4 class="text-center mb-4 fw-bold">Excise and Taxation Department</h4>
 
@@ -370,15 +370,15 @@
                                 <div class="form-outline mb-4 d-flex align-items-center justify-content-between d-none"
                                     id="captcha_code">
                                     <div class="captcha bg-white text-dark px-3 py-2 rounded fw-bold">
-                                        {{session('captcha') }}
+                                        {{ session('captcha') }}
                                     </div>
                                     <input type="text" id="captchaInput" class="form-control w-50"
                                         placeholder="Enter Captcha" />
                                 </div>
 
                                 <div id="otpSection" class="hidden mt-3">
-                                    <input type="text" name="otp" id="otp" class="form-control otp-input" maxlength="6"
-                                        placeholder="Enter 6 digit OTP" />
+                                    <input type="text" name="otp" id="otp" class="form-control otp-input"
+                                        maxlength="6" placeholder="Enter 6 digit OTP" />
                                     <button type="button" id="loginBtn"
                                         class="btn btn-primary btn-block w-100 mt-3">Login</button>
                                 </div>
@@ -423,8 +423,8 @@
             sendOtpBtn.disabled = true;
             sendOtpBtn.innerText = 'Sending...';
             axios.post("{{ route('send-otp') }}", {
-                mobile: mobileInput.value
-            })
+                    mobile: mobileInput.value
+                })
                 .then(res => {
                     if (res.data.success) {
                         $('#loader').addClass('d-none');
@@ -492,24 +492,68 @@
             }
 
 
+            // axios.post("{{ route('verify-otp') }}", {
+            //     mobile: mobileInput.value,
+            //     otp: otpInput.value,
+            //     captcha: captchaInput.value,
+            //     _token: document.querySelector('input[name="_token"]').value
+            // })
+            //     .then(res => {
+            //         if (res.data.success) {
+            //             $('#loader').addClass('d-none');
+            //             window.location.href = res.data.redirect_url;
+            //         } else {
+            //             $('#loader').addClass('d-none');
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Oops...',
+            //                 text: res.data.message || 'Invalid OTP!',
+            //                 confirmButtonText: 'OK'
+            //             });
+            //             $('#otp').val("");
+            //             loginBtn.disabled = false;
+            //             loginBtn.innerText = 'Send Otp';
+            //         }
+            //     })
+            //     .catch(err => {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire({
+            //             icon: 'error',
+            //             title: 'Oops...',
+            //             text: err.response?.data?.message || 'Server error!',
+            //             confirmButtonText: 'OK'
+            //         });
+            //         loginBtn.disabled = false;
+            //         loginBtn.innerText = 'Login';
+            //         return;
+            //     });
+
+
             axios.post("{{ route('verify-otp') }}", {
-                mobile: mobileInput.value,
-                otp: otpInput.value,
-                captcha: captchaInput.value,
-                _token: document.querySelector('input[name="_token"]').value
-            })
+                    mobile: mobileInput.value,
+                    otp: otpInput.value,
+                    captcha: captchaInput.value,
+                    _token: document.querySelector('input[name="_token"]').value
+                })
                 .then(res => {
+                    $('#loader').addClass('d-none');
+
                     if (res.data.success) {
-                        $('#loader').addClass('d-none');
                         window.location.href = res.data.redirect_url;
                     } else {
-                        $('#loader').addClass('d-none');
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
                             text: res.data.message || 'Invalid OTP!',
                             confirmButtonText: 'OK'
+                        }).then(() => {
+                            // 🔹 Only refresh after user clicks OK
+                            if (res.data.message === 'Invalid captcha') {
+                                location.reload();
+                            }
                         });
+
+                        // Clear OTP input
                         $('#otp').val("");
                         loginBtn.disabled = false;
                         loginBtn.innerText = 'Send Otp';
@@ -525,20 +569,19 @@
                     });
                     loginBtn.disabled = false;
                     loginBtn.innerText = 'Login';
-                    return;
                 });
         });
     </script>
 
-    @if(session('status'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Logged Out',
-            text: '{{ session('status') }}',
-            confirmButtonText: 'OK'
-        });
-    </script>
+    @if (session('status'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Logged Out',
+                text: '{{ session('status') }}',
+                confirmButtonText: 'OK'
+            });
+        </script>
     @endif
 </body>
 

@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Web;
 
-use Carbon\Carbon;
-use App\Models\Otp;
-use App\Models\Complainant;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Complainant;
+use App\Models\Otp;
 use App\Models\RoleGroup;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
-
 
 class AuthController extends Controller
 {
@@ -37,7 +35,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'OTP sent successfully to ' . $request->mobile
+            'message' => 'OTP sent successfully to '.$request->mobile,
         ]);
     }
 
@@ -181,7 +179,6 @@ class AuthController extends Controller
     //             $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
     //         }
 
-
     //     return response()->json([
     //         'success' => true,
     //         'redirect_url' => $redirectUrl,
@@ -202,10 +199,18 @@ class AuthController extends Controller
         $captcha = $request->captcha;
 
         // ✅ Captcha check
+        // if ($captcha !== session('captcha')) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Invalid captcha'
+        //     ]);
+        // }
+
         if ($captcha !== session('captcha')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid captcha'
+                'message' => 'Invalid captcha',
+                'refresh' => true,
             ]);
         }
 
@@ -217,10 +222,10 @@ class AuthController extends Controller
             ->latest()
             ->first();
 
-        if (!$otpRecord) {
+        if (! $otpRecord) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid or expired OTP'
+                'message' => 'Invalid or expired OTP',
             ]);
         }
 
@@ -265,9 +270,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'redirect_url' => $redirectUrl,
-            'message' => 'Login successful!'
+            'message' => 'Login successful!',
         ]);
     }
-
-
 }
