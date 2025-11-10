@@ -48,7 +48,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 25px 40px;
+            padding: 15px 30px;
             border-bottom: 2px solid #7386ff;
             background: linear-gradient(to right, #ffffff, #f1f1f1);
             flex-wrap: wrap;
@@ -200,6 +200,16 @@
                 transform: rotate(360deg);
             }
         }
+
+        .kar-hit {
+            font-size: 1.2rem;
+            line-height: 80px;
+            margin-bottom: 0;
+            font-weight: 700;
+            background: linear-gradient(90deg, #3beaef, #404ee8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
 
@@ -222,7 +232,11 @@
 
     <!-- Header -->
     <header class="header">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Emblem_of_Haryana.svg" alt="Logo">
+        <div class="d-flex align-items-center me-3">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Emblem_of_Haryana.svg" alt="Logo"
+                style="height: 60px; width: auto;">
+            <span class="ms-2 fw-bold kar-hit">कर हितैषी</span>
+        </div>
         <div class="header-content">
             <h1>Excise and Taxation Department</h1>
             <p>Government of Haryana</p>
@@ -291,20 +305,23 @@
                 </div>
 
                 <!-- STEP 2 -->
-                
+
                 <div class="step" data-step="2">
                     <h5 class="fw-bold mb-0">Step 2 — Information related to</h5>
                     <div class="mb-3 mt-4">
                         <label class="form-label required">Select Tax to which information is related</label>
                         <select id="taxType" name="taxType" class="form-select" required>
                             <option value="">Select</option>
-                            <option value="gst" {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'gst' ? 'selected': ''}}>
+                            <option value="gst"
+                                {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'gst' ? 'selected' : '' }}>
                                 Goods and Services Tax (GST)
                             </option>
-                            <option value="excise" {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'excise' ? 'selected': '' }}>
+                            <option value="excise"
+                                {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'excise' ? 'selected' : '' }}>
                                 Excise
                             </option>
-                            <option value="vat" {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'vat' ? 'selected': ''}}>
+                            <option value="vat"
+                                {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'vat' ? 'selected' : '' }}>
                                 Value Added Tax (VAT) / Central Sales Tax (CST)
                             </option>
                         </select>
@@ -340,24 +357,25 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label required">Firm Name</label>
-                                <input id="gstFirmName" name="gstFirmName" type="text" class="form-control" placeholder="Enter firm name">
+                                <input id="gstFirmName" name="gstFirmName" type="text" class="form-control"
+                                    placeholder="Enter firm name">
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">GSTIN</label>
-                                <input id="gstGstin" name="gstGstin" type="text" class="form-control" placeholder="15 character GSTIN">
+                                <input id="gstGstin" name="gstGstin" type="text" class="form-control"
+                                    placeholder="15 character GSTIN">
                             </div>
                         </div>
 
 
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
-                            <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control"
-                                rows="2"></textarea>
+                            <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control" rows="2"></textarea>
                         </div>
 
 
-                      
+
 
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -375,15 +393,17 @@
 
 
                         <div class="mb-3">
-                            <label class="form-label required">Description of Information <small class="text-muted">(Max 200 words)</small></label>
-                            <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3"
-                                maxlength="2000" placeholder="Provide details about the complaint or information"></textarea>
+                            <label class="form-label required">Description of Information <small
+                                    class="text-muted">(Max 200 words)</small></label>
+                            <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3" maxlength="2000"
+                                placeholder="Provide details about the complaint or information"></textarea>
                             <small class="text-muted" id="descCount">0 / 200 words</small>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
-                            <input id="gstProof" name="gstProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control" multipleonchange="validateFiles(this)" multiple>
+                            <input id="gstProof" name="gstProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
+                                class="form-control" multipleonchange="validateFiles(this)" multiple>
                         </div>
                     </div>
 
@@ -431,8 +451,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
-                            <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control"
-                                rows="2"></textarea>
+                            <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2"></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label required">Upload Proof</label>
@@ -442,84 +461,89 @@
                     </div> -->
 
                     <div id="vatFields" style="display:none;">
-                            <div class="mb-3">
-                                <label class="form-label required">Firm Name</label>
-                                <input id="vatFirmName" name="vatFirmName" type="text" class="form-control" placeholder="Enter firm name">
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label required">Firm Name</label>
+                            <input id="vatFirmName" name="vatFirmName" type="text" class="form-control"
+                                placeholder="Enter firm name">
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">TIN</label>
-                                <input id="vatTin" name="vatTin" type="text" class="form-control" placeholder="Tax Identification Number">
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">TIN</label>
+                            <input id="vatTin" name="vatTin" type="text" class="form-control"
+                                placeholder="Tax Identification Number">
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label required">Firm Address</label>
-                                <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2" placeholder="Enter firm address"></textarea>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label required">Firm Address</label>
+                            <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2"
+                                placeholder="Enter firm address"></textarea>
+                        </div>
 
-                            <!-- ✅ New Fields -->
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label required">Locality</label>
-                                    <input type="text" id="vatLocality" name="vatLocality" class="form-control" placeholder="Enter locality or area name">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label required">District</label>
-                                    <input type="text" id="vatDistrict" name="vatDistrict" class="form-control" placeholder="Enter district name">
-                                </div>
+                        <!-- ✅ New Fields -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label required">Locality</label>
+                                <input type="text" id="vatLocality" name="vatLocality" class="form-control"
+                                    placeholder="Enter locality or area name">
                             </div>
-
-                            <div class="mb-3">
-                                <label class="form-label required">Description of Information <small class="text-muted">(Max 200 words)</small></label>
-                                <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3"
-                                    maxlength="2000" placeholder="Provide details about the complaint or information"></textarea>
-                                <small class="text-muted" id="vatDescCount">0 / 200 words</small>
+                            <div class="col-md-6">
+                                <label class="form-label required">District</label>
+                                <input type="text" id="vatDistrict" name="vatDistrict" class="form-control"
+                                    placeholder="Enter district name">
                             </div>
+                        </div>
 
-                            <!-- <div class="mb-3">
+                        <div class="mb-3">
+                            <label class="form-label required">Description of Information <small
+                                    class="text-muted">(Max 200 words)</small></label>
+                            <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3" maxlength="2000"
+                                placeholder="Provide details about the complaint or information"></textarea>
+                            <small class="text-muted" id="vatDescCount">0 / 200 words</small>
+                        </div>
+
+                        <!-- <div class="mb-3">
                                 <label class="form-label required">Upload Proof</label>
                                 <input id="vatProof" name="vatProof" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control">
                             </div> -->
 
-                            <div class="mb-3">
-                                    <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
-                                    <input id="vatProof" 
-                                        name="vatProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control" multiple
-                                onchange="validateVatFiles(this)">
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
+                            <input id="vatProof" name="vatProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
+                                class="form-control" multiple onchange="validateVatFiles(this)">
+                        </div>
 
 
 
                     </div>
                     <script>
-function validateVatFiles(input) {
-    const files = input.files;
+                        function validateVatFiles(input) {
+                            const files = input.files;
 
-    // Check number of files
-    if (files.length > 5) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'You can upload a maximum of 5 files.'
-        });
-        input.value = ''; // clear selection
-        return false;
-    }
+                            // Check number of files
+                            if (files.length > 5) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'You can upload a maximum of 5 files.'
+                                });
+                                input.value = ''; // clear selection
+                                return false;
+                            }
 
-    // Check file size (max 1MB)
-    for (let i = 0; i < files.length; i++) {
-        if (files[i].size > 1024 * 1024) { // 1 MB in bytes
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Each file must be less than 1 MB.'
-            });
-            input.value = ''; // clear selection
-            return false;
-        }
-    }
-}
-</script>
+                            // Check file size (max 1MB)
+                            for (let i = 0; i < files.length; i++) {
+                                if (files[i].size > 1024 * 1024) { // 1 MB in bytes
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Each file must be less than 1 MB.'
+                                    });
+                                    input.value = ''; // clear selection
+                                    return false;
+                                }
+                            }
+                        }
+                    </script>
 
 
                     <!-- Excise Fields -->
@@ -608,58 +632,60 @@ function validateVatFiles(input) {
 
             // axios.post('/save-informer', formData)
             axios.post("{{ route('save.informer') }}", formData)
-                    .then(response => {
-                        if (response.data.success) {
-                             showStep(2);
-                             $('#loader').addClass('d-none');
-                        } else {
-                            $('#loader').addClass('d-none');
-                            Swal.fire('Error', response.data.message, 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
+                .then(response => {
+                    if (response.data.success) {
+                        showStep(2);
                         $('#loader').addClass('d-none');
-                        Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
-                    });
-            });
+                    } else {
+                        $('#loader').addClass('d-none');
+                        Swal.fire('Error', response.data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+                });
+        });
 
 
         document.getElementById('backTo1').onclick = () => showStep(1);
 
         document.getElementById('toStep3').onclick = () => {
-                const complaintType = taxType.value; // renamed for clarity
-                if (!complaintType) return Swal.fire('Error', 'Please select a complaint type.', 'error');
+            const complaintType = taxType.value; // renamed for clarity
+            if (!complaintType) return Swal.fire('Error', 'Please select a complaint type.', 'error');
 
-                $('#loader').removeClass('d-none');
+            $('#loader').removeClass('d-none');
 
-                // Hide all sections first
-                ['gstFields', 'vatFields', 'exciseFields'].forEach(id =>
-                    document.getElementById(id).style.display = 'none'
-                );
+            // Hide all sections first
+            ['gstFields', 'vatFields', 'exciseFields'].forEach(id =>
+                document.getElementById(id).style.display = 'none'
+            );
 
-                // 🔹 Send complaint type to backend
-                // axios.post('/save-complaint-type', { complaint_type: complaintType })
-                axios.post("{{ route('save.complaint.type') }}", { complaint_type: complaintType })
-                    .then(response => {
-                        $('#loader').addClass('d-none');
+            // 🔹 Send complaint type to backend
+            // axios.post('/save-complaint-type', { complaint_type: complaintType })
+            axios.post("{{ route('save.complaint.type') }}", {
+                    complaint_type: complaintType
+                })
+                .then(response => {
+                    $('#loader').addClass('d-none');
 
-                        if (response.data.success) {
-                            showStep(3);
+                    if (response.data.success) {
+                        showStep(3);
 
-                            // Show relevant form section
-                            if (complaintType === 'gst') gstFields.style.display = 'block';
-                            if (complaintType === 'vat') vatFields.style.display = 'block';
-                            if (complaintType === 'excise') exciseFields.style.display = 'block';
-                        } else {
-                            Swal.fire('Error', response.data.message, 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        $('#loader').addClass('d-none');
-                        Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
-                    });
+                        // Show relevant form section
+                        if (complaintType === 'gst') gstFields.style.display = 'block';
+                        if (complaintType === 'vat') vatFields.style.display = 'block';
+                        if (complaintType === 'excise') exciseFields.style.display = 'block';
+                    } else {
+                        Swal.fire('Error', response.data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+                });
         };
 
         document.getElementById('backTo2').onclick = () => showStep(2);
@@ -675,7 +701,7 @@ function validateVatFiles(input) {
             $('#loader').removeClass('d-none');
             const tax = taxType.value;
 
-            if(tax == 'gst'){
+            if (tax == 'gst') {
                 const firmName = gstFirmName.value.trim();
                 const gstin = gstGstin.value.trim();
                 const firmAddress = gstFirmAddress.value.trim();
@@ -684,13 +710,13 @@ function validateVatFiles(input) {
                 const district = gstDistrict.value.trim();
                 const description = gstDescription.value.trim();
 
-                if(!firmName){
-                     $('#loader').addClass('d-none');
+                if (!firmName) {
+                    $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Firm Name.', 'error');
                     return false;
                 }
 
-                if (gstin) { 
+                if (gstin) {
                     if (gstin.length !== 15) {
                         $('#loader').addClass('d-none');
                         Swal.fire({
@@ -702,14 +728,14 @@ function validateVatFiles(input) {
                     }
                 }
 
-                if(!firmAddress){
+                if (!firmAddress) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Firm Address.', 'error');
                     return false;
                 }
 
                 if (!gstProof) {
-                     $('#loader').addClass('d-none');
+                    $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please upload a proof document.', 'error');
                     return false;
                 }
@@ -718,38 +744,38 @@ function validateVatFiles(input) {
                 let fileExtension = gstProof.name.split('.').pop().toLowerCase();
 
                 if (!allowedExtensions.includes(fileExtension)) {
-                     $('#loader').addClass('d-none');
+                    $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Invalid file type. Only PDF, JPG, JPEG, or PNG are allowed.', 'error');
-                    $('#gstProof').val(''); 
+                    $('#gstProof').val('');
                     return false;
                 }
 
                 if (gstProof.size > 1024 * 1024) {
-                     $('#loader').addClass('d-none');
+                    $('#loader').addClass('d-none');
                     Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
-                    $('#gstProof').val(''); 
+                    $('#gstProof').val('');
                     return false;
                 }
 
 
                 if (!locality) {
-                            $('#loader').addClass('d-none');
-                            Swal.fire('Error', 'Please enter Locality.', 'error');
-                            return false;
-                        }
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please enter Locality.', 'error');
+                    return false;
+                }
 
-                        // === District ===
-                        if (!district) {
-                            $('#loader').addClass('d-none');
-                            Swal.fire('Error', 'Please enter District.', 'error');
-                            return false;
-                        }
+                // === District ===
+                if (!district) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please enter District.', 'error');
+                    return false;
+                }
 
-                        // === Description of Information ===
-                        if (!description) {
-                            $('#loader').addClass('d-none');
-                            Swal.fire('Error', 'Please enter Description of Information.', 'error');
-                            return false;
+                // === Description of Information ===
+                if (!description) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please enter Description of Information.', 'error');
+                    return false;
                 }
 
             }
@@ -757,7 +783,7 @@ function validateVatFiles(input) {
 
 
 
-            if(tax == 'vat'){
+            if (tax == 'vat') {
                 const firmName = vatFirmName.value.trim();
                 const tin = vatTin.value.trim();
                 const firmAddress = vatFirmAddress.value.trim();
@@ -767,16 +793,16 @@ function validateVatFiles(input) {
                 const description = vatDescription.value.trim();
 
 
-                if(!firmName){
+                if (!firmName) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Firm Name.', 'error');
                     return false;
                 }
 
                 if (!locality) {
-                        $('#loader').addClass('d-none');
-                        Swal.fire('Error', 'Please enter Locality.', 'error');
-                        return false;
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please enter Locality.', 'error');
+                    return false;
                 }
 
                 if (!district) {
@@ -791,7 +817,7 @@ function validateVatFiles(input) {
                     return false;
                 }
 
-                if(!firmAddress){
+                if (!firmAddress) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Firm Address.', 'error');
                     return false;
@@ -803,44 +829,44 @@ function validateVatFiles(input) {
                     return false;
                 }
 
-                    let allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
-                    let fileExtension = vatProof.name.split('.').pop().toLowerCase();
+                let allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
+                let fileExtension = vatProof.name.split('.').pop().toLowerCase();
 
-                    if (!allowedExtensions.includes(fileExtension)) {
-                        $('#loader').addClass('d-none');
-                        Swal.fire('Error', 'Invalid file type. Only PDF, JPG, JPEG, or PNG are allowed.', 'error');
-                        $('#vatProof').val(''); // clear invalid file
-                        return false;
-                    }
+                if (!allowedExtensions.includes(fileExtension)) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Invalid file type. Only PDF, JPG, JPEG, or PNG are allowed.', 'error');
+                    $('#vatProof').val(''); // clear invalid file
+                    return false;
+                }
 
-                    // 🔹 File size check (max 1 MB)
-                    if (vatProof.size > 1024 * 1024) {
-                        $('#loader').addClass('d-none');
-                        Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
-                        $('#vatProof').val(''); // clear large file
-                        return false;
-                    }
+                // 🔹 File size check (max 1 MB)
+                if (vatProof.size > 1024 * 1024) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
+                    $('#vatProof').val(''); // clear large file
+                    return false;
+                }
             }
 
 
 
-            if(tax == 'excise'){
+            if (tax == 'excise') {
                 const offender = exciseName.value.trim();
                 const details = exciseDetails.value.trim();
 
-                if(!offender){
+                if (!offender) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Name of Offender / Licensee.', 'error');
                     return false;
                 }
 
-                if(!details){
+                if (!details) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Details of Offence.', 'error');
                     return false;
                 }
 
-                if(details.split(/\s+/).length > 200){
+                if (details.split(/\s+/).length > 200) {
                     $('#loader').addClass('d-none');
                     return Swal.fire('Error', 'Details exceed 200 words.', 'error');
                 }
@@ -850,20 +876,20 @@ function validateVatFiles(input) {
             try {
                 // const res = await axios.post('/submit-complaint', formData);
                 const res = await axios.post("{{ route('submit.complaint') }}", formData);
-             
+
                 if (res.data.success) {
-                        $('#loader').addClass('d-none');
-                        Swal.fire(
-                            'Success',
-                            `Your complaint has been submitted successfully!<br><b>Application ID:</b> ${res.data.application_id}`,
-                            'success'
-                        ).then(() => {
-                            multiStepForm.reset();
-                            window.location.href = "{{ url('user/dashboard') }}";
-                        });
-                    } else {
-                        $('#loader').addClass('d-none');
-                        Swal.fire('Error', res.data.message, 'error');
+                    $('#loader').addClass('d-none');
+                    Swal.fire(
+                        'Success',
+                        `Your complaint has been submitted successfully!<br><b>Application ID:</b> ${res.data.application_id}`,
+                        'success'
+                    ).then(() => {
+                        multiStepForm.reset();
+                        window.location.href = "{{ url('user/dashboard') }}";
+                    });
+                } else {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', res.data.message, 'error');
                 }
             } catch (err) {
                 console.error(err);
@@ -874,16 +900,15 @@ function validateVatFiles(input) {
     </script>
 
     <script>
-        document.getElementById('informerName').addEventListener('input', function () {
+        document.getElementById('informerName').addEventListener('input', function() {
             this.value = this.value.replace(/[^A-Za-z\s]/g, '');
         });
-
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const taxType = document.getElementById('taxType');
 
-            taxType.addEventListener('change', function () {
+            taxType.addEventListener('change', function() {
                 // Hide all Step 3 sections
                 ['gstFields', 'vatFields', 'exciseFields'].forEach(id => {
                     const el = document.getElementById(id);
@@ -905,11 +930,10 @@ function validateVatFiles(input) {
                 if (wordCount) wordCount.textContent = '0 / 200 words';
             });
         });
-
     </script>
 
     <script>
-        document.getElementById("gstGstin").addEventListener("input", function () {
+        document.getElementById("gstGstin").addEventListener("input", function() {
             let value = this.value;
             value = value.replace(/[^A-Za-z0-9]/g, '');
 
@@ -921,47 +945,47 @@ function validateVatFiles(input) {
         });
 
         // Here
-        document.getElementById("gstProof").addEventListener("change", function () {
-                const file = this.files[0];
-                if (!file) return;
+        document.getElementById("gstProof").addEventListener("change", function() {
+            const file = this.files[0];
+            if (!file) return;
 
-                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-                const maxSize = 1 * 1024 * 1024;
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+            const maxSize = 1 * 1024 * 1024;
 
-                if (!allowedTypes.includes(file.type)) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid File Type',
-                        text: 'Only PDF, JPG, JPEG, and PNG files are allowed.',
-                    });
-                    this.value = '';
-                    return;
-                }
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File Type',
+                    text: 'Only PDF, JPG, JPEG, and PNG files are allowed.',
+                });
+                this.value = '';
+                return;
+            }
 
-                if (file.size > maxSize) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'File Too Large',
-                        text: 'File size must not exceed 1 MB.',
-                    });
-                    this.value = '';
-                    return;
-                }
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Too Large',
+                    text: 'File size must not exceed 1 MB.',
+                });
+                this.value = '';
+                return;
+            }
         });
 
         // HERE
-        document.getElementById("gstFirmName").addEventListener("input", function () {
-                const value = this.value;
-                const cleaned = value.replace(/[^a-zA-Z0-9 .-]/g, '');
+        document.getElementById("gstFirmName").addEventListener("input", function() {
+            const value = this.value;
+            const cleaned = value.replace(/[^a-zA-Z0-9 .-]/g, '');
 
-                if (value !== cleaned) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Characters',
-                        text: 'Special characters are not allowed in Firm Name.',
-                    });
-                    this.value = cleaned;
-                }
+            if (value !== cleaned) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Characters',
+                    text: 'Special characters are not allowed in Firm Name.',
+                });
+                this.value = cleaned;
+            }
         });
 
 
@@ -976,10 +1000,9 @@ function validateVatFiles(input) {
                 $('#descCount').text('200 / 200 words');
             }
         });
-
     </script>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 </body>

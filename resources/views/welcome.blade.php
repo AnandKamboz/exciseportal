@@ -26,7 +26,6 @@
         }
 
         .otp-input {
-            letter-spacing: 12px;
             font-size: 20px;
             text-align: center;
         }
@@ -79,13 +78,14 @@
 
         /* =================== Login Page =================== */
         .login-page {
-            position: relative;
+            /* position: relative;
             height: 100vh;
             width: 100%;
-            display: flex;
+            
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: hidden; */
+            display: flex;
         }
 
         .login-page .bubble {
@@ -208,8 +208,8 @@
 
         /* =================== Background Gradient =================== */
         .background-radial-gradient {
-            background-color: hsl(218, 41%, 15%);
-            background-image: radial-gradient(650px circle at 0% 0%,
+            /* background-color: hsl(218, 41%, 15%); */
+            /* background-image: radial-gradient(650px circle at 0% 0%,
                     hsl(218, 41%, 35%) 15%,
                     hsl(218, 41%, 30%) 35%,
                     hsl(218, 41%, 20%) 75%,
@@ -220,7 +220,7 @@
                     hsl(218, 41%, 30%) 35%,
                     hsl(218, 41%, 20%) 75%,
                     hsl(218, 41%, 19%) 80%,
-                    transparent 100%);
+                    transparent 100%); */
         }
 
         #radius-shape-1 {
@@ -254,20 +254,20 @@
 
         .bg-glass:hover {
             transform: translateY(-6px);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+            /* box-shadow: 0 0 40px rgba(255, 255, 255, 0.3); */
         }
 
         /* =================== Form Styling =================== */
         .card-body {
-            color: #fff;
+            color: #393939;
             font-family: "Poppins", sans-serif;
         }
 
         .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgb(13 110 253 / 4%);
+            border: 1px solid rgba(13, 110, 253, 0.25);
             border-radius: 12px;
-            color: #fff;
+            color: #393939;
             padding: 10px 14px;
             transition: 0.3s;
         }
@@ -276,33 +276,36 @@
             background: rgba(255, 255, 255, 0.2);
             border-color: #404ee8;
             box-shadow: 0 0 12px rgba(64, 78, 232, 0.5);
-            color: #fff;
+            color: #393939;
         }
 
         .form-label {
-            color: #eee;
+            color: #393939;
             font-weight: 500;
             margin-top: 5px;
         }
 
         .btn-primary {
-            background-color: #b028ff;
-            border: none;
-            border-radius: 25px;
+            border-radius: 20px;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            padding: 0.6rem 2rem;
+            font-size: 15px;
+            background: #7386ff;
+            border: none;
+            color: #fff;
         }
 
-        .btn-primary:hover {
-            background-color: #852ab9;
+        .btn-cta:hover {
+            background: #4b59ba;
+            color: #fff;
         }
 
         .form-check-label {
-            color: #f1f1f1;
+            color: #272727;
         }
 
         .btn-floating {
-            color: #fff !important;
+            color: #393939 !important;
             background: rgba(255, 255, 255, 0.15);
             border-radius: 50%;
         }
@@ -312,14 +315,82 @@
         }
 
         .text-center p {
-            color: #fff;
+            color: #393939;
             font-weight: 500;
             margin-bottom: 10px;
         }
 
         ::placeholder {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: #393939 !important;
             opacity: 1 !important;
+        }
+
+
+
+        .top-bar {
+            width: 100%;
+            background: linear-gradient(135deg, #7386ff, #262626);
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            flex-wrap: wrap;
+        }
+
+        .top-bar .contact-item {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .top-bar .contact-item i {
+            margin-right: 8px;
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            border-bottom: 2px solid #7386ff;
+            background: linear-gradient(to right, #ffffff, #f1f1f1);
+            flex-wrap: wrap;
+        }
+
+        .header img {
+            height: 90px;
+        }
+
+        .header-content {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-content h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 5px 0;
+            letter-spacing: 1px;
+        }
+
+        .header-content p {
+            font-size: 17px;
+            color: #555;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .kar-hit {
+            font-size: 1.2rem;
+            line-height: 80px;
+            margin-bottom: 0;
+            font-weight: 700;
+            background: linear-gradient(90deg, #3beaef, #404ee8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -329,32 +400,47 @@
         <div class="spinner"></div>
     </div>
 
-    <section class="background-radial-gradient overflow-hidden login-page">
-        <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
-            <div class="row gx-lg-5 align-items-center mb-5">
-                <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
-                    <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
-                        The dummy text <br />
-                        <span style="color: hsl(218, 81%, 75%)">for your xyz</span>
-                    </h1>
-                    <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                        Temporibus, expedita iusto veniam atque, magni tempora mollitia
-                        dolorum consequatur nulla, neque debitis eos reprehenderit quasi
-                        ab ipsum nisi dolorem modi. Quos?
-                    </p>
-                </div>
 
-                <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
-                    <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
-                    <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="contact-item">
+            <i>📧</i> excisehry@gmail.com
+        </div>
+        <div class="contact-item">
+            <i>📞</i> 0123-4567890
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="d-flex align-items-center me-3">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Emblem_of_Haryana.svg" alt="Logo"
+                style="height: 60px; width: auto;">
+            <span class="ms-2 fw-bold kar-hit">कर हितैषी</span>
+        </div>
+        <div class="header-content">
+            <h1>Excise and Taxation Department</h1>
+            <p>Government of Haryana</p>
+        </div>
+    </header>
+
+
+
+    <section class="background-radial-gradient  login-page">
+        <div class="container px-4  px-md-5 text-center text-lg-start my-5">
+            <div class="row gx-lg-5 align-items-center mb-5">
+
+
+                <div class="col-lg-5 mb-5 mb-lg-0 position-relative">
+                    {{-- <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
+                    <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div> --}}
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
-                            <div class="text-center mb-4">
+                            {{-- <div class="text-center mb-4">
                                 <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo"
                                     width="80" height="80" class="rounded-circle">
-                            </div>
-                            <h4 class="text-center mb-4 fw-bold">Excise and Taxation Department</h4>
+                            </div> --}}
+                            <h4 class="text-center mb-4 fw-bold">Login/Register</h4>
 
                             <form id="loginForm">
                                 @csrf
@@ -386,6 +472,41 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="col-lg-7 mb-5 mb-lg-0" style="z-index: 10;">
+                    <div class="p-4 rounded-4 shadow-lg"
+                        style="background: linear-gradient(135deg, #153462, #1A4D8C); color: #f1f6ff; border-left: 6px solid #00c4ff;  font-size: 14px;">
+
+                        {{-- <h2 class="fw-bold mb-4 text-center"
+                            style="color: #00e0ff; letter-spacing: 1px; text-shadow: 0 0 6px rgba(255,255,255,0.3);">
+                            Disclaimer / अस्वीकरण
+                        </h2> --}}
+
+                        <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
+                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
+                            <li>This app pertains to providing information related to evasion of <strong>GST / VAT / CST
+                                    / Excise</strong> only. No other information should be given.</li>
+                            <li>It shall be noted that providing information does not entitle the informer to any award.
+                            </li>
+                            <li>The name of the informer will be kept secret.</li>
+                        </ul>
+
+                        <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 1.5rem 0;">
+
+                        <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
+                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
+                            <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से संबंधित
+                                जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li>
+                            <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं मिलेगा।
+                            </li>
+                            <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
+                        </ul>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </section>

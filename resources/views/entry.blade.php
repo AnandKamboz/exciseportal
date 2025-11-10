@@ -2,247 +2,251 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Excise Department | Official Portal</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- SweetAlert2 CSS (optional, for default styling) -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- SweetAlert2 JS -->
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-            background-color: #0b0e1a;
-            color: #fff;
+        :root {
+            --bg: #070812;
+            --card-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --accent-1: #3beaef;
+            --accent-2: #4b60ff;
+            --accent-3: #ccf381;
+            --muted: #d7d7d7;
         }
 
-        /* ========== HERO SECTION ========== */
-        .hero-section {
-            position: relative;
-            /* background: url('./assets/images/excise-dep.JPG') no-repeat center center/cover; */
-            background: url('./assets/images/entery_page_image/excise-dep.JPG') no-repeat center center/cover;
-            height: 100vh;
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #04050a 0, #0b0e1a 60%);
+            color: #fff;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout */
+        .hero {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 3rem 1rem;
+            position: relative;
             overflow: hidden;
+            background: url('assets/images/entery_page_image/excise-dep.JPG') no-repeat center center/cover;
         }
 
-        /* Dark gradient overlay with slight blue-red tint */
-        .hero-overlay {
-
-
+        /* Add black overlay on background image */
+        .hero::before {
+            content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgb(0 0 0 / 64%);
-            z-index: 1;
-
-
-
-
-
-
-            /* position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: linear-gradient(
-        rgba(0, 0, 0, 0.75),
-        rgba(15, 15, 35, 0.85)
-      ), rgba(0, 0, 0, 0.5);
-      z-index: 1; */
-        }
-
-        /* Decorative blurred orbs for background effect */
-        .decor-circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.5;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
             z-index: 0;
         }
 
-        .decor-circle.red {
-            background: #ef3b3b;
-            width: 250px;
-            height: 250px;
-            top: -80px;
-            right: -100px;
-        }
-
-        .decor-circle.blue {
-            background: #404ee8;
-            width: 300px;
-            height: 300px;
-            bottom: -100px;
-            left: -120px;
-        }
-
-        .hero-content {
+        /* Main card (glass) */
+        .entry-card {
             position: relative;
             z-index: 2;
+            max-width: 1100px;
             width: 100%;
-            max-width: 1200px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 40px rgba(2, 6, 23, 0.6);
+            overflow: hidden;
+        }
+
+        .entry-grid {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            min-height: 420px;
+            align-items: stretch;
+        }
+
+        /* left: image */
+        .entry-visual {
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        .entry-visual img {
+            width: 100%;
+            height: 100%;
+            /* object-fit: cover; */
+            display: block;
+            transition: transform 7s ease;
+        }
+
+        .entry-visual:hover img {
+            transform: scale(1.06);
+        }
+
+        /* .entry-visual::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(3, 8, 18, 0.65) 25%, rgba(3, 8, 18, 0.12) 60%, transparent 100%);
+        } */
+
+        /* right: content */
+        .entry-body {
+            padding: 20px;
             display: flex;
-            flex-wrap: wrap;
-            align-items: center;
+            flex-direction: column;
             justify-content: space-between;
-            gap: 40px;
+            gap: 10px;
+            background: rgb(0 0 0 / 15%) !important;
+            backdrop-filter: blur(60px) saturate(160%);
         }
 
-        /* Glassmorphism box for text */
-        .hero-text {
-            flex: 1 1 60%;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            padding: 40px 35px;
-            border-radius: 20px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+        .dept-header {
+            display: flex;
+            gap: 14px;
+            align-items: center;
         }
 
-        .hero-text h1 {
-            font-size: 3.2rem;
-            line-height: 80px;
-            margin-bottom: 0;
+        .dept-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(75, 96, 255, 0.18);
+        }
+
+        .dept-logo img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: brightness(1.1) saturate(1.05);
+        }
+
+        .dept-title h1 {
+            font-size: 1.4rem;
+            margin: 0;
+            line-height: 1.5;
             font-weight: 700;
-            background: linear-gradient(90deg, #3beaef, #404ee8);
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .hero-text h3 {
-            font-size: 1.2rem;
-            color: #CCF381;
-            margin-bottom: 15px;
+        .dept-title p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+            margin-top: 4px;
         }
 
-        .hero-text p {
-            font-size: 1.1rem;
-            color: #dcdcdc;
-            line-height: 1.7;
-            margin-bottom: 30px;
+        .disclaimers {
+            margin-top: 8px;
+            display: grid;
+            gap: 10px;
         }
 
-        .btn-custom {
-            background: #879fff;
-            border: none;
-            color: #fff;
-            padding: 12px 35px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: 0.3s;
-            box-shadow: 0 0 15px rgba(239, 59, 59, 0.5);
+        .disc-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.02);
         }
 
-        .btn-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 20px rgba(64, 78, 232, 0.7);
-        }
-
-        .hero-image {
-            flex: 1 1 30%;
-            text-align: center;
-        }
-
-        .hero-image img {
-            width: 90%;
-            max-width: 380px;
-            animation: float 4s ease-in-out infinite;
-            border-radius: 25px;
-            box-shadow: 0 0 35px rgba(255, 255, 255, 0.2);
-        }
-
-
-        .disclaimer-list {
-            list-style: none;
-            padding-left: 0;
-            margin: 0 0 18px 0;
-            color: #e9e9e9;
-            line-height: 1.6;
-            /* font-size: 0.98rem; */
-            font-size: 14px;
-        }
-
-        .disclaimer-list li {
-            position: relative;
-            padding-left: 28px;
-            /* margin-bottom: 10px; */
-        }
-
-        .disclaimer-list li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: #CCF381;
+        .disc-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            flex: 0 0 36px;
+            background: linear-gradient(180deg, var(--accent-2), var(--accent-1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 700;
-            font-size: 1.1rem;
-            line-height: 1;
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(59, 174, 239, 0.12);
         }
 
-        .disclaimer-divider {
+        .disc-text {
+            color: #e8e8e8;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .divider {
             height: 1px;
-            background: rgba(255, 255, 255, 0.06);
-            margin: 18px 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+            margin: 8px 0;
             border-radius: 2px;
         }
 
-
-
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
+        .cta-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 6px;
+            flex-wrap: wrap;
         }
 
-        /* RESPONSIVE */
+        .btn-cta {
+            border-radius: 20px;
+            font-weight: 600;
+            padding: 0.6rem 2rem;
+            font-size: 15px;
+            background: #7386ff;
+            border: none;
+            color: #fff;
+        }
+
+        .btn-cta:hover {
+            background: #4b59ba;
+            color: #fff;
+        }
+
+        .muted-small {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
         @media (max-width: 992px) {
-
-
-            .hero-section {
-                height: auto;
-
+            .entry-grid {
+                grid-template-columns: 1fr;
             }
 
-
-
-            .hero-content {
-                flex-direction: column;
-                text-align: center;
+            .entry-visual {
+                min-height: 260px;
             }
 
-            .hero-text {
-                flex: 1 1 100%;
+            .entry-body {
+                padding: 22px;
             }
 
-            .hero-text h1 {
-                font-size: 2.3rem;
-            }
-
-            .hero-image img {
-                margin-top: 30px;
-                width: 80%;
+            .dept-title h1 {
+                font-size: 1.35rem;
             }
         }
     </style>
@@ -250,81 +254,73 @@
 
 <body>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-overlay"></div>
-
-        <!-- Decorative Background Shapes -->
-        <div class="decor-circle red"></div>
-        <div class="decor-circle blue"></div>
-
-        <div class="hero-content container">
-            <div class="hero-text">
-                <div class="d-flex ">
-                    <!-- <img src="./assets/images/haryana-logo.png" alt="Department Logo" class="me-2" style="height:60px; width:auto;"> -->
-                    <img src="{{ 'assets/images/banner/haryana-logo.png' }}" alt="Department Logo" class="me-2"
-                        style="height:60px; width:auto;">
-
-                    <h1 class="m-0">कर हितैषी</h1>
-                </div>
-                <h3> Excise and Taxation Department , Government of Haryana</h3>
-
-                <!-- ENGLISH DISCLAIMER -->
-                <div aria-labelledby="disclaimer-en">
-                    <h3 id="disclaimer-en" style="font-size:1rem;color:#f5f5f5;margin:8px 0 12px 0;font-weight:600;">
-                        Disclaimer
-                    </h3>
-                    <ul class="disclaimer-list">
-                        <li>This app pertains to providing information related to evasion of GST/ VAT/ CST/ Excise only.
-                            No other
-                            information should be given.</li>
-                        <li>It shall be noted that the providing of information does not entitle the informer to any
-                            award.</li>
-                        <li>The name of the informer will be kept secret.</li>
-                    </ul>
+    <main class="hero">
+        <section class="entry-card">
+            <div class="entry-grid">
+                <div class="entry-visual">
+                    <img src="{{ asset('assets/images/entery_page_image/tax-stop.jpeg') }}"
+                        alt="Excise Department background image" loading="lazy">
                 </div>
 
-                <div class="disclaimer-divider" role="separator" aria-hidden="true"></div>
+                <div class="entry-body">
+                    <div>
+                        <div class="dept-header">
+                            <div class="dept-logo" aria-hidden="true">
+                                <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Haryana logo">
+                            </div>
+                            <div class="dept-title">
+                                <h1 class="m-0">कर हितैषी</h1>
+                                <p class="m-0">Excise &amp; Taxation Department, Government of Haryana</p>
+                            </div>
+                        </div>
 
-                <!-- HINDI DISCLAIMER -->
-                <div aria-labelledby="disclaimer-hi">
-                    <h3 id="disclaimer-hi" style="font-size:1rem;color:#f5f5f5;margin:8px 0 12px 0;font-weight:600;">
-                        अस्वीकरण</h3>
-                    <ul class="disclaimer-list" lang="hi">
-                        <li>यह ऐप केवल जीएसटी/वैट/सीएसटी/उत्पाद शुल्क की चोरी से संबंधित जानकारी प्रदान करने के लिए है।
-                            कोई अन्य
-                            जानकारी नहीं दी जानी चाहिए।</li>
-                        <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं मिलेगा।</li>
-                        <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
-                    </ul>
-                </div>
-                <div class=" mt-5">
-                    <a href="{{ route('login') }}" class="btn-custom text-decoration-none">
-                        Click to Register / Login
-                    </a>
-                </div>
+                        <div class="divider"></div>
 
+                        <div class="p-2 rounded-4 shadow-lg"
+                            style="background: linear-gradient(135deg, #153462, #1A4D8C); color: #f1f6ff; border-left: 6px solid #00c4ff;  font-size: 12px;">
+
+
+
+                            <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
+                            <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
+                                <li>This app pertains to providing information related to evasion of <strong>GST / VAT /
+                                        CST
+                                        / Excise</strong> only. No other information should be given.</li>
+                                <li>It shall be noted that providing information does not entitle the informer to any
+                                    award.
+                                </li>
+                                <li>The name of the informer will be kept secret.</li>
+                            </ul>
+
+                            <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 10px;">
+
+                            <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
+                            <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
+                                <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से संबंधित
+                                    जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li>
+                                <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं
+                                    मिलेगा।
+                                </li>
+                                <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div class="cta-row">
+                            <a href="{{ route('login') }}" class="btn btn-cta btn-lg" role="button">Register /
+                                Login</a>
+
+                        </div>
+                    </div>
+                </div>
             </div>
+        </section>
+    </main>
 
-            <div class="hero-image">
-                <!-- <img src="./assets/images/new-tex-image.png" alt="Excise Department Illustration"> -->
-                <!-- entery_page_image -->
-                <img src="{{ asset('assets/images/entery_page_image/new-tex-image.png') }}"
-                    alt="Excise Department Illustration">
-            </div>
-        </div>
-    </section>
-    @if (session('status'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Logged Out',
-                text: '{{ session('status') }}',
-                confirmButtonText: 'OK'
-            });
-        </script>
-    @endif
 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
