@@ -529,6 +529,48 @@
             //     });
 
 
+            // axios.post("{{ route('verify-otp') }}", {
+            //         mobile: mobileInput.value,
+            //         otp: otpInput.value,
+            //         captcha: captchaInput.value,
+            //         _token: document.querySelector('input[name="_token"]').value
+            //     })
+            //     .then(res => {
+            //         $('#loader').addClass('d-none');
+
+            //         if (res.data.success) {
+            //             window.location.href = res.data.redirect_url;
+            //         } else {
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Oops...',
+            //                 text: res.data.message || 'Invalid OTP!',
+            //                 confirmButtonText: 'OK'
+            //             }).then(() => {
+            //                 // 🔹 Only refresh after user clicks OK
+            //                 if (res.data.message === 'Invalid captcha') {
+            //                     location.reload();
+            //                 }
+            //             });
+
+            //             // Clear OTP input
+            //             $('#otp').val("");
+            //             loginBtn.disabled = false;
+            //             loginBtn.innerText = 'Send Otp';
+            //         }
+            //     })
+            //     .catch(err => {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire({
+            //             icon: 'error',
+            //             title: 'Oops...',
+            //             text: err.response?.data?.message || 'Server error!',
+            //             confirmButtonText: 'OK'
+            //         });
+            //         loginBtn.disabled = false;
+            //         loginBtn.innerText = 'Login';
+            //     });
+
             axios.post("{{ route('verify-otp') }}", {
                     mobile: mobileInput.value,
                     otp: otpInput.value,
@@ -547,13 +589,11 @@
                             text: res.data.message || 'Invalid OTP!',
                             confirmButtonText: 'OK'
                         }).then(() => {
-                            // 🔹 Only refresh after user clicks OK
-                            if (res.data.message === 'Invalid captcha') {
+                            if (res.data.refresh) {
                                 location.reload();
                             }
                         });
 
-                        // Clear OTP input
                         $('#otp').val("");
                         loginBtn.disabled = false;
                         loginBtn.innerText = 'Send Otp';
@@ -570,6 +610,7 @@
                     loginBtn.disabled = false;
                     loginBtn.innerText = 'Login';
                 });
+
         });
     </script>
 
