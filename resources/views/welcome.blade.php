@@ -260,7 +260,11 @@
         /* =================== Form Styling =================== */
         .card-body {
             color: #393939;
-            font-family: "Poppins", sans-serif;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            height: 380px;
         }
 
         .form-control {
@@ -428,7 +432,39 @@
 
     <section class="background-radial-gradient  login-page">
         <div class="container px-4  px-md-5 text-center text-lg-start my-5">
-            <div class="row gx-lg-5 align-items-center mb-5">
+            <div class="row gx-lg-5 align-items-center mb-5 ">
+
+
+                <div class="col-lg-7 mb-5 mb-lg-0" style="z-index: 10;">
+                    <div class="p-4 rounded-4 shadow-lg"
+                        style="background: linear-gradient(135deg, #153462, #1A4D8C); color: #f1f6ff; border-left: 6px solid #00c4ff;  font-size: 14px;">
+
+                        {{-- <h2 class="fw-bold mb-4 text-center"
+                            style="color: #00e0ff; letter-spacing: 1px; text-shadow: 0 0 6px rgba(255,255,255,0.3);">
+                            Disclaimer / अस्वीकरण
+                        </h2> --}}
+
+                        <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
+                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
+                            <li>This app pertains to providing information related to evasion of <strong>GST / VAT / CST
+                                    / Excise</strong> only. No other information should be given.</li>
+                            <li>It shall be noted that providing information does not entitle the informer to any award.
+                            </li>
+                            <li>The name of the informer will be kept secret.</li>
+                        </ul>
+
+                        <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 1.5rem 0;">
+
+                        <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
+                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
+                            <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से संबंधित
+                                जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li>
+                            <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं मिलेगा।
+                            </li>
+                            <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
+                        </ul>
+                    </div>
+                </div>
 
 
                 <div class="col-lg-5 mb-5 mb-lg-0 position-relative">
@@ -474,36 +510,7 @@
                 </div>
 
 
-                <div class="col-lg-7 mb-5 mb-lg-0" style="z-index: 10;">
-                    <div class="p-4 rounded-4 shadow-lg"
-                        style="background: linear-gradient(135deg, #153462, #1A4D8C); color: #f1f6ff; border-left: 6px solid #00c4ff;  font-size: 14px;">
 
-                        {{-- <h2 class="fw-bold mb-4 text-center"
-                            style="color: #00e0ff; letter-spacing: 1px; text-shadow: 0 0 6px rgba(255,255,255,0.3);">
-                            Disclaimer / अस्वीकरण
-                        </h2> --}}
-
-                        <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
-                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                            <li>This app pertains to providing information related to evasion of <strong>GST / VAT / CST
-                                    / Excise</strong> only. No other information should be given.</li>
-                            <li>It shall be noted that providing information does not entitle the informer to any award.
-                            </li>
-                            <li>The name of the informer will be kept secret.</li>
-                        </ul>
-
-                        <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 1.5rem 0;">
-
-                        <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
-                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                            <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से संबंधित
-                                जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li>
-                            <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं मिलेगा।
-                            </li>
-                            <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
-                        </ul>
-                    </div>
-                </div>
 
 
 
