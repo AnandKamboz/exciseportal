@@ -226,7 +226,7 @@
             <i>📧</i> excisehry@gmail.com
         </div>
         <div class="contact-item">
-            <i>📞</i> 0123-4567890
+            <i>📞</i> 0172-4567890
         </div>
     </div>
 
