@@ -270,7 +270,7 @@
                                 class="form-control" required value="{{ $userData->complainant_name ?? '' }}"> --}}
                             <input id="informerName" name="informerName" type="text" class="form-control"
                                 placeholder="Enter your name" required
-                                value="{{ $userDataForNewApplication->complainant_name ?? '' }}"
+                                value="{{ $userDataForNewApplication->complainant_name ?? ($userData->complainant_name ?? '') }}"
                                 @if (!empty($userDataForNewApplication->complainant_name)) disabled @endif>
 
                         </div>
@@ -289,7 +289,7 @@
                                 placeholder="example@mail.com" value="{{ $userData->complainant_email ?? '' }}"> --}}
                             <input id="informerEmail" name="informerEmail" type="email" class="form-control"
                                 placeholder="example@mail.com"
-                                value="{{ $userDataForNewApplication->complainant_email ?? '' }}"
+                                value="{{ $userDataForNewApplication->complainant_email ?? ($userData->complainant_email ?? '') }}"
                                 @if (!empty($userDataForNewApplication->complainant_email)) disabled @endif>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -301,7 +301,7 @@
                             <input id="informerAadhar" name="informerAadhar" type="text" class="form-control"
                                 maxlength="12" placeholder="Enter 12-digit Aadhar Number"
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-                                value="{{ $userDataForNewApplication->complainant_aadhar ?? '' }}"
+                                value="{{ $userDataForNewApplication->complainant_aadhar ?? ($userData->complainant_aadhar ?? '') }}"
                                 @if (!empty($userDataForNewApplication->complainant_aadhar)) disabled @endif>
 
                         </div>
@@ -314,7 +314,7 @@
                         </textarea> --}}
                         <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
                             placeholder="House No., Street, City, District, State, Pincode" required
-                            @if (!empty($userDataForNewApplication->complainant_address)) disabled @endif>{{ $userDataForNewApplication->complainant_address ?? '' }}</textarea>
+                            @if (!empty($userDataForNewApplication->complainant_address)) disabled @endif>{{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
                     </div>
 
                     <div class="text-end">
@@ -443,7 +443,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Vehicle Number (If any)</label>
+                                <label class="form-label">Vehicle Number (If available)</label>
                                 <input id="gstVehicleNumber" name="gstVehicleNumber" type="text"
                                     class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
                                     maxlength="10" oninput="this.value=this.value.toUpperCase()">
@@ -574,7 +574,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Vehicle Number (If any)</label>
+                                <label class="form-label">Vehicle Number (If available)</label>
                                 <input id="vatVehicleNumber" name="vatVehicleNumber" type="text"
                                     class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
                                     maxlength="10" oninput="this.value=this.value.toUpperCase()">
@@ -629,12 +629,6 @@
                             </div>
 
 
-                            {{-- <div class="col-md-6 mb-3">
-                                <label class="form-label required">Time of Offence</label>
-                                <input id="exciseTime" name="exciseTime" type="text" class="form-control"
-                                    placeholder="e.g. 2025-11-06 21:00">
-                            </div> --}}
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label required">Time and Date of Offence</label>
                                 <input id="exciseTime" name="exciseTime" type="datetime-local" class="form-control"
@@ -661,13 +655,20 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Vehicle Number (If any)</label>
+                                <label class="form-label">Vehicle Number (If available)</label>
                                 <input id="exciseVehicleNumber" name="exciseVehicleNumber" type="text"
                                     class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
                                     maxlength="10" oninput="this.value=this.value.toUpperCase()">
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
+                            <input id="exciseProof" name="exciseProof[]" type="file" class="form-control"
+                                accept=".jpg,.jpeg,.png,.pdf" multiple>
+                            <small class="text-muted">Allowed formats: JPG, JPEG, PNG, PDF</small>
+                            <ul id="proofList" class="mt-2"></ul>
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-between">
@@ -779,9 +780,21 @@
                     complaint_type: complaintType
                 })
                 .then(response => {
-                    $('#loader').addClass('d-none');
 
+                    $('#loader').addClass('d-none');
                     if (response.data.success) {
+                        // console.log(response.data.complaint_type);
+                        // document.getElementById('step3Title').innerHTML =
+                        //     `Step 3 — Offence / Evasion Details (${response.data.complaint_type})`;
+                        let type = response.data.complaint_type.toLowerCase();
+                        if (type === 'gst') type = 'GST';
+                        else if (type === 'vat') type = 'VAT';
+                        else if (type === 'excise') type = 'Excise';
+
+                        // ✅ Update heading dynamically
+                        document.getElementById('step3Title').innerHTML =
+                            `Step 3 — Offence / Evasion Details (${type})`;
+
                         showStep(3);
 
                         // Show relevant form section
@@ -1115,6 +1128,43 @@
             }
         });
     </script>
+
+    <script>
+        document.getElementById('exciseProof').addEventListener('change', function() {
+            const files = this.files;
+            const proofList = document.getElementById('proofList');
+            proofList.innerHTML = ''; // Clear previous list
+
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            const maxFiles = 5;
+            const maxSize = 1 * 1024 * 1024; // 1MB
+
+            if (files.length > maxFiles) {
+                Swal.fire('Error', 'You can upload a maximum of 5 files only.', 'error');
+                this.value = '';
+                return;
+            }
+
+            for (let file of files) {
+                if (!allowedTypes.includes(file.type)) {
+                    Swal.fire('Error', 'Only JPG, JPEG, PNG, or PDF files are allowed.', 'error');
+                    this.value = '';
+                    return;
+                }
+                if (file.size > maxSize) {
+                    Swal.fire('Error', `${file.name} exceeds 1MB size limit.`, 'error');
+                    this.value = '';
+                    return;
+                }
+
+                // Display file names
+                const li = document.createElement('li');
+                li.textContent = file.name;
+                proofList.appendChild(li);
+            }
+        });
+    </script>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

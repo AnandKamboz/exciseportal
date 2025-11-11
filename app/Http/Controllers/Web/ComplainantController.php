@@ -100,6 +100,7 @@ class ComplainantController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
+            'complaint_type' => $request->complaint_type,
         ]);
     }
 
@@ -445,6 +446,7 @@ class ComplainantController extends Controller
             'exciseDesc'    => 'nullable|string|max:255',
             'excisePlace'   => 'required|string|max:255',
             'exciseTime'    => 'required|string|max:255',
+            'exciseProof.*'     => 'file|mimes:pdf,jpg,jpeg,png|max:1024',
         ],
         default => [],
     };
@@ -573,15 +575,36 @@ class ComplainantController extends Controller
         }
     }
 
-    // 🔹 Excise Complaint Data
-    if ($type === 'excise') {
-        $complaint->excise_name = $request->exciseName;
-        $complaint->excise_desc = $request->exciseDesc;
-        $complaint->excise_place = $request->excisePlace;
-        $complaint->excise_time = $request->exciseTime;
-        $complaint->excise_details = $request->exciseDetails;
-        $complaint->excise_vehicle_number = $request->exciseVehicleNumber ?? ""; 
-         $complaint->district = $request->exciseDistrict;
+        // 🔹 Excise Complaint Data
+        if ($type === 'excise') {
+            $complaint->excise_name = $request->exciseName;
+            $complaint->excise_desc = $request->exciseDesc;
+            $complaint->excise_place = $request->excisePlace;
+            $complaint->excise_time = $request->exciseTime;
+            $complaint->excise_details = $request->exciseDetails;
+            $complaint->excise_vehicle_number = $request->exciseVehicleNumber ?? ""; 
+            $complaint->district = $request->exciseDistrict;
+
+            if ($request->hasFile('exciseProof')) {
+            $files = $request->file('exciseProof');
+
+            if (count($files) > 5) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You can upload a maximum of 5 files.'
+                ]);
+            }
+
+            $uploadedFiles = [];
+            foreach ($files as $file) {
+                $fileName = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+                $file->storeAs("complaints/{$complaint->application_id}", $fileName, 'public');
+                $uploadedFiles[] = $fileName;
+            }
+
+            // Save as JSON in database
+            $complaint->excise_proof = json_encode($uploadedFiles);
+        }
     }
 
     $complaint->is_completed = 1;

@@ -10,6 +10,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -265,6 +267,24 @@ class AuthController extends Controller
             $redirectUrl = route('inspector.dashboard');
         } else {
             $redirectUrl = route('user.dashboard');
+        }
+
+        if ($role === 'detc') {
+                $redirectUrl = route('detc.dashboard');
+            } elseif ($role === 'excise inspector') {
+                $redirectUrl = route('inspector.dashboard');
+            } else {
+                $mobile = Auth::user()->mobile;
+                $complaintExists = DB::table('complainants')
+                    ->where('complainant_phone', $mobile)
+                    ->where('is_completed', 1)
+                    ->exists();
+
+                if ($complaintExists) {
+                    $redirectUrl = route('user.dashboard');
+                } else {
+                    $redirectUrl = route('complainant');
+                }
         }
 
         return response()->json([

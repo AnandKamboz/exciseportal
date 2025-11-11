@@ -87,6 +87,7 @@ return new class extends Migration
                 $table->string('excise_time')->nullable();
                 $table->text('excise_details')->nullable();
                 $table->string('excise_vehicle_number', 15)->nullable();
+                $table->string('excise_proof')->nullable(); // file path
 
                 $table->string('gst_locality')->nullable();
                 $table->string('district')->nullable();
