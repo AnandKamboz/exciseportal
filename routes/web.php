@@ -79,3 +79,5 @@ Route::middleware(['auth','userrole'])->group(function () {
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('/user/dashboard', [UserDashboard::class, 'userDashboard'])->name('user.dashboard');
 });
+
+Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
