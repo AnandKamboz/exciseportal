@@ -788,7 +788,7 @@
                         //     `Step 3 — Offence / Evasion Details (${response.data.complaint_type})`;
                         let type = response.data.complaint_type.toLowerCase();
                         if (type === 'gst') type = 'GST';
-                        else if (type === 'vat') type = 'VAT';
+                        else if (type === 'vat') type = 'VAT/CST';
                         else if (type === 'excise') type = 'Excise';
 
                         // ✅ Update heading dynamically
