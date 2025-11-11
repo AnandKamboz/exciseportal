@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\UserComplaintController;
 use App\Http\Controllers\Web\DetcController;
 use App\Http\Controllers\Web\InspectorDashboard;
 use Illuminate\Support\Str;
+use Mews\Captcha\Facades\Captcha;
 
 
 
@@ -57,6 +58,14 @@ Route::get('/login', function () {
     return view('welcome');
 })->name('login');
 
+Route::get('captcha', function () {
+    return Captcha::create();
+});
+
+Route::get('captcha/{config?}', function ($config = 'default') {
+    return Captcha::create($config);
+});
+
 Route::post('/send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
 // here midelware
@@ -70,5 +79,3 @@ Route::middleware(['auth','userrole'])->group(function () {
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('/user/dashboard', [UserDashboard::class, 'userDashboard'])->name('user.dashboard');
 });
-
-

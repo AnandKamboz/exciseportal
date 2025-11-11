@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
+
 
 class AuthController extends Controller
 {
@@ -190,31 +193,54 @@ class AuthController extends Controller
 
     public function verifyOtp(Request $request)
     {
-        $request->validate([
-            'mobile' => 'required|numeric|digits:10',
-            'otp' => 'required|numeric|digits:6',
-            'captcha' => 'required|size:6',
+
+        // $request->validate([
+        //     'mobile'  => 'required|numeric|digits:10',
+        //     'otp'     => 'required|numeric|digits:6',
+        //     'captcha' => 'required|size:6|captcha',
+        // ], [
+        //     'mobile.required'  => 'Mobile number is required.',
+        //     'mobile.numeric'   => 'Mobile number must be numeric.',
+        //     'mobile.digits'    => 'Mobile number must be exactly 10 digits.',
+        //     'otp.required'     => 'OTP is required.',
+        //     'otp.numeric'      => 'OTP must be numeric.',
+        //     'otp.digits'       => 'OTP must be exactly 6 digits.',
+        //     'captcha.required' => 'Captcha is required.',
+        //     'captcha.size'     => 'Captcha must be 6 characters.',
+        //     'captcha.captcha'  => 'Captcha is invalid. Please try again.',
+        // ]);
+
+            $validator = Validator::make($request->all(), [
+            'mobile'  => 'required|numeric|digits:10',
+            'otp'     => 'required|numeric|digits:6',
+            'captcha' => 'required|size:6|captcha',
+        ], [
+            'mobile.required'  => 'Mobile number is required.',
+            'mobile.numeric'   => 'Mobile number must be numeric.',
+            'mobile.digits'    => 'Mobile number must be exactly 10 digits.',
+            'otp.required'     => 'OTP is required.',
+            'otp.numeric'      => 'OTP must be numeric.',
+            'otp.digits'       => 'OTP must be exactly 6 digits.',
+            'captcha.required' => 'Captcha is required.',
+            'captcha.size'     => 'Captcha must be 6 characters.',
+            'captcha.captcha'  => 'Captcha is invalid. Please try again.',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first(), 
+                'new_captcha' => captcha_src(),           
+            ]);
+        }
+
+    
         $mobile = $request->mobile;
         $otpInput = $request->otp;
         $captcha = $request->captcha;
 
-        // ✅ Captcha check
-        // if ($captcha !== session('captcha')) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Invalid captcha'
-        //     ]);
-        // }
 
-        if ($captcha !== session('captcha')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid captcha',
-                'refresh' => true,
-            ]);
-        }
+
 
         // ✅ OTP check
         $otpRecord = Otp::where('mobile', $mobile)

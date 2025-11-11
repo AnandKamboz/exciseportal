@@ -397,6 +397,7 @@
             -webkit-text-fill-color: transparent;
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -495,7 +496,19 @@
                                 <div class="form-outline mb-4 d-flex align-items-center justify-content-between d-none"
                                     id="captcha_code">
                                     <div class="captcha bg-white text-dark px-3 py-2 rounded fw-bold">
-                                        {{ session('captcha') }}
+                                        {{-- {{ session('captcha') }} --}}
+                                        <img src="{{ captcha_src() }}" id="captcha" alt="captcha" width="150"
+                                            height="50">
+
+                                        <button type="button"
+                                            class="btn btn-primary btn-sm rounded-3 d-flex align-items-center mt-1"
+                                            style="padding: 2px 6px; font-size: 0.75rem;" id="reload-captcha-btn"
+                                            onclick="reloadCaptcha()">
+                                            <span id="btn-text"><i class="bi bi-arrow-clockwise me-1"
+                                                    style="font-size: 0.75rem;"></i> Reload</span>
+                                            <span id="btn-spinner" class="spinner-border spinner-border-sm ms-1 d-none"
+                                                role="status" aria-hidden="true"></span>
+                                        </button>
                                     </div>
                                     <input type="text" id="captchaInput" class="form-control w-50"
                                         placeholder="Enter Captcha" />
@@ -511,16 +524,36 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
             </div>
         </div>
     </section>
 
+    {{-- <script>
+        function reloadCaptcha() {
+                document.getElementById('captcha').src = "{{ captcha_src() }}" + '?' + Date.now();
+        }
+    </script> --}}
+    <script>
+        function reloadCaptcha() {
+           $('#loader').removeClass('d-none');
+           $('#captchaInput').val('');
+            var img = document.getElementById('captcha');
+            var btnSpinner = document.getElementById('btn-spinner');
+            var btnText = document.getElementById('btn-text');
+
+            btnSpinner.classList.remove('d-none');
+            btnText.classList.add('d-none');
+
+            img.src = '{{ captcha_src() }}?' + Date.now();
+
+            img.onload = function() {
+                btnSpinner.classList.add('d-none');
+                btnText.classList.remove('d-none');
+                $('#loader').addClass('d-none');
+            };
+            // $('#loader').addClass('d-none');
+        }
+    </script>
     <script>
         const mobileInput = document.getElementById('mobile');
         const otpInput = document.getElementById('otp');
@@ -623,42 +656,7 @@
             }
 
 
-            // axios.post("{{ route('verify-otp') }}", {
-            //     mobile: mobileInput.value,
-            //     otp: otpInput.value,
-            //     captcha: captchaInput.value,
-            //     _token: document.querySelector('input[name="_token"]').value
-            // })
-            //     .then(res => {
-            //         if (res.data.success) {
-            //             $('#loader').addClass('d-none');
-            //             window.location.href = res.data.redirect_url;
-            //         } else {
-            //             $('#loader').addClass('d-none');
-            //             Swal.fire({
-            //                 icon: 'error',
-            //                 title: 'Oops...',
-            //                 text: res.data.message || 'Invalid OTP!',
-            //                 confirmButtonText: 'OK'
-            //             });
-            //             $('#otp').val("");
-            //             loginBtn.disabled = false;
-            //             loginBtn.innerText = 'Send Otp';
-            //         }
-            //     })
-            //     .catch(err => {
-            //         $('#loader').addClass('d-none');
-            //         Swal.fire({
-            //             icon: 'error',
-            //             title: 'Oops...',
-            //             text: err.response?.data?.message || 'Server error!',
-            //             confirmButtonText: 'OK'
-            //         });
-            //         loginBtn.disabled = false;
-            //         loginBtn.innerText = 'Login';
-            //         return;
-            //     });
-
+           
 
             // axios.post("{{ route('verify-otp') }}", {
             //         mobile: mobileInput.value,
@@ -678,13 +676,11 @@
             //                 text: res.data.message || 'Invalid OTP!',
             //                 confirmButtonText: 'OK'
             //             }).then(() => {
-            //                 // 🔹 Only refresh after user clicks OK
-            //                 if (res.data.message === 'Invalid captcha') {
+            //                 if (res.data.refresh) {
             //                     location.reload();
             //                 }
             //             });
 
-            //             // Clear OTP input
             //             $('#otp').val("");
             //             loginBtn.disabled = false;
             //             loginBtn.innerText = 'Send Otp';
@@ -702,7 +698,7 @@
             //         loginBtn.innerText = 'Login';
             //     });
 
-            axios.post("{{ route('verify-otp') }}", {
+           axios.post("{{ route('verify-otp') }}", {
                     mobile: mobileInput.value,
                     otp: otpInput.value,
                     captcha: captchaInput.value,
@@ -711,35 +707,33 @@
                 .then(res => {
                     $('#loader').addClass('d-none');
 
-                    if (res.data.success) {
+                   if (res.data.success) {
                         window.location.href = res.data.redirect_url;
                     } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: res.data.message || 'Invalid OTP!',
+                            text: res.data.message,
                             confirmButtonText: 'OK'
                         }).then(() => {
-                            if (res.data.refresh) {
-                                location.reload();
-                            }
+                            $('#otp').val('');
+                            $('#captcha-input').val('');
+                            reloadCaptcha();
+                            loginBtn.disabled = false;
+                            loginBtn.innerText = 'Send Otp';
                         });
-
-                        $('#otp').val("");
-                        loginBtn.disabled = false;
-                        loginBtn.innerText = 'Send Otp';
                     }
                 })
                 .catch(err => {
                     $('#loader').addClass('d-none');
                     Swal.fire({
                         icon: 'error',
-                        title: 'Oops...',
+                        title: 'Oopssssss...',
                         text: err.response?.data?.message || 'Server error!',
                         confirmButtonText: 'OK'
                     });
                     loginBtn.disabled = false;
-                    loginBtn.innerText = 'Login';
+                    loginBtn.innerText = 'Send Otp';
                 });
 
         });
