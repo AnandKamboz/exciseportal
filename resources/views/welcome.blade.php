@@ -435,36 +435,36 @@
             <div class="row gx-lg-5 align-items-center mb-5 ">
 
 
-              <div class="col-lg-7 mb-5 mb-lg-0" style="z-index: 10;">
+                <div class="col-lg-7 mb-5 mb-lg-0" style="z-index: 10;">
 
-    {{-- 
-    <div class="p-4 rounded-4 shadow-lg"
-        style="background: linear-gradient(135deg, #153462, #1A4D8C); color: #f1f6ff; border-left: 6px solid #00c4ff;  font-size: 14px;">
-        <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
-        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-            <li>This app pertains to providing information related to evasion of <strong>GST / VAT / CST / Excise</strong> only. No other information should be given.</li>
-            <li>The name of the informer will be kept secret.</li>
-        </ul>
+                    {{--
+                    <div class="p-4 rounded-4 shadow-lg"
+                        style="background: linear-gradient(135deg, #153462, #1A4D8C); color: #f1f6ff; border-left: 6px solid #00c4ff;  font-size: 14px;">
+                        <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
+                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
+                            <li>This app pertains to providing information related to evasion of <strong>GST / VAT / CST
+                                    / Excise</strong> only. No other information should be given.</li>
+                            <li>The name of the informer will be kept secret.</li>
+                        </ul>
 
-        <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 1.5rem 0;">
+                        <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 1.5rem 0;">
 
-        <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
-        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-            <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से संबंधित जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li>
-            <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
-        </ul>
-    </div>
-    --}}
+                        <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
+                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
+                            <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से संबंधित
+                                जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li>
+                            <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
+                        </ul>
+                    </div>
+                    --}}
 
-    <!-- Image version (replace the src path as needed) -->
-    <div class="p-0 rounded-4 shadow-lg overflow-hidden" style="background: #fff;">
-        <img src="{{ asset('assets/images/entery_page_image/new-img.JPG') }}" 
-             alt="Disclaimer Graphic" 
-             class="img-fluid w-100 d-block"
-             style="object-fit: cover; max-height: 480px;">
-    </div>
+                    <!-- Image version (replace the src path as needed) -->
+                    <div class="p-0 rounded-4 shadow-lg overflow-hidden" style="background: #fff;">
+                        <img src="{{ asset('assets/images/entery_page_image/new-img.jpg') }}" alt="Disclaimer Graphic"
+                            class="img-fluid w-100 d-block" style="object-fit: cover; max-height: 480px;">
+                    </div>
 
-</div>
+                </div>
 
 
 
@@ -474,8 +474,8 @@
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
                             {{-- <div class="text-center mb-4">
-                                <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo"
-                                    width="80" height="80" class="rounded-circle">
+                                <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo" width="80"
+                                    height="80" class="rounded-circle">
                             </div> --}}
                             <h4 class="text-center mb-4 fw-bold">Login/Register</h4>
 
@@ -500,8 +500,8 @@
                                 </div>
 
                                 <div id="otpSection" class="hidden mt-3">
-                                    <input type="text" name="otp" id="otp" class="form-control otp-input"
-                                        maxlength="6" placeholder="Enter 6 digit OTP" />
+                                    <input type="text" name="otp" id="otp" class="form-control otp-input" maxlength="6"
+                                        placeholder="Enter 6 digit OTP" />
                                     <button type="button" id="loginBtn"
                                         class="btn btn-primary btn-block w-100 mt-3">Login</button>
                                 </div>
@@ -744,14 +744,14 @@
     </script>
 
     @if (session('status'))
-        <script>
-            Swal.fire({
+    <script>
+        Swal.fire({
                 icon: 'success',
                 title: 'Logged Out',
                 text: '{{ session('status') }}',
                 confirmButtonText: 'OK'
             });
-        </script>
+    </script>
     @endif
 </body>
 
