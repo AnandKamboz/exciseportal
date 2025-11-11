@@ -439,9 +439,9 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label required">Locality</label>
+                                <label class="form-label required">Location</label>
                                 <input type="text" id="gstLocality" name="gstLocality" class="form-control"
-                                    placeholder="Enter locality or area name">
+                                    placeholder="Enter location or area name">
                             </div>
 
                             {{-- <div class="col-md-6">
@@ -576,9 +576,9 @@
                         <!-- ✅ New Fields -->
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label required">Locality</label>
+                                <label class="form-label required">Location</label>
                                 <input type="text" id="vatLocality" name="vatLocality" class="form-control"
-                                    placeholder="Enter locality or area name">
+                                    placeholder="Enter location or area name">
                             </div>
                             {{-- <div class="col-md-6">
                                 <label class="form-label required">District</label>
