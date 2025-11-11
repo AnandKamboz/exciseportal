@@ -64,6 +64,7 @@ return new class extends Migration
                 $table->string('complainant_email')->nullable();
                 $table->string('complainant_aadhar', 12);
                 $table->text('complainant_address');
+                $table->string('district')->nullable();
 
                 // 🔹 Step 2 — Tax Information
                 $table->enum('complaint_type', ['gst', 'excise', 'vat']);
@@ -72,13 +73,12 @@ return new class extends Migration
                 $table->string('gst_firm_name')->nullable();
                 $table->string('gst_gstin', 15)->nullable();
                 $table->text('gst_firm_address')->nullable();
-                $table->string('gst_proof')->nullable(); // file path
+                $table->string('gst_proof')->nullable();
+                $table->string('gst_locality')->nullable();
+                $table->text('gst_description')->nullable();
+                $table->string('gst_vehicle_number', 15)->nullable(); 
 
-                // 🔹 Step 3 — VAT-related Fields
-                $table->string('vat_firm_name')->nullable();
-                $table->string('vat_tin')->nullable();
-                $table->text('vat_firm_address')->nullable();
-                $table->string('vat_proof')->nullable(); // file path
+               
 
                 // 🔹 Step 3 — Excise-related Fields
                 $table->string('excise_name')->nullable();
@@ -89,16 +89,16 @@ return new class extends Migration
                 $table->string('excise_vehicle_number', 15)->nullable();
                 $table->string('excise_proof')->nullable(); // file path
 
-                $table->string('gst_locality')->nullable();
-                $table->string('district')->nullable();
-                $table->text('gst_description')->nullable();
-                $table->string('gst_vehicle_number', 15)->nullable(); 
+                
 
                 // 🔹 Step 3 — VAT Additional Fields
                 $table->string('vat_locality')->nullable();
-                // $table->string('vat_district')->nullable();
                 $table->text('vat_description')->nullable();
                 $table->string('vat_vehicle_number', 15)->nullable(); 
+                $table->string('vat_firm_name')->nullable();
+                $table->string('vat_tin')->nullable();
+                $table->text('vat_firm_address')->nullable();
+                $table->string('vat_proof')->nullable();
 
                 // 🔹 System Fields
                 $table->unsignedBigInteger('user_id')->nullable()->comment('Linked user ID if logged in');
