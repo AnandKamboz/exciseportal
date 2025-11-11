@@ -288,15 +288,24 @@
                                         VAT /
                                         CST
                                         / Excise</strong> only. No other information should be given.</li> --}}
-                                <li>
+                                <li>This app pertains only to providing information related to evasion of GST/ VAT/ CST/
+                                    Excise.</li>
+                                <li>The name of the informer will be kept secret.
+                                </li>
+                                <li>The informer must verify that the information being provided is correct to their
+                                    best knowledge and it is being provided only with the purpose to curb tax evasion.
+                                </li>
+
+
+                                {{-- <li>
                                     It is hereby verified that the information provided is accurate and correct to the
                                     best of my knowledge and belief.
-                                </li>
+                                </li> --}}
                                 {{-- <li>It shall be noted that providing information does not entitle the informer to
                                     any
                                     award.
                                 </li> --}}
-                                <li>The name of the informer will be kept secret.</li>
+                                {{-- <li>The name of the informer will be kept secret.</li> --}}
                             </ul>
 
                             <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 10px;">
@@ -306,12 +315,15 @@
                                 {{-- <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से
                                     संबंधित
                                     जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li> --}}
-                                <li>मैं यह सत्यापित करता/करती हूँ कि प्रस्तुत की गई जानकारी मेरी जानकारी के अनुसार सही
-                                    और सत्य है।</li>
+                                <li>यह ऐप केवल जीएसटी/वैट/सीएसटी/उत्पाद शुल्क की चोरी से संबंधित जानकारी प्रदान करने के
+                                    लिए है।</li>
+                                <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
                                 {{-- <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं
                                     मिलेगा।
                                 </li> --}}
-                                <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
+                                <li>सूचना देने वाले को यह सत्यापित करना होगा कि दी जा रही जानकारी उनकी सर्वोत्तम जानकारी
+                                    के अनुसार सही है और यह केवल कर चोरी को रोकने के उद्देश्य से प्रदान की जा रही है।
+                                </li>
                             </ul>
                         </div>
                     </div>
