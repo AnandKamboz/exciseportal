@@ -39,6 +39,8 @@ class ComplainantController extends Controller
             'informer_aadhar' => 'required|digits:12',
             'informer_address' => 'required|string',
             'informer_email' => 'nullable|email',
+            'informer_city' => ['required', 'regex:/^[A-Za-z\s]+$/', 'max:50'],
+            'informer_district' => ['required', 'regex:/^[A-Za-z\s]+$/', 'max:50'],
         ]);
 
         $mobile = auth()->user()->mobile;
@@ -52,6 +54,8 @@ class ComplainantController extends Controller
                 'complainant_name' => $request->informer_name,
                 'complainant_aadhar' => $request->informer_aadhar,
                 'complainant_address' => $request->informer_address,
+                'complainant_city' => $request->informer_city,
+                'complainant_district' => $request->informer_district,
                 'complainant_email' => $request->informer_email ?? null,
             ]);
 
@@ -62,6 +66,8 @@ class ComplainantController extends Controller
             $complaint->complainant_name = $request->informer_name;
             $complaint->complainant_aadhar = $request->informer_aadhar;
             $complaint->complainant_address = $request->informer_address;
+            $complaint->complainant_city = $request->informer_city; 
+            $complaint->complainant_district = $request->informer_district;
             $complaint->complainant_email = $request->informer_email ?? null;
             $complaint->complainant_phone = $mobile;
             $complaint->user_id = auth()->id();
@@ -424,21 +430,45 @@ class ComplainantController extends Controller
     $rules = match ($type) {
         'gst' => [
             'gstFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-            'gstGstin'       => 'nullable|alpha_num|size:15',
+            // 'gstGstin'       => 'nullable|alpha_num|size:15',
+            'gstGstin' => [
+                'nullable',
+                'size:15',
+                'regex:/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i'
+            ],
             'gstFirmAddress' => 'required|string',
             'gstLocality'    => 'required|string|max:255',
             'gstDistrict'    => 'required|string|max:255',
-            'gstDescription' => 'required|string|max:2000',
+            'gstDescription' => 'required|string|max:150',
             'gstProof.*'     => 'file|mimes:pdf,jpg,jpeg,png|max:1024', // Each ≤ 1MB
+            'gstVehicleNumber' => [
+                'nullable',                  // optional field
+                'string',
+                'max:10',                    // max 10 characters
+                'regex:/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1,4}$/i'
+            ],
         ],
         'vat' => [
             'vatFirmName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-            'vatTin'         => 'nullable|alpha_num',
+            // 'vatTin'         => 'nullable|alpha_num',
+            'vatTin' => [
+                'nullable',
+                'alpha_num',          
+                'size:11',           
+                'regex:/^[0-9A-Z]{11}$/i'
+            ],
             'vatFirmAddress' => 'required|string',
             'vatLocality'    => 'required|string|max:255',
             'vatDistrict'    => 'required|string|max:255',
-            'vatDescription' => 'required|string|max:2000',
+            'vatDescription' => 'required|string|max:150',
             'vatProof.*'     => 'file|mimes:pdf,jpg,jpeg,png|max:1024', // Each ≤ 1MB
+            'vatVehicleNumber' => [
+                'nullable',          // optional field
+                'string',
+                'max:10',            // maximum 10 characters
+                'regex:/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1,4}$/i'
+            ],
+
         ],
         'excise' => [
             'exciseName'    => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
@@ -447,6 +477,12 @@ class ComplainantController extends Controller
             'excisePlace'   => 'required|string|max:255',
             'exciseTime'    => 'required|string|max:255',
             'exciseProof.*'     => 'file|mimes:pdf,jpg,jpeg,png|max:1024',
+            'exciseVehicleNumber' => [
+                'nullable',                  
+                'string',
+                'max:10',                 
+                'regex:/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1,4}$/i'
+            ],
         ],
         default => [],
     };

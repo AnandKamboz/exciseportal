@@ -64,7 +64,13 @@ return new class extends Migration
                 $table->string('complainant_email')->nullable();
                 $table->string('complainant_aadhar', 12);
                 $table->text('complainant_address');
+                $table->string('complainant_city')->nullable();
+                $table->string('complainant_district')->nullable();
+
+
                 $table->string('district')->nullable();
+
+
 
                 // 🔹 Step 2 — Tax Information
                 $table->enum('complaint_type', ['gst', 'excise', 'vat']);

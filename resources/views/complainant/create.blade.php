@@ -275,7 +275,7 @@
 
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label required">Phone Number</label>
+                            <label class="form-label">Phone Number</label>
                             <input id="informerPhone" name="informerPhone" type="tel" class="form-control"
                                 value="{{ Auth::user()->mobile ?? '' }}" placeholder="10 digit mobile" required
                                 disabled>
@@ -308,13 +308,42 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label required">Address</label>
+                        {{-- <label class="form-label required">Address</label> --}}
                         {{-- <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
-                            placeholder="House No., Street, City, District, State, Pincode" required>{{ $userData->complainant_address ?? '' }}
+                            placeholder="House No., Street, State, Pincode" required @if
+                            (!empty($userDataForNewApplication->complainant_address)) disabled @endif>
+                            {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}
                         </textarea> --}}
-                        <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
-                            placeholder="House No., Street, City, District, State, Pincode" required
-                            @if (!empty($userDataForNewApplication->complainant_address)) disabled @endif>{{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
+                        <div class="mb-3">
+                            <label class="form-label required">Address</label>
+                            {{-- <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
+                                placeholder="House No., Street, State, Pincode" required @if
+                                (!empty($userDataForNewApplication->complainant_address)) disabled 
+                                @endif>
+                                {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
+                            --}}
+                            <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
+                                placeholder="House No., Street, State, Pincode" @if (!empty($userDataForNewApplication->complainant_address)) disabled @endif > {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">City</label>
+                            <input type="text" id="informerCity" name="informerCity" class="form-control"
+                                placeholder="Enter City"
+                                value="{{ $userDataForNewApplication->complainant_city ?? ($userData->complainant_city ?? '') }}"
+                                @if (!empty($userDataForNewApplication->complainant_city)) disabled @endif required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">District</label>
+                            <input type="text" id="informerDistrict" name="informerDistrict" class="form-control"
+                                placeholder="Enter District"
+                                value="{{ $userDataForNewApplication->complainant_district ?? ($userData->complainant_district ?? '') }}"
+                                @if (!empty($userDataForNewApplication->complainant_district)) disabled @endif required>
+                        </div>
                     </div>
 
                     <div class="text-end">
@@ -329,17 +358,20 @@
                     <div class="mb-3 mt-4">
                         <label class="form-label required">Select Tax to which information is related</label>
                         <select id="taxType" name="taxType" class="form-select" required>
-                            <option value="">Select</option>
-                            <option value="gst"
-                                {{ isset($userData) && $userData->complaint_type === 'gst' ? 'selected' : '' }}>
+                            {{-- <option value="">Select Category to which information related</option> --}}
+                            <option value="" selected disabled>
+                                Select Category to which information related
+                            </option>
+                            <option value="gst" {{ isset($userData) && $userData->complaint_type === 'gst' ? 'selected'
+                                : '' }}>
                                 Goods and Services Tax (GST)
                             </option>
-                            <option value="excise"
-                                {{ isset($userData) && $userData->complaint_type === 'excise' ? 'selected' : '' }}>
+                            <option value="excise" {{ isset($userData) && $userData->complaint_type === 'excise' ?
+                                'selected' : '' }}>
                                 Excise
                             </option>
-                            <option value="vat"
-                                {{ isset($userData) && $userData->complaint_type === 'vat' ? 'selected' : '' }}>
+                            <option value="vat" {{ isset($userData) && $userData->complaint_type === 'vat' ? 'selected'
+                                : '' }}>
                                 Value Added Tax (VAT) / Central Sales Tax (CST)
                             </option>
                         </select>
@@ -390,7 +422,7 @@
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
                             <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control" rows="2"
-                                placeholder="Building No., Street Name, Area/Locality, City, District, State, Pincode"></textarea>
+                                placeholder="Building No., Street Name , City , State, Pincode"></textarea>
                         </div>
 
 
@@ -413,20 +445,28 @@
                                 <select id="gstDistrict" name="gstDistrict" class="form-select" required>
                                     <option value="">Select District</option>
                                     @foreach ($districts as $district)
-                                        <option value="{{ $district->id }}">{{ $district->name }}
-                                        </option>
+                                    <option value="{{ $district->id }}">{{ $district->name }}
+                                    </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
 
-                        <div class="mb-3">
-                            <label class="form-label required">Description of Information <small
-                                    class="text-muted">(Max 200 words)</small></label>
-                            <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3" maxlength="2000"
-                                placeholder="Provide details about the activity"></textarea>
+                        {{-- <div class="mb-3">
+                            <label class="form-label required">Description of Information <small class="text-muted">(Max
+                                    200 words)</small></label>
+                            <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3"
+                                maxlength="2000" placeholder="Provide details about the activity"></textarea>
                             <small class="text-muted" id="descCount">0 / 200 words</small>
+                        </div> --}}
+
+                        <div class="mb-3">
+                            <label class="form-label required">Description of Information <small class="text-muted">(Max
+                                    150 words)</small></label>
+                            <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3"
+                                placeholder="Provide details about the activity"></textarea>
+                            <small class="text-muted" id="descCount">0 / 150 words</small>
                         </div>
 
                         {{-- <div class="mb-3">
@@ -444,9 +484,9 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Vehicle Number (If available)</label>
-                                <input id="gstVehicleNumber" name="gstVehicleNumber" type="text"
-                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
-                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                                <input id="gstVehicleNumber" name="gstVehicleNumber" type="text" class="form-control"
+                                    placeholder="Enter Vehicle Number (e.g., HR26AB1234)" maxlength="10"
+                                    oninput="this.value=this.value.toUpperCase()">
                             </div>
                         </div>
                     </div>
@@ -480,6 +520,7 @@
                                 }
                             }
                         }
+
                     </script>
 
                     <!-- VAT Fields -->
@@ -520,7 +561,7 @@
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
                             <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2"
-                                placeholder="Building No., Street Name, Area/Locality, City, District, State, Pincode"></textarea>
+                                placeholder="Building No., Street Name, Area/Locality, State, Pincode"></textarea>
                         </div>
 
                         <!-- ✅ New Fields -->
@@ -541,18 +582,18 @@
                                 <select id="vatDistrict" name="vatDistrict" class="form-select" required>
                                     <option value="">Select District</option>
                                     @foreach ($districts as $district)
-                                        <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                    <option value="{{ $district->id }}">{{ $district->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label required">Description of Information <small
-                                    class="text-muted">(Max 200 words)</small></label>
-                            <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3" maxlength="2000"
-                                placeholder="Provide details about the activity"></textarea>
-                            <small class="text-muted" id="vatDescCount">0 / 200 words</small>
+                            <label class="form-label required">Description of Information <small class="text-muted">(Max
+                                    150 words)</small></label>
+                            <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3"
+                                maxlength="150" placeholder="Provide details about the activity"></textarea>
+                            <small class="text-muted" id="vatDescCount">0 / 150 words</small>
                         </div>
 
                         <!-- <div class="mb-3">
@@ -575,9 +616,9 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Vehicle Number (If available)</label>
-                                <input id="vatVehicleNumber" name="vatVehicleNumber" type="text"
-                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
-                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                                <input id="vatVehicleNumber" name="vatVehicleNumber" type="text" class="form-control"
+                                    placeholder="Enter Vehicle Number (e.g., HR26AB1234)" maxlength="10"
+                                    oninput="this.value=this.value.toUpperCase()">
                             </div>
                         </div>
                     </div>
@@ -588,9 +629,9 @@
                             // Check number of files
                             if (files.length > 5) {
                                 Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'You can upload a maximum of 5 files.'
+                                    icon: 'error'
+                                    , title: 'Oops...'
+                                    , text: 'You can upload a maximum of 5 files.'
                                 });
                                 input.value = ''; // clear selection
                                 return false;
@@ -600,15 +641,16 @@
                             for (let i = 0; i < files.length; i++) {
                                 if (files[i].size > 1024 * 1024) { // 1 MB in bytes
                                     Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'Each file must be less than 1 MB.'
+                                        icon: 'error'
+                                        , title: 'Oops...'
+                                        , text: 'Each file must be less than 1 MB.'
                                     });
                                     input.value = ''; // clear selection
                                     return false;
                                 }
                             }
                         }
+
                     </script>
 
 
@@ -624,7 +666,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label required">Place of Offence</label>
+                                <label class="form-label required">Place/Location of Offence</label>
                                 <input id="excisePlace" name="excisePlace" type="text" class="form-control">
                             </div>
 
@@ -636,10 +678,10 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label required">Details of Offence (max 200 words)</label>
+                            <label class="form-label required">Details of Offence (max 150 words)</label>
                             <textarea id="exciseDetails" name="exciseDetails" class="form-control" rows="5"></textarea>
                             <div class="d-flex justify-content-between mt-1">
-                                <small id="wordCount" class="word-count">0 / 200 words</small>
+                                <small id="wordCount" class="word-count">0 / 150 words</small>
                             </div>
                         </div>
 
@@ -649,7 +691,7 @@
                                 <select id="exciseDistrict" name="exciseDistrict" class="form-select" required>
                                     <option value="">Select District</option>
                                     @foreach ($districts as $district)
-                                        <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                    <option value="{{ $district->id }}">{{ $district->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -694,6 +736,8 @@
             const name = informerName.value.trim();
             const phone = informerPhone.value.trim();
             const address = informerAddress.value.trim();
+            const city = informerCity.value.trim();
+            const district = informerDistrict.value.trim();
             const aadhar = informerAadhar.value.trim();
             const email = informerEmail.value.trim();
 
@@ -714,10 +758,10 @@
                 if (!emailPattern.test(email)) {
                     $('#loader').addClass('d-none');
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Email',
-                        text: 'Please enter a valid email address (e.g., example@gmail.com)',
-                    });
+                        icon: 'error'
+                        , title: 'Invalid Email'
+                        , text: 'Please enter a valid email address (e.g., example@gmail.com)'
+                    , });
                     informerEmail.value = ""; // Clear invalid input
                     informerEmail.focus();
                     return false;
@@ -734,13 +778,25 @@
                 return Swal.fire('Error', 'Enter address.', 'error');
             }
 
+            if (!city) {
+                $('#loader').addClass('d-none');
+                return Swal.fire('Error', 'Enter city.', 'error');
+            }
+
+            if (!district) {
+                $('#loader').addClass('d-none');
+                return Swal.fire('Error', 'Enter district.', 'error');
+            }
+
 
             const formData = {
-                informer_name: name,
-                informer_aadhar: aadhar,
-                informer_address: address,
-                informer_email: email
-            };
+                informer_name: name
+                , informer_aadhar: aadhar
+                , informer_address: address
+                , informer_city: city
+                , informer_district: district
+                , informer_email: email
+            , };
 
             // axios.post('/save-informer', formData)
             axios.post("{{ route('save.informer') }}", formData)
@@ -814,11 +870,11 @@
 
         document.getElementById('backTo2').onclick = () => showStep(2);
 
-        exciseDetails?.addEventListener('input', () => {
+        exciseDetails ?.addEventListener('input', () => {
             const count = exciseDetails.value.trim().split(/\s+/).filter(Boolean).length;
-            wordCount.textContent = `${count} / 200 words`;
+            wordCount.textContent = `${count} / 150 words`;
             if (count > 200)
-                Swal.fire('Limit Exceeded', 'Maximum 200 words allowed.', 'warning');
+                Swal.fire('Limit Exceeded', 'Maximum 150 words allowed.', 'warning');
         });
 
         document.getElementById('submitBtn').addEventListener('click', async () => {
@@ -844,13 +900,37 @@
                     if (gstin.length !== 15) {
                         $('#loader').addClass('d-none');
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Invalid GSTIN',
-                            text: 'GSTIN must be exactly 15 characters long.'
+                            icon: 'error'
+                            , title: 'Invalid GSTIN'
+                            , text: 'GSTIN must be exactly 15 characters long.'
                         });
                         return false;
                     }
                 }
+
+                if (gstin) {
+                        const gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+                        if (gstin.length !== 15) {
+                            $('#loader').addClass('d-none');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Invalid GSTIN',
+                                text: 'GSTIN must be exactly 15 characters long.'
+                            });
+                            return false;
+                        }
+
+                        if (!gstinPattern.test(gstin)) {
+                            $('#loader').addClass('d-none');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Invalid GSTIN Format',
+                                text: 'Please enter a valid GSTIN (e.g., 22AAAAA0000A1Z5).'
+                            });
+                            return false;
+                        }
+                }
+
 
                 if (!firmAddress) {
                     $('#loader').addClass('d-none');
@@ -995,7 +1075,7 @@
 
                 if (details.split(/\s+/).length > 200) {
                     $('#loader').addClass('d-none');
-                    return Swal.fire('Error', 'Details exceed 200 words.', 'error');
+                    return Swal.fire('Error', 'Details exceed 150 words.', 'error');
                 }
             }
 
@@ -1007,9 +1087,9 @@
                 if (res.data.success) {
                     $('#loader').addClass('d-none');
                     Swal.fire(
-                        'Success',
-                        `Your complaint has been submitted successfully!<br><b>Application ID:</b> ${res.data.application_id}`,
-                        'success'
+                        'Success'
+                        , `Your complaint has been submitted successfully!<br><b>Application ID:</b> ${res.data.application_id}`
+                        , 'success'
                     ).then(() => {
                         multiStepForm.reset();
                         window.location.href = "{{ url('user/dashboard') }}";
@@ -1024,12 +1104,14 @@
                 Swal.fire('Error', 'Submission failed. Try again.', 'error');
             }
         });
+
     </script>
 
     <script>
         document.getElementById('informerName').addEventListener('input', function() {
             this.value = this.value.replace(/[^A-Za-z\s]/g, '');
         });
+
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -1054,9 +1136,10 @@
 
                 // Reset word count if visible
                 const wordCount = document.getElementById('wordCount');
-                if (wordCount) wordCount.textContent = '0 / 200 words';
+                if (wordCount) wordCount.textContent = '0 / 150 words';
             });
         });
+
     </script>
 
     <script>
@@ -1081,20 +1164,20 @@
 
             if (!allowedTypes.includes(file.type)) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid File Type',
-                    text: 'Only PDF, JPG, JPEG, and PNG files are allowed.',
-                });
+                    icon: 'error'
+                    , title: 'Invalid File Type'
+                    , text: 'Only PDF, JPG, JPEG, and PNG files are allowed.'
+                , });
                 this.value = '';
                 return;
             }
 
             if (file.size > maxSize) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'File Too Large',
-                    text: 'File size must not exceed 1 MB.',
-                });
+                    icon: 'error'
+                    , title: 'File Too Large'
+                    , text: 'File size must not exceed 1 MB.'
+                , });
                 this.value = '';
                 return;
             }
@@ -1107,10 +1190,10 @@
 
             if (value !== cleaned) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid Characters',
-                    text: 'Special characters are not allowed in Firm Name.',
-                });
+                    icon: 'error'
+                    , title: 'Invalid Characters'
+                    , text: 'Special characters are not allowed in Firm Name.'
+                , });
                 this.value = cleaned;
             }
         });
@@ -1119,14 +1202,15 @@
         $('#gstDescription').on('input', function() {
             let text = $(this).val().trim();
             let words = text.split(/\s+/).filter(word => word.length > 0);
-            $('#descCount').text(words.length + ' / 200 words');
+            $('#descCount').text(words.length + ' / 150 words');
 
             if (words.length > 200) {
-                Swal.fire('Error', 'Description cannot exceed 200 words.', 'error');
+                Swal.fire('Error', 'Description cannot exceed 150 words.', 'error');
                 $(this).val(words.slice(0, 200).join(' ')); // truncate extra words
-                $('#descCount').text('200 / 200 words');
+                $('#descCount').text('150 / 150 words');
             }
         });
+
     </script>
 
     <script>
@@ -1163,6 +1247,81 @@
                 proofList.appendChild(li);
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cityInput = document.getElementById('informerCity');
+            const districtInput = document.getElementById('informerDistrict');
+
+            // Function to allow only letters and spaces
+            function allowOnlyLetters(input) {
+                input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+            }
+
+            cityInput.addEventListener('input', function() {
+                allowOnlyLetters(this);
+            });
+
+            districtInput.addEventListener('input', function() {
+                allowOnlyLetters(this);
+            });
+        });
+
+
+        const textarea = document.getElementById('gstDescription');
+            const counter = document.getElementById('descCount');
+            const MAX_WORDS = 100;
+            const HARD_LIMIT = 150;
+
+            textarea.addEventListener('input', () => {
+                let words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0);
+                let wordCount = words.length;
+
+                if(wordCount > HARD_LIMIT){
+                    words = words.slice(0, HARD_LIMIT);
+                    textarea.value = words.join(' ');
+                    wordCount = HARD_LIMIT;
+                }
+
+                // counter me show karo
+                counter.textContent = `${Math.min(wordCount, MAX_WORDS)} / ${MAX_WORDS} words`;
+
+                // agar MAX_WORDS se zyada ho to alert ya warning (optional)
+                if(wordCount > MAX_WORDS){
+                    textarea.value = words.slice(0, MAX_WORDS).join(' ');
+                    counter.textContent = `${MAX_WORDS} / ${MAX_WORDS} words`;
+                }
+        });
+
+        // const vatInput = document.getElementById('vatTin');
+        // const vatCounter = document.getElementById('vatTinCount');
+        // const MAX_LENGTH = 11;
+
+        // vatInput.addEventListener('input', () => {
+        //     vatInput.value = vatInput.value.replace(/\s+/g, '');
+
+        //     if (vatInput.value.length > MAX_LENGTH) {
+        //         vatInput.value = vatInput.value.slice(0, MAX_LENGTH);
+        //     }
+
+        //     vatCounter.textContent = `${vatInput.value.length} / ${MAX_LENGTH} characters`;
+        // });
+
+        const vatInput = document.getElementById('vatTin');
+            const vatCounter = document.getElementById('vatTinCount');
+            const MAX_LENGTH = 11;
+
+            vatInput.addEventListener('input', () => {
+                // Remove spaces and special characters, keep only letters and digits
+                vatInput.value = vatInput.value.replace(/[^a-zA-Z0-9]/g, '');
+
+                // Truncate if exceeds max length
+                if (vatInput.value.length > MAX_LENGTH) {
+                    vatInput.value = vatInput.value.slice(0, MAX_LENGTH);
+                }
+
+                // Update counter
+                vatCounter.textContent = `${vatInput.value.length} / ${MAX_LENGTH} characters`;
+            });
     </script>
 
 

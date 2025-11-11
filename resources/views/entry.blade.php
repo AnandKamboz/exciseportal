@@ -258,7 +258,7 @@
         <section class="entry-card">
             <div class="entry-grid">
                 <div class="entry-visual">
-                    <img src="{{ asset('assets/images/entery_page_image/tax-stop.jpeg') }}"
+                    <img src="{{ asset('assets/images/entery_page_image/excise-dep.JPG') }}"
                         alt="Excise Department background image" loading="lazy">
                 </div>
 
@@ -283,12 +283,18 @@
 
                             <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
                             <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                                <li>This app pertains to providing information related to evasion of <strong>GST / VAT /
+                                {{-- <li>This app pertains to providing information related to evasion of <strong>GST /
+                                        VAT /
                                         CST
-                                        / Excise</strong> only. No other information should be given.</li>
-                                <li>It shall be noted that providing information does not entitle the informer to any
-                                    award.
+                                        / Excise</strong> only. No other information should be given.</li> --}}
+                                <li>
+                                    It is hereby verified that the information provided is accurate and correct to the
+                                    best of my knowledge and belief.
                                 </li>
+                                {{-- <li>It shall be noted that providing information does not entitle the informer to
+                                    any
+                                    award.
+                                </li> --}}
                                 <li>The name of the informer will be kept secret.</li>
                             </ul>
 
@@ -296,11 +302,14 @@
 
                             <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
                             <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                                <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से संबंधित
-                                    जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li>
-                                <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं
+                                {{-- <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से
+                                    संबंधित
+                                    जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li> --}}
+                                <li>मैं यह सत्यापित करता/करती हूँ कि प्रस्तुत की गई जानकारी मेरी जानकारी के अनुसार सही
+                                    और सत्य है।</li>
+                                {{-- <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं
                                     मिलेगा।
-                                </li>
+                                </li> --}}
                                 <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
                             </ul>
                         </div>
@@ -319,14 +328,14 @@
     </main>
 
     @if (session('status'))
-        <script>
-            Swal.fire({
+    <script>
+        Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: '{{ session('status') }}',
                 confirmButtonText: 'OK'
             });
-        </script>
+    </script>
     @endif
 
 
