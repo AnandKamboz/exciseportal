@@ -36,7 +36,15 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $complain->created_at->format('d-m-Y') }}</td>
                                 <td>{{ $complain->application_id }}</td>
-                                <td>{{ ucfirst($complain->complaint_type) }}</td>
+                                {{-- <td>{{ ucfirst($complain->complaint_type) }}</td> --}}
+                                <td>
+                                    @if (strtolower($complain->complaint_type) === 'excise')
+                                        {{ ucfirst($complain->complaint_type) }}
+                                    @else
+                                        {{ strtoupper($complain->complaint_type) }}
+                                    @endif
+                                </td>
+
                                 <td>{{ 'Pending' }}</td>
                                 <td>
                                     <a href="{{ route('user.setails', [$complain->secure_id]) }}"
