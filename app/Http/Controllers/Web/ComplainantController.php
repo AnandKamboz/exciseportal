@@ -23,10 +23,13 @@ class ComplainantController extends Controller
 
         $districts = DB::table('districts')->get();
         $userMobile = Auth::user()->mobile;
-        $userDataForNewApplication = Complainant::where('complainant_phone', $userMobile)->where('is_completed', 0)->first();
-
-        $userData = Complainant::where('complainant_phone', $userMobile)->first();
-        return view('complainant.create',compact('userMobile','userData','districts','userDataForNewApplication'));
+        $userDataForNewApplication = Complainant::where('complainant_phone', $userMobile)->where('is_completed', 1)->first();
+        $userData = Complainant::where('complainant_phone', $userMobile)->where('is_completed',0)->first();
+        // $districts = DB::table('districts')->get();
+        $districts = DB::table('districts')
+            ->orderBy('name', 'asc')
+            ->get();
+        return view('complainant.create',compact('userMobile','userData','districts','userDataForNewApplication','districts'));
     }
 
     public function saveInformer(Request $request)
@@ -466,16 +469,45 @@ class ComplainantController extends Controller
     }
 
     // 🔹 Generate Unique Application ID (if not set)
-    if (empty($complaint->application_id)) {
-        do {
-            $randomDigits = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
-            $applicationId = strtoupper($type) . '-' . $randomDigits;
-        } while (Complainant::where('application_id', $applicationId)->exists());
+    // if (empty($complaint->application_id)) {
+    //     do {
+    //         $randomDigits = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+    //         $applicationId = strtoupper($type) . '-' . $randomDigits;
+    //     } while (Complainant::where('application_id', $applicationId)->exists());
 
-        $complaint->application_id = $applicationId;
-    } else {
-        $applicationId = $complaint->application_id;
-    }
+    //     $complaint->application_id = $applicationId;
+    // } else {
+    //     $applicationId = $complaint->application_id;
+    // }
+
+            if (empty($complaint->application_id)) {
+            do {
+                $randomDigits = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+
+                // 🔹 Generate prefix based on complaint type
+                switch (strtoupper($type)) {
+                    case 'EXCISE':
+                        $prefix = 'EXC';
+                        break;
+                    case 'GST':
+                        $prefix = 'GST';
+                        break;
+                    case 'VAT':
+                        $prefix = 'VAT';
+                        break;
+                    default:
+                        $prefix = 'CMP';
+                }
+
+                $applicationId = $prefix . '-' . $randomDigits;
+
+            } while (Complainant::where('application_id', $applicationId)->exists());
+
+            $complaint->application_id = $applicationId;
+        } else {
+            $applicationId = $complaint->application_id;
+        }
+
 
     $complaint->complaint_type = $type;
 
@@ -485,8 +517,10 @@ class ComplainantController extends Controller
         $complaint->gst_gstin = strtoupper($request->gstGstin);
         $complaint->gst_firm_address = $request->gstFirmAddress;
         $complaint->gst_locality = $request->gstLocality;
-        $complaint->gst_district = $request->gstDistrict;
+        $complaint->district = $request->gstDistrict;
         $complaint->gst_description = $request->gstDescription;
+        $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? ""; 
+
 
         if ($request->hasFile('gstProof')) {
             $files = $request->file('gstProof');
@@ -514,8 +548,10 @@ class ComplainantController extends Controller
         $complaint->vat_tin = strtoupper($request->vatTin);
         $complaint->vat_firm_address = $request->vatFirmAddress;
         $complaint->vat_locality = $request->vatLocality;
-        $complaint->vat_district = $request->vatDistrict;
+        $complaint->district = $request->vatDistrict;
         $complaint->vat_description = $request->vatDescription;
+        $complaint->vat_vehicle_number = $request->vatVehicleNumber; // ✅ Added
+
 
         if ($request->hasFile('vatProof')) {
             $files = $request->file('vatProof');
@@ -544,6 +580,8 @@ class ComplainantController extends Controller
         $complaint->excise_place = $request->excisePlace;
         $complaint->excise_time = $request->exciseTime;
         $complaint->excise_details = $request->exciseDetails;
+        $complaint->excise_vehicle_number = $request->exciseVehicleNumber ?? ""; 
+         $complaint->district = $request->exciseDistrict;
     }
 
     $complaint->is_completed = 1;
@@ -572,4 +610,3 @@ class ComplainantController extends Controller
 
 
 }
-

@@ -266,8 +266,13 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label required">Name</label>
-                            <input id="informerName" name="informerName" placeholder="Enter your name" type="text"
-                                class="form-control" required value="{{ $userData->complainant_name ?? '' }}">
+                            {{-- <input id="informerName" name="informerName" placeholder="Enter your name" type="text"
+                                class="form-control" required value="{{ $userData->complainant_name ?? '' }}"> --}}
+                            <input id="informerName" name="informerName" type="text" class="form-control"
+                                placeholder="Enter your name" required
+                                value="{{ $userDataForNewApplication->complainant_name ?? '' }}"
+                                @if (!empty($userDataForNewApplication->complainant_name)) disabled @endif>
+
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label required">Phone Number</label>
@@ -280,23 +285,36 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Email</label>
+                            {{-- <input id="informerEmail" name="informerEmail" type="email" class="form-control"
+                                placeholder="example@mail.com" value="{{ $userData->complainant_email ?? '' }}"> --}}
                             <input id="informerEmail" name="informerEmail" type="email" class="form-control"
-                                placeholder="example@mail.com" value="{{ $userData->complainant_email ?? '' }}">
+                                placeholder="example@mail.com"
+                                value="{{ $userDataForNewApplication->complainant_email ?? '' }}"
+                                @if (!empty($userDataForNewApplication->complainant_email)) disabled @endif>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label required">Aadhar Number</label>
+                            {{-- <input id="informerAadhar" name="informerAadhar" type="text" class="form-control"
+                                maxlength="12" placeholder="Enter 12-digit Aadhar Number"
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                                value="{{ $userData->complainant_aadhar ?? '' }}"> --}}
                             <input id="informerAadhar" name="informerAadhar" type="text" class="form-control"
                                 maxlength="12" placeholder="Enter 12-digit Aadhar Number"
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-                                value="{{ $userData->complainant_aadhar ?? '' }}">
+                                value="{{ $userDataForNewApplication->complainant_aadhar ?? '' }}"
+                                @if (!empty($userDataForNewApplication->complainant_aadhar)) disabled @endif>
+
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label required">Address</label>
-                        <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
+                        {{-- <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
                             placeholder="House No., Street, City, District, State, Pincode" required>{{ $userData->complainant_address ?? '' }}
-                        </textarea>
+                        </textarea> --}}
+                        <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
+                            placeholder="House No., Street, City, District, State, Pincode" required
+                            @if (!empty($userDataForNewApplication->complainant_address)) disabled @endif>{{ $userDataForNewApplication->complainant_address ?? '' }}</textarea>
                     </div>
 
                     <div class="text-end">
@@ -313,15 +331,15 @@
                         <select id="taxType" name="taxType" class="form-select" required>
                             <option value="">Select</option>
                             <option value="gst"
-                                {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'gst' ? 'selected' : '' }}>
+                                {{ isset($userData) && $userData->complaint_type === 'gst' ? 'selected' : '' }}>
                                 Goods and Services Tax (GST)
                             </option>
                             <option value="excise"
-                                {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'excise' ? 'selected' : '' }}>
+                                {{ isset($userData) && $userData->complaint_type === 'excise' ? 'selected' : '' }}>
                                 Excise
                             </option>
                             <option value="vat"
-                                {{ isset($userDataForNewApplication) && $userDataForNewApplication->complaint_type === 'vat' ? 'selected' : '' }}>
+                                {{ isset($userData) && $userData->complaint_type === 'vat' ? 'selected' : '' }}>
                                 Value Added Tax (VAT) / Central Sales Tax (CST)
                             </option>
                         </select>
@@ -371,7 +389,8 @@
 
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
-                            <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control" rows="2"></textarea>
+                            <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control" rows="2"
+                                placeholder="Building No., Street Name, Area/Locality, City, District, State, Pincode"></textarea>
                         </div>
 
 
@@ -384,10 +403,20 @@
                                     placeholder="Enter locality or area name">
                             </div>
 
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <label class="form-label required">District</label>
                                 <input type="text" id="gstDistrict" name="gstDistrict" class="form-control"
                                     placeholder="Enter district name">
+                            </div> --}}
+                            <div class="col-md-6">
+                                <label class="form-label required">District</label>
+                                <select id="gstDistrict" name="gstDistrict" class="form-select" required>
+                                    <option value="">Select District</option>
+                                    @foreach ($districts as $district)
+                                        <option value="{{ $district->id }}">{{ $district->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
@@ -400,10 +429,25 @@
                             <small class="text-muted" id="descCount">0 / 200 words</small>
                         </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
                             <input id="gstProof" name="gstProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
                                 class="form-control" multipleonchange="validateFiles(this)" multiple>
+                        </div> --}}
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
+                                <input id="gstProof" name="gstProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
+                                    class="form-control" onchange="validateFiles(this)" multiple>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Vehicle Number (If any)</label>
+                                <input id="gstVehicleNumber" name="gstVehicleNumber" type="text"
+                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
+                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                            </div>
                         </div>
                     </div>
 
@@ -476,7 +520,7 @@
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
                             <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2"
-                                placeholder="Enter firm address"></textarea>
+                                placeholder="Building No., Street Name, Area/Locality, City, District, State, Pincode"></textarea>
                         </div>
 
                         <!-- ✅ New Fields -->
@@ -486,10 +530,20 @@
                                 <input type="text" id="vatLocality" name="vatLocality" class="form-control"
                                     placeholder="Enter locality or area name">
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <label class="form-label required">District</label>
                                 <input type="text" id="vatDistrict" name="vatDistrict" class="form-control"
                                     placeholder="Enter district name">
+                            </div> --}}
+
+                            <div class="col-md-6">
+                                <label class="form-label required">District</label>
+                                <select id="vatDistrict" name="vatDistrict" class="form-select" required>
+                                    <option value="">Select District</option>
+                                    @foreach ($districts as $district)
+                                        <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
@@ -506,14 +560,26 @@
                                 <input id="vatProof" name="vatProof" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control">
                             </div> -->
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
                             <input id="vatProof" name="vatProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
                                 class="form-control" multiple onchange="validateVatFiles(this)">
+                        </div> --}}
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
+                                <input id="vatProof" name="vatProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
+                                    class="form-control" onchange="validateVatFiles(this)" multiple>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Vehicle Number (If any)</label>
+                                <input id="vatVehicleNumber" name="vatVehicleNumber" type="text"
+                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
+                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                            </div>
                         </div>
-
-
-
                     </div>
                     <script>
                         function validateVatFiles(input) {
@@ -561,10 +627,18 @@
                                 <label class="form-label required">Place of Offence</label>
                                 <input id="excisePlace" name="excisePlace" type="text" class="form-control">
                             </div>
-                            <div class="col-md-6 mb-3">
+
+
+                            {{-- <div class="col-md-6 mb-3">
                                 <label class="form-label required">Time of Offence</label>
                                 <input id="exciseTime" name="exciseTime" type="text" class="form-control"
                                     placeholder="e.g. 2025-11-06 21:00">
+                            </div> --}}
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Time and Date of Offence</label>
+                                <input id="exciseTime" name="exciseTime" type="datetime-local" class="form-control"
+                                    placeholder="Select date & time">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -574,6 +648,26 @@
                                 <small id="wordCount" class="word-count">0 / 200 words</small>
                             </div>
                         </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label required">District</label>
+                                <select id="exciseDistrict" name="exciseDistrict" class="form-select" required>
+                                    <option value="">Select District</option>
+                                    @foreach ($districts as $district)
+                                        <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Vehicle Number (If any)</label>
+                                <input id="exciseVehicleNumber" name="exciseVehicleNumber" type="text"
+                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
+                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="d-flex justify-content-between">
@@ -610,6 +704,23 @@
             if (!/^\d{10}$/.test(phone)) {
                 $('#loader').addClass('d-none');
                 return Swal.fire('Error', 'Enter valid 10-digit phone.', 'error');
+            }
+
+            if (email !== "") {
+                // Email pattern check
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailPattern.test(email)) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Email',
+                        text: 'Please enter a valid email address (e.g., example@gmail.com)',
+                    });
+                    informerEmail.value = ""; // Clear invalid input
+                    informerEmail.focus();
+                    return false;
+                }
             }
 
             if (!/^\d{12}$/.test(aadhar)) {
@@ -709,7 +820,7 @@
                 const locality = gstLocality.value.trim();
                 const district = gstDistrict.value.trim();
                 const description = gstDescription.value.trim();
-
+                const vehicleNumber = gstVehicleNumber.value.trim();
                 if (!firmName) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Firm Name.', 'error');
@@ -791,6 +902,8 @@
                 const locality = vatLocality.value.trim();
                 const district = vatDistrict.value.trim();
                 const description = vatDescription.value.trim();
+                const vehicleNumber = vatVehicleNumber.value.trim();
+
 
 
                 if (!firmName) {
@@ -853,6 +966,7 @@
             if (tax == 'excise') {
                 const offender = exciseName.value.trim();
                 const details = exciseDetails.value.trim();
+                const vehicleNumber = exciseVehicleNumber.value.trim();
 
                 if (!offender) {
                     $('#loader').addClass('d-none');
