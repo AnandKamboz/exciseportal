@@ -123,7 +123,7 @@
             </div>
 
             {{-- Attached Proofs --}}
-            @if ($complain->gst_proof || $complain->vat_proof)
+            {{-- @if ($complain->gst_proof || $complain->vat_proof)
                 <hr>
                 <h5 class="fw-semibold text-secondary mb-3">📎 Attached Documents</h5>
                 <div class="row g-3 mb-3">
@@ -145,6 +145,51 @@
                                 <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
                                     target="_blank" class="btn btn-sm btn-outline-success">
                                     View VAT Proof
+                                </a>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+            @endif --}}
+
+            @if ($complain->gst_proof || $complain->vat_proof || $complain->excise_proof)
+                <hr>
+                <h5 class="fw-semibold text-secondary mb-3">📎 Attached Documents</h5>
+                <div class="row g-3 mb-3">
+                    {{-- GST Proof --}}
+                    @if ($complain->gst_proof)
+                        @php $gstFiles = json_decode($complain->gst_proof, true); @endphp
+                        @foreach ($gstFiles as $file)
+                            <div class="col-md-4">
+                                <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
+                                    target="_blank" class="btn btn-sm btn-outline-primary w-100 text-center">
+                                    View GST Proof
+                                </a>
+                            </div>
+                        @endforeach
+                    @endif
+
+                    {{-- VAT Proof --}}
+                    @if ($complain->vat_proof)
+                        @php $vatFiles = json_decode($complain->vat_proof, true); @endphp
+                        @foreach ($vatFiles as $file)
+                            <div class="col-md-4">
+                                <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
+                                    target="_blank" class="btn btn-sm btn-outline-success w-100 text-center">
+                                    View VAT Proof
+                                </a>
+                            </div>
+                        @endforeach
+                    @endif
+
+                    {{-- Excise Proof --}}
+                    @if ($complain->excise_proof)
+                        @php $exciseFiles = json_decode($complain->excise_proof, true); @endphp
+                        @foreach ($exciseFiles as $file)
+                            <div class="col-md-4">
+                                <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
+                                    target="_blank" class="btn btn-sm btn-outline-warning w-100 text-center">
+                                    View Excise Proof
                                 </a>
                             </div>
                         @endforeach
