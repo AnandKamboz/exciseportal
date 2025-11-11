@@ -461,8 +461,9 @@
 
                     <!-- Image version (replace the src path as needed) -->
                     <div class="p-0 rounded-4 shadow-lg overflow-hidden" style="background: #fff;">
-                        <img src="{{ asset('assets/images/entery_page_image/new-img.jpg') }}" alt="Disclaimer Graphic"
-                            class="img-fluid w-100 d-block" style="object-fit: cover; max-height: 480px;">
+                        <img src="{{ asset('assets/images/entery_page_image/login-image.jpg') }}"
+                            alt="Disclaimer Graphic" class="img-fluid w-100 d-block"
+                            style="object-fit: cover; max-height: 480px;">
                     </div>
 
                 </div>
