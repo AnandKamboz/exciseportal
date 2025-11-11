@@ -50,7 +50,8 @@
             padding: 3rem 1rem;
             position: relative;
             overflow: hidden;
-            background: url('assets/images/entery_page_image/excise-dep.JPG') no-repeat center center/cover;
+            background: url('assets/images/entery_page_image/banner-1.png') no-repeat center center/cover;
+            /* background: url('assets/images/entery_page_image/excise-dep.JPG') no-repeat center center/cover; */
         }
 
         /* Add black overlay on background image */
