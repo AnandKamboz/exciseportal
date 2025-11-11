@@ -315,16 +315,22 @@
                             {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}
                         </textarea> --}}
                         <div class="mb-3">
-                            <label class="form-label required">Address</label>
+                            {{-- <label class="form-label required">Address</label> --}}
                             {{-- <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
                                 placeholder="House No., Street, State, Pincode" required @if
                                 (!empty($userDataForNewApplication->complainant_address)) disabled 
                                 @endif>
                                 {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
                             --}}
-                            <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
+                            {{-- <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
                                 placeholder="House No., Street, State, Pincode" @if (!empty($userDataForNewApplication->complainant_address)) disabled @endif > {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}
-                            </textarea>
+                            </textarea> --}}
+                            <div class="mb-3">
+                                <label class="form-label required">Address</label>
+                                <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
+                                    placeholder="House No., Street, State, Pincode"
+                                    @if(!empty($userDataForNewApplication->complainant_address)) disabled @endif>{{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
+                            </div>
                         </div>
                     </div>
 
