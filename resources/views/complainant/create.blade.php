@@ -425,7 +425,7 @@
                             <label class="form-label required">Description of Information <small
                                     class="text-muted">(Max 200 words)</small></label>
                             <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3" maxlength="2000"
-                                placeholder="Provide details about the complaint or information"></textarea>
+                                placeholder="Provide details about the activity"></textarea>
                             <small class="text-muted" id="descCount">0 / 200 words</small>
                         </div>
 
@@ -551,7 +551,7 @@
                             <label class="form-label required">Description of Information <small
                                     class="text-muted">(Max 200 words)</small></label>
                             <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3" maxlength="2000"
-                                placeholder="Provide details about the complaint or information"></textarea>
+                                placeholder="Provide details about the activity"></textarea>
                             <small class="text-muted" id="vatDescCount">0 / 200 words</small>
                         </div>
 

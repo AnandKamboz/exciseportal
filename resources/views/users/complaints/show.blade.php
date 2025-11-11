@@ -45,25 +45,25 @@
 
                 {{-- GST Details --}}
                 @if ($complain->gst_firm_name)
-                    <div class="col-md-4"><strong>GST Firm Name:</strong> {{ $complain->gst_firm_name }}</div>
+                    <div class="col-md-4"><strong>Firm Name:</strong> {{ $complain->gst_firm_name }}</div>
                 @endif
                 @if ($complain->gst_gstin)
                     <div class="col-md-4"><strong>GSTIN:</strong> {{ $complain->gst_gstin }}</div>
                 @endif
                 @if ($complain->gst_firm_address)
-                    <div class="col-md-8"><strong>GST Firm Address:</strong> {{ $complain->gst_firm_address }}</div>
+                    <div class="col-md-8"><strong>Firm Address:</strong> {{ $complain->gst_firm_address }}</div>
                 @endif
                 @if ($complain->gst_locality)
-                    <div class="col-md-4"><strong>GST Locality:</strong> {{ $complain->gst_locality }}</div>
+                    <div class="col-md-4"><strong>Locality:</strong> {{ $complain->gst_locality }}</div>
                 @endif
                 {{-- @if ($complain->district)
                     <div class="col-md-4"><strong>GST District:</strong> {{ $complain->district }}</div>
                 @endif --}}
                 @if ($complain->gst_vehicle_number)
-                    <div class="col-md-4"><strong>GST Vehicle Number:</strong> {{ $complain->gst_vehicle_number }}</div>
+                    <div class="col-md-4"><strong>Vehicle Number:</strong> {{ $complain->gst_vehicle_number }}</div>
                 @endif
                 @if ($complain->gst_description)
-                    <div class="col-md-12"><strong>GST Description:</strong> {{ $complain->gst_description }}</div>
+                    <div class="col-md-12"><strong>Description:</strong> {{ $complain->gst_description }}</div>
                 @endif
 
                 {{-- VAT Details --}}
