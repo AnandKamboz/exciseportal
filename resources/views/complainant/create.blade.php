@@ -362,11 +362,14 @@
                 <div class="step" data-step="2">
                     <h5 class="fw-bold mb-0">Step 2 — Information related to</h5>
                     <div class="mb-3 mt-4">
-                        <label class="form-label required">Select Tax to which information is related</label>
+                        <label class="form-label required">
+                            {{-- Select Tax to which information is related --}}
+                            Select the category,to which the information relates
+                        </label>
                         <select id="taxType" name="taxType" class="form-select" required>
                             {{-- <option value="">Select Category to which information related</option> --}}
                             <option value="" selected disabled>
-                                Select Category to which information related
+                                Select
                             </option>
                             <option value="gst" {{ isset($userData) && $userData->complaint_type === 'gst' ? 'selected'
                                 : '' }}>
