@@ -292,8 +292,8 @@
                                     Excise.</li>
                                 <li>The name of the informer will be kept secret.
                                 </li>
-                                <li>The informer must verify that the information being provided is correct to their
-                                    best knowledge and it is being provided only with the purpose to curb tax evasion.
+                                <li>The informer must verify that the information being provided is correct to his best
+                                    of knowledge and it is being provided only with the purpose to curb tax evasion.
                                 </li>
 
 
