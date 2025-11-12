@@ -514,7 +514,7 @@
                                         </button>
                                     </div>
                                     <input type="text" id="captchaInput" class="form-control w-50"
-                                        placeholder="Enter Captcha" />
+                                        placeholder="Enter Captcha" maxlength="6" />
                                 </div>
 
                                 <div id="otpSection" class="hidden mt-3">
@@ -556,6 +556,18 @@
             };
             // $('#loader').addClass('d-none');
         }
+
+        document.getElementById('captchaInput').addEventListener('input', function(e) {
+            // Sirf alphabets (A–Z, a–z) aur numbers (0–9) allow karne ke liye
+            let value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+
+            // Agar 6 se zyada character likh diye gaye ho to cut kar de
+            if (value.length > 6) {
+                value = value.slice(0, 6);
+            }
+
+            e.target.value = value;
+        });
     </script>
     <script>
         const mobileInput = document.getElementById('mobile');
