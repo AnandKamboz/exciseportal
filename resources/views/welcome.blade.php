@@ -508,7 +508,7 @@
                                             style="padding: 2px 6px; font-size: 0.75rem;" id="reload-captcha-btn"
                                             onclick="reloadCaptcha()">
                                             <span id="btn-text"><i class="bi bi-arrow-clockwise me-1"
-                                                    style="font-size: 0.75rem;"></i> Reload</span>
+                                                    style="font-size: 0.85rem;"></i> </span>
                                             <span id="btn-spinner" class="spinner-border spinner-border-sm ms-1 d-none"
                                                 role="status" aria-hidden="true"></span>
                                         </button>
