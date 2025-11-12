@@ -396,6 +396,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        img#captcha {
+            width: 130px;
+        }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
@@ -497,8 +501,7 @@
                                     id="captcha_code">
                                     <div class="captcha bg-white text-dark px-3 py-2 rounded fw-bold">
                                         {{-- {{ session('captcha') }} --}}
-                                        <img src="{{ captcha_src() }}" id="captcha" alt="captcha" width="150"
-                                            height="50">
+                                        <img src="{{ captcha_src() }}" id="captcha" alt="captcha">
 
                                         <button type="button"
                                             class="btn btn-primary btn-sm rounded-3 d-flex align-items-center mt-1"
