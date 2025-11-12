@@ -352,7 +352,7 @@
             margin-right: 8px;
         }
 
-        .header {
+        /* .header {
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -361,7 +361,31 @@
             border-bottom: 2px solid #7386ff;
             background: linear-gradient(to right, #ffffff, #f1f1f1);
             flex-wrap: wrap;
+        } */
+
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            border-bottom: 2px solid #7386ff;
+            flex-wrap: wrap;
+
+
+
+            background: linear-gradient(to bottom, rgb(186 197 255 / 45%), rgb(86 243 243 / 27%)), url("/assets/images/entery_page_image/new-bg1.jpg");
+            background-repeat: no-repeat;
+            background-position: right center;
+            /* align image to right */
+            background-size: cover;
+            /* show full image (no crop, no stretch) */
+            background-color: #f7f7f7;
+            /* soft fallback */
         }
+
+
+
 
         .header img {
             height: 90px;
@@ -416,7 +440,7 @@
             <i>📧</i> excisehry@gmail.com
         </div>
         <div class="contact-item">
-            <i>📞</i> 0123-4567890
+            <i>📞</i> 0172-4567890
         </div>
     </div>
 

@@ -43,7 +43,7 @@
             margin-right: 8px;
         }
 
-        .header {
+        /* .header {
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -52,7 +52,30 @@
             border-bottom: 2px solid #7386ff;
             background: linear-gradient(to right, #ffffff, #f1f1f1);
             flex-wrap: wrap;
+        } */
+
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            border-bottom: 2px solid #7386ff;
+
+            /* Combined gradient + background image */
+            background:
+                linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(241, 241, 241, 0.9)),
+                url('http://127.0.0.1:8000/assets/images/entery_page_image/new-bg.png');
+
+            background-size: cover;
+            /* makes the image cover the whole area */
+            background-position: center;
+            /* centers the image */
+            background-repeat: no-repeat;
+            /* prevents tiling */
+            flex-wrap: wrap;
         }
+
 
         .header img {
             height: 90px;
