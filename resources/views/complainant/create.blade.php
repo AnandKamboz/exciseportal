@@ -63,9 +63,9 @@
             border-bottom: 2px solid #7386ff;
 
             /* Combined gradient + background image */
-            background:
+            /* background:
                 linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(241, 241, 241, 0.9)),
-                url('http://127.0.0.1:8000/assets/images/entery_page_image/new-bg.png');
+                url('http://127.0.0.1:8000/assets/images/entery_page_image/new-bg.png'); */
 
             background-size: cover;
             /* makes the image cover the whole area */
