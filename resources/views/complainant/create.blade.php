@@ -7,10 +7,6 @@
     <title>Multi-Step Complaint / Informer Form</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -43,17 +39,6 @@
             margin-right: 8px;
         }
 
-        /* .header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            border-bottom: 2px solid #7386ff;
-            background: linear-gradient(to right, #ffffff, #f1f1f1);
-            flex-wrap: wrap;
-        } */
-
         .header {
             width: 100%;
             display: flex;
@@ -61,18 +46,9 @@
             align-items: center;
             padding: 15px 30px;
             border-bottom: 2px solid #7386ff;
-
-            /* Combined gradient + background image */
-            /* background:
-                linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(241, 241, 241, 0.9)),
-                url('http://127.0.0.1:8000/assets/images/entery_page_image/new-bg.png'); */
-
             background-size: cover;
-            /* makes the image cover the whole area */
             background-position: center;
-            /* centers the image */
             background-repeat: no-repeat;
-            /* prevents tiling */
             flex-wrap: wrap;
         }
 
@@ -308,8 +284,6 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Email</label>
-                            {{-- <input id="informerEmail" name="informerEmail" type="email" class="form-control"
-                                placeholder="example@mail.com" value="{{ $userData->complainant_email ?? '' }}"> --}}
                             <input id="informerEmail" name="informerEmail" type="email" class="form-control"
                                 placeholder="example@mail.com"
                                 value="{{ $userDataForNewApplication->complainant_email ?? ($userData->complainant_email ?? '') }}"
@@ -317,44 +291,19 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label required">Aadhar Number</label>
-                            {{-- <input id="informerAadhar" name="informerAadhar" type="text" class="form-control"
-                                maxlength="12" placeholder="Enter 12-digit Aadhar Number"
-                                oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-                                value="{{ $userData->complainant_aadhar ?? '' }}"> --}}
                             <input id="informerAadhar" name="informerAadhar" type="text" class="form-control"
                                 maxlength="12" placeholder="Enter 12-digit Aadhar Number"
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'')"
                                 value="{{ $userDataForNewApplication->complainant_aadhar ?? ($userData->complainant_aadhar ?? '') }}"
                                 @if (!empty($userDataForNewApplication->complainant_aadhar)) disabled @endif>
-
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        {{-- <label class="form-label required">Address</label> --}}
-                        {{-- <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
-                            placeholder="House No., Street, State, Pincode" required @if
-                            (!empty($userDataForNewApplication->complainant_address)) disabled @endif>
-                            {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}
-                        </textarea> --}}
-                        <div class="mb-3">
-                            {{-- <label class="form-label required">Address</label> --}}
-                            {{-- <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
-                                placeholder="House No., Street, State, Pincode" required @if
-                                (!empty($userDataForNewApplication->complainant_address)) disabled 
-                                @endif>
-                                {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
-                            --}}
-                            {{-- <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
-                                placeholder="House No., Street, State, Pincode" @if (!empty($userDataForNewApplication->complainant_address)) disabled @endif > {{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}
-                            </textarea> --}}
-                            <div class="mb-3">
-                                <label class="form-label required">Address</label>
-                                <textarea id="informerAddress" name="informerAddress" class="form-control" rows="3"
-                                    placeholder="House No., Street, State, Pincode"
-                                    @if(!empty($userDataForNewApplication->complainant_address)) disabled @endif>{{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
-                            </div>
-                        </div>
+                        <label class="form-label required">Address</label>
+                        <textarea placeholder="House No., Street, State, Pincode"
+                            {{ !empty($userDataForNewApplication->complainant_address) ? 'disabled' : '' }} id="informerAddress"
+                            name="informerAddress" class="form-control" rows="3">{{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
                     </div>
 
                     <div class="row">
@@ -386,24 +335,22 @@
                     <h5 class="fw-bold mb-0">Step 2 — Information related to</h5>
                     <div class="mb-3 mt-4">
                         <label class="form-label required">
-                            {{-- Select Tax to which information is related --}}
                             Select the category,to which the information relates
                         </label>
                         <select id="taxType" name="taxType" class="form-select" required>
-                            {{-- <option value="">Select Category to which information related</option> --}}
                             <option value="" selected disabled>
                                 Select
                             </option>
-                            <option value="gst" {{ isset($userData) && $userData->complaint_type === 'gst' ? 'selected'
-                                : '' }}>
+                            <option value="gst"
+                                {{ isset($userData) && $userData->complaint_type === 'gst' ? 'selected' : '' }}>
                                 Goods and Services Tax (GST)
                             </option>
-                            <option value="excise" {{ isset($userData) && $userData->complaint_type === 'excise' ?
-                                'selected' : '' }}>
+                            <option value="excise"
+                                {{ isset($userData) && $userData->complaint_type === 'excise' ? 'selected' : '' }}>
                                 Excise
                             </option>
-                            <option value="vat" {{ isset($userData) && $userData->complaint_type === 'vat' ? 'selected'
-                                : '' }}>
+                            <option value="vat"
+                                {{ isset($userData) && $userData->complaint_type === 'vat' ? 'selected' : '' }}>
                                 Value Added Tax (VAT) / Central Sales Tax (CST)
                             </option>
                         </select>
@@ -421,21 +368,8 @@
                 <!-- STEP 3 -->
                 <div class="step" data-step="3">
                     <h5 id="step3Title">Step 3 — Offence / Evasion Details</h5>
-
                     <!-- GST Fields -->
                     <div id="gstFields" style="display:none;">
-                        <!-- <div class="mb-3">
-                            <label class="form-label required">Firm Name</label>
-                            <input id="gstFirmName" name="gstFirmName" type="text" class="form-control">
-                        </div>
-
-                        
-                        <div class="mb-3">
-                            <label class="form-label">GSTIN</label>
-                            <input id="gstGstin" name="gstGstin" type="text" class="form-control"
-                                placeholder="15 character GSTIN">
-                        </div> -->
-
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label required">Firm Name</label>
@@ -450,15 +384,11 @@
                             </div>
                         </div>
 
-
                         <div class="mb-3">
                             <label class="form-label required">Firm Address</label>
                             <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control" rows="2"
                                 placeholder="Building No., Street Name , City , State, Pincode"></textarea>
                         </div>
-
-
-
 
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -467,45 +397,26 @@
                                     placeholder="Enter location or area name">
                             </div>
 
-                            {{-- <div class="col-md-6">
-                                <label class="form-label required">District</label>
-                                <input type="text" id="gstDistrict" name="gstDistrict" class="form-control"
-                                    placeholder="Enter district name">
-                            </div> --}}
                             <div class="col-md-6">
                                 <label class="form-label required">District</label>
                                 <select id="gstDistrict" name="gstDistrict" class="form-select" required>
                                     <option value="">Select District</option>
                                     @foreach ($districts as $district)
-                                    <option value="{{ $district->id }}">{{ $district->name }}
-                                    </option>
+                                        <option value="{{ $district->id }}">{{ $district->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
-
-                        {{-- <div class="mb-3">
-                            <label class="form-label required">Description of Information <small class="text-muted">(Max
-                                    200 words)</small></label>
-                            <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3"
-                                maxlength="2000" placeholder="Provide details about the activity"></textarea>
-                            <small class="text-muted" id="descCount">0 / 200 words</small>
-                        </div> --}}
-
                         <div class="mb-3">
-                            <label class="form-label required">Description of Information <small class="text-muted">(Max
+                            <label class="form-label required">Description of Information <small
+                                    class="text-muted">(Max
                                     150 words)</small></label>
                             <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3"
                                 placeholder="Provide details about the activity"></textarea>
                             <small class="text-muted" id="descCount">0 / 150 words</small>
                         </div>
-
-                        {{-- <div class="mb-3">
-                            <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
-                            <input id="gstProof" name="gstProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
-                                class="form-control" multipleonchange="validateFiles(this)" multiple>
-                        </div> --}}
 
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -516,66 +427,12 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Vehicle Number (If available)</label>
-                                <input id="gstVehicleNumber" name="gstVehicleNumber" type="text" class="form-control"
-                                    placeholder="Enter Vehicle Number (e.g., HR26AB1234)" maxlength="10"
-                                    oninput="this.value=this.value.toUpperCase()">
+                                <input id="gstVehicleNumber" name="gstVehicleNumber" type="text"
+                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
+                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        function validateFiles(input) {
-                            const maxFiles = 5;
-                            const maxSize = 1 * 1024 * 1024; // 1 MB
-                            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-                            const files = input.files;
-
-                            if (files.length > maxFiles) {
-                                Swal.fire('Error', `You can upload a maximum of ${maxFiles} files.`, 'error');
-                                input.value = '';
-                                return;
-                            }
-
-                            for (let i = 0; i < files.length; i++) {
-                                const file = files[i];
-
-                                if (!allowedTypes.includes(file.type)) {
-                                    Swal.fire('Error', `File type not allowed: ${file.name}`, 'error');
-                                    input.value = '';
-                                    return;
-                                }
-
-                                if (file.size > maxSize) {
-                                    Swal.fire('Error', `File size exceeds 1 MB: ${file.name}`, 'error');
-                                    input.value = '';
-                                    return;
-                                }
-                            }
-                        }
-
-                    </script>
-
-                    <!-- VAT Fields -->
-                    <!-- <div id="vatFields" style="display:none;">
-                        <div class="mb-3">
-                            <label class="form-label required">Firm Name</label>
-                            <input id="vatFirmName" name="vatFirmName" type="text" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">TIN</label>
-                            <input id="vatTin" name="vatTin" type="text" class="form-control"
-                                placeholder="Tax Identification Number">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label required">Firm Address</label>
-                            <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label required">Upload Proof</label>
-                            <input id="vatProof" name="vatProof" type="file" accept=".pdf,.jpg,.jpeg,.png"
-                                class="form-control">
-                        </div>
-                    </div> -->
 
                     <div id="vatFields" style="display:none;">
                         <div class="mb-3">
@@ -603,41 +460,26 @@
                                 <input type="text" id="vatLocality" name="vatLocality" class="form-control"
                                     placeholder="Enter location or area name">
                             </div>
-                            {{-- <div class="col-md-6">
-                                <label class="form-label required">District</label>
-                                <input type="text" id="vatDistrict" name="vatDistrict" class="form-control"
-                                    placeholder="Enter district name">
-                            </div> --}}
 
                             <div class="col-md-6">
                                 <label class="form-label required">District</label>
                                 <select id="vatDistrict" name="vatDistrict" class="form-select" required>
                                     <option value="">Select District</option>
                                     @foreach ($districts as $district)
-                                    <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                        <option value="{{ $district->id }}">{{ $district->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label required">Description of Information <small class="text-muted">(Max
+                            <label class="form-label required">Description of Information <small
+                                    class="text-muted">(Max
                                     150 words)</small></label>
-                            <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3"
-                                maxlength="150" placeholder="Provide details about the activity"></textarea>
+                            <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3" maxlength="150"
+                                placeholder="Provide details about the activity"></textarea>
                             <small class="text-muted" id="vatDescCount">0 / 150 words</small>
                         </div>
-
-                        <!-- <div class="mb-3">
-                                <label class="form-label required">Upload Proof</label>
-                                <input id="vatProof" name="vatProof" type="file" accept=".pdf,.jpg,.jpeg,.png" class="form-control">
-                            </div> -->
-
-                        {{-- <div class="mb-3">
-                            <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
-                            <input id="vatProof" name="vatProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
-                                class="form-control" multiple onchange="validateVatFiles(this)">
-                        </div> --}}
 
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -648,43 +490,12 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Vehicle Number (If available)</label>
-                                <input id="vatVehicleNumber" name="vatVehicleNumber" type="text" class="form-control"
-                                    placeholder="Enter Vehicle Number (e.g., HR26AB1234)" maxlength="10"
-                                    oninput="this.value=this.value.toUpperCase()">
+                                <input id="vatVehicleNumber" name="vatVehicleNumber" type="text"
+                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
+                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
                             </div>
                         </div>
                     </div>
-                    <script>
-                        function validateVatFiles(input) {
-                            const files = input.files;
-
-                            // Check number of files
-                            if (files.length > 5) {
-                                Swal.fire({
-                                    icon: 'error'
-                                    , title: 'Oops...'
-                                    , text: 'You can upload a maximum of 5 files.'
-                                });
-                                input.value = ''; // clear selection
-                                return false;
-                            }
-
-                            // Check file size (max 1MB)
-                            for (let i = 0; i < files.length; i++) {
-                                if (files[i].size > 1024 * 1024) { // 1 MB in bytes
-                                    Swal.fire({
-                                        icon: 'error'
-                                        , title: 'Oops...'
-                                        , text: 'Each file must be less than 1 MB.'
-                                    });
-                                    input.value = ''; // clear selection
-                                    return false;
-                                }
-                            }
-                        }
-
-                    </script>
-
 
                     <!-- Excise Fields -->
                     <div id="exciseFields" style="display:none;">
@@ -723,7 +534,7 @@
                                 <select id="exciseDistrict" name="exciseDistrict" class="form-select" required>
                                     <option value="">Select District</option>
                                     @foreach ($districts as $district)
-                                    <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                        <option value="{{ $district->id }}">{{ $district->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -784,17 +595,16 @@
             }
 
             if (email !== "") {
-                // Email pattern check
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 if (!emailPattern.test(email)) {
                     $('#loader').addClass('d-none');
                     Swal.fire({
-                        icon: 'error'
-                        , title: 'Invalid Email'
-                        , text: 'Please enter a valid email address (e.g., example@gmail.com)'
-                    , });
-                    informerEmail.value = ""; // Clear invalid input
+                        icon: 'error',
+                        title: 'Invalid Email',
+                        text: 'Please enter a valid email address (e.g., example@gmail.com)',
+                    });
+                    informerEmail.value = "";
                     informerEmail.focus();
                     return false;
                 }
@@ -822,15 +632,14 @@
 
 
             const formData = {
-                informer_name: name
-                , informer_aadhar: aadhar
-                , informer_address: address
-                , informer_city: city
-                , informer_district: district
-                , informer_email: email
-            , };
+                informer_name: name,
+                informer_aadhar: aadhar,
+                informer_address: address,
+                informer_city: city,
+                informer_district: district,
+                informer_email: email,
+            };
 
-            // axios.post('/save-informer', formData)
             axios.post("{{ route('save.informer') }}", formData)
                 .then(response => {
                     if (response.data.success) {
@@ -852,18 +661,15 @@
         document.getElementById('backTo1').onclick = () => showStep(1);
 
         document.getElementById('toStep3').onclick = () => {
-            const complaintType = taxType.value; // renamed for clarity
+            const complaintType = taxType.value;
             if (!complaintType) return Swal.fire('Error', 'Please select a complaint type.', 'error');
 
             $('#loader').removeClass('d-none');
 
-            // Hide all sections first
             ['gstFields', 'vatFields', 'exciseFields'].forEach(id =>
                 document.getElementById(id).style.display = 'none'
             );
 
-            // 🔹 Send complaint type to backend
-            // axios.post('/save-complaint-type', { complaint_type: complaintType })
             axios.post("{{ route('save.complaint.type') }}", {
                     complaint_type: complaintType
                 })
@@ -871,21 +677,16 @@
 
                     $('#loader').addClass('d-none');
                     if (response.data.success) {
-                        // console.log(response.data.complaint_type);
-                        // document.getElementById('step3Title').innerHTML =
-                        //     `Step 3 — Offence / Evasion Details (${response.data.complaint_type})`;
                         let type = response.data.complaint_type.toLowerCase();
                         if (type === 'gst') type = 'GST';
                         else if (type === 'vat') type = 'VAT/CST';
                         else if (type === 'excise') type = 'Excise';
 
-                        // ✅ Update heading dynamically
                         document.getElementById('step3Title').innerHTML =
                             `Step 3 — Offence / Evasion Details (${type})`;
 
                         showStep(3);
 
-                        // Show relevant form section
                         if (complaintType === 'gst') gstFields.style.display = 'block';
                         if (complaintType === 'vat') vatFields.style.display = 'block';
                         if (complaintType === 'excise') exciseFields.style.display = 'block';
@@ -902,7 +703,7 @@
 
         document.getElementById('backTo2').onclick = () => showStep(2);
 
-        exciseDetails ?.addEventListener('input', () => {
+        exciseDetails?.addEventListener('input', () => {
             const count = exciseDetails.value.trim().split(/\s+/).filter(Boolean).length;
             wordCount.textContent = `${count} / 150 words`;
             if (count > 200)
@@ -932,35 +733,35 @@
                     if (gstin.length !== 15) {
                         $('#loader').addClass('d-none');
                         Swal.fire({
-                            icon: 'error'
-                            , title: 'Invalid GSTIN'
-                            , text: 'GSTIN must be exactly 15 characters long.'
+                            icon: 'error',
+                            title: 'Invalid GSTIN',
+                            text: 'GSTIN must be exactly 15 characters long.'
                         });
                         return false;
                     }
                 }
 
                 if (gstin) {
-                        const gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-                        if (gstin.length !== 15) {
-                            $('#loader').addClass('d-none');
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Invalid GSTIN',
-                                text: 'GSTIN must be exactly 15 characters long.'
-                            });
-                            return false;
-                        }
+                    const gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+                    if (gstin.length !== 15) {
+                        $('#loader').addClass('d-none');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid GSTIN',
+                            text: 'GSTIN must be exactly 15 characters long.'
+                        });
+                        return false;
+                    }
 
-                        if (!gstinPattern.test(gstin)) {
-                            $('#loader').addClass('d-none');
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Invalid GSTIN Format',
-                                text: 'Please enter a valid GSTIN (e.g., 22AAAAA0000A1Z5).'
-                            });
-                            return false;
-                        }
+                    if (!gstinPattern.test(gstin)) {
+                        $('#loader').addClass('d-none');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid GSTIN Format',
+                            text: 'Please enter a valid GSTIN (e.g., 22AAAAA0000A1Z5).'
+                        });
+                        return false;
+                    }
                 }
 
 
@@ -1000,14 +801,12 @@
                     return false;
                 }
 
-                // === District ===
                 if (!district) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter District.', 'error');
                     return false;
                 }
 
-                // === Description of Information ===
                 if (!description) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter Description of Information.', 'error');
@@ -1015,9 +814,6 @@
                 }
 
             }
-
-
-
 
             if (tax == 'vat') {
                 const firmName = vatFirmName.value.trim();
@@ -1028,8 +824,6 @@
                 const district = vatDistrict.value.trim();
                 const description = vatDescription.value.trim();
                 const vehicleNumber = vatVehicleNumber.value.trim();
-
-
 
                 if (!firmName) {
                     $('#loader').addClass('d-none');
@@ -1073,15 +867,14 @@
                 if (!allowedExtensions.includes(fileExtension)) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Invalid file type. Only PDF, JPG, JPEG, or PNG are allowed.', 'error');
-                    $('#vatProof').val(''); // clear invalid file
+                    $('#vatProof').val('');
                     return false;
                 }
 
-                // 🔹 File size check (max 1 MB)
                 if (vatProof.size > 1024 * 1024) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
-                    $('#vatProof').val(''); // clear large file
+                    $('#vatProof').val('');
                     return false;
                 }
             }
@@ -1113,15 +906,14 @@
 
             const formData = new FormData(multiStepForm);
             try {
-                // const res = await axios.post('/submit-complaint', formData);
                 const res = await axios.post("{{ route('submit.complaint') }}", formData);
 
                 if (res.data.success) {
                     $('#loader').addClass('d-none');
                     Swal.fire(
-                        'Success'
-                        , `Your complaint has been submitted successfully!<br><b>Application ID:</b> ${res.data.application_id}`
-                        , 'success'
+                        'Success',
+                        `Your complaint has been submitted successfully!<br><b>Application ID:</b> ${res.data.application_id}`,
+                        'success'
                     ).then(() => {
                         multiStepForm.reset();
                         window.location.href = "{{ url('user/dashboard') }}";
@@ -1137,44 +929,33 @@
             }
         });
 
-    </script>
-
-    <script>
         document.getElementById('informerName').addEventListener('input', function() {
             this.value = this.value.replace(/[^A-Za-z\s]/g, '');
         });
 
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const taxType = document.getElementById('taxType');
 
             taxType.addEventListener('change', function() {
-                // Hide all Step 3 sections
                 ['gstFields', 'vatFields', 'exciseFields'].forEach(id => {
                     const el = document.getElementById(id);
                     el.style.display = 'none';
                 });
 
-                // Clear all input + textarea + file fields inside Step 3
                 const step3 = document.querySelector('[data-step="3"]');
                 step3.querySelectorAll('input, textarea').forEach(input => {
                     if (input.type === 'file') {
-                        input.value = ''; // reset file
+                        input.value = '';
                     } else {
-                        input.value = ''; // reset text, email, etc.
+                        input.value = '';
                     }
                 });
 
-                // Reset word count if visible
                 const wordCount = document.getElementById('wordCount');
                 if (wordCount) wordCount.textContent = '0 / 150 words';
             });
         });
 
-    </script>
-
-    <script>
         document.getElementById("gstGstin").addEventListener("input", function() {
             let value = this.value;
             value = value.replace(/[^A-Za-z0-9]/g, '');
@@ -1196,20 +977,20 @@
 
             if (!allowedTypes.includes(file.type)) {
                 Swal.fire({
-                    icon: 'error'
-                    , title: 'Invalid File Type'
-                    , text: 'Only PDF, JPG, JPEG, and PNG files are allowed.'
-                , });
+                    icon: 'error',
+                    title: 'Invalid File Type',
+                    text: 'Only PDF, JPG, JPEG, and PNG files are allowed.',
+                });
                 this.value = '';
                 return;
             }
 
             if (file.size > maxSize) {
                 Swal.fire({
-                    icon: 'error'
-                    , title: 'File Too Large'
-                    , text: 'File size must not exceed 1 MB.'
-                , });
+                    icon: 'error',
+                    title: 'File Too Large',
+                    text: 'File size must not exceed 1 MB.',
+                });
                 this.value = '';
                 return;
             }
@@ -1222,10 +1003,10 @@
 
             if (value !== cleaned) {
                 Swal.fire({
-                    icon: 'error'
-                    , title: 'Invalid Characters'
-                    , text: 'Special characters are not allowed in Firm Name.'
-                , });
+                    icon: 'error',
+                    title: 'Invalid Characters',
+                    text: 'Special characters are not allowed in Firm Name.',
+                });
                 this.value = cleaned;
             }
         });
@@ -1238,22 +1019,20 @@
 
             if (words.length > 200) {
                 Swal.fire('Error', 'Description cannot exceed 150 words.', 'error');
-                $(this).val(words.slice(0, 200).join(' ')); // truncate extra words
+                $(this).val(words.slice(0, 200).join(' '));
                 $('#descCount').text('150 / 150 words');
             }
         });
 
-    </script>
 
-    <script>
         document.getElementById('exciseProof').addEventListener('change', function() {
             const files = this.files;
             const proofList = document.getElementById('proofList');
-            proofList.innerHTML = ''; // Clear previous list
+            proofList.innerHTML = '';
 
             const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
             const maxFiles = 5;
-            const maxSize = 1 * 1024 * 1024; // 1MB
+            const maxSize = 1 * 1024 * 1024;
 
             if (files.length > maxFiles) {
                 Swal.fire('Error', 'You can upload a maximum of 5 files only.', 'error');
@@ -1273,7 +1052,7 @@
                     return;
                 }
 
-                // Display file names
+
                 const li = document.createElement('li');
                 li.textContent = file.name;
                 proofList.appendChild(li);
@@ -1284,7 +1063,6 @@
             const cityInput = document.getElementById('informerCity');
             const districtInput = document.getElementById('informerDistrict');
 
-            // Function to allow only letters and spaces
             function allowOnlyLetters(input) {
                 input.value = input.value.replace(/[^A-Za-z\s]/g, '');
             }
@@ -1300,66 +1078,101 @@
 
 
         const textarea = document.getElementById('gstDescription');
-            const counter = document.getElementById('descCount');
-            const MAX_WORDS = 100;
-            const HARD_LIMIT = 150;
+        const counter = document.getElementById('descCount');
+        const MAX_WORDS = 100;
+        const HARD_LIMIT = 150;
 
-            textarea.addEventListener('input', () => {
-                let words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0);
-                let wordCount = words.length;
+        textarea.addEventListener('input', () => {
+            let words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0);
+            let wordCount = words.length;
 
-                if(wordCount > HARD_LIMIT){
-                    words = words.slice(0, HARD_LIMIT);
-                    textarea.value = words.join(' ');
-                    wordCount = HARD_LIMIT;
-                }
+            if (wordCount > HARD_LIMIT) {
+                words = words.slice(0, HARD_LIMIT);
+                textarea.value = words.join(' ');
+                wordCount = HARD_LIMIT;
+            }
 
-                // counter me show karo
-                counter.textContent = `${Math.min(wordCount, MAX_WORDS)} / ${MAX_WORDS} words`;
+            counter.textContent = `${Math.min(wordCount, MAX_WORDS)} / ${MAX_WORDS} words`;
 
-                // agar MAX_WORDS se zyada ho to alert ya warning (optional)
-                if(wordCount > MAX_WORDS){
-                    textarea.value = words.slice(0, MAX_WORDS).join(' ');
-                    counter.textContent = `${MAX_WORDS} / ${MAX_WORDS} words`;
-                }
+            if (wordCount > MAX_WORDS) {
+                textarea.value = words.slice(0, MAX_WORDS).join(' ');
+                counter.textContent = `${MAX_WORDS} / ${MAX_WORDS} words`;
+            }
         });
 
-        // const vatInput = document.getElementById('vatTin');
-        // const vatCounter = document.getElementById('vatTinCount');
-        // const MAX_LENGTH = 11;
-
-        // vatInput.addEventListener('input', () => {
-        //     vatInput.value = vatInput.value.replace(/\s+/g, '');
-
-        //     if (vatInput.value.length > MAX_LENGTH) {
-        //         vatInput.value = vatInput.value.slice(0, MAX_LENGTH);
-        //     }
-
-        //     vatCounter.textContent = `${vatInput.value.length} / ${MAX_LENGTH} characters`;
-        // });
-
         const vatInput = document.getElementById('vatTin');
-            const vatCounter = document.getElementById('vatTinCount');
-            const MAX_LENGTH = 11;
+        const vatCounter = document.getElementById('vatTinCount');
+        const MAX_LENGTH = 11;
 
-            vatInput.addEventListener('input', () => {
-                // Remove spaces and special characters, keep only letters and digits
-                vatInput.value = vatInput.value.replace(/[^a-zA-Z0-9]/g, '');
+        vatInput.addEventListener('input', () => {
+            vatInput.value = vatInput.value.replace(/[^a-zA-Z0-9]/g, '');
 
-                // Truncate if exceeds max length
-                if (vatInput.value.length > MAX_LENGTH) {
-                    vatInput.value = vatInput.value.slice(0, MAX_LENGTH);
+            if (vatInput.value.length > MAX_LENGTH) {
+                vatInput.value = vatInput.value.slice(0, MAX_LENGTH);
+            }
+
+            vatCounter.textContent = `${vatInput.value.length} / ${MAX_LENGTH} characters`;
+        });
+
+        function validateFiles(input) {
+            const maxFiles = 5;
+            const maxSize = 1 * 1024 * 1024;
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+            const files = input.files;
+
+            if (files.length > maxFiles) {
+                Swal.fire('Error', `You can upload a maximum of ${maxFiles} files.`, 'error');
+                input.value = '';
+                return;
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                if (!allowedTypes.includes(file.type)) {
+                    Swal.fire('Error', `File type not allowed: ${file.name}`, 'error');
+                    input.value = '';
+                    return;
                 }
 
-                // Update counter
-                vatCounter.textContent = `${vatInput.value.length} / ${MAX_LENGTH} characters`;
-            });
+                if (file.size > maxSize) {
+                    Swal.fire('Error', `File size exceeds 1 MB: ${file.name}`, 'error');
+                    input.value = '';
+                    return;
+                }
+            }
+        }
+
+        function validateVatFiles(input) {
+            const files = input.files;
+            if (files.length > 5) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'You can upload a maximum of 5 files.'
+                });
+                input.value = '';
+                return false;
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].size > 1024 * 1024) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Each file must be less than 1 MB.'
+                    });
+                    input.value = '';
+                    return false;
+                }
+            }
+        }
     </script>
 
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 
 </html>

@@ -5,16 +5,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Excise Department | Official Portal</title>
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <!-- SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
     <style>
         :root {
@@ -41,7 +34,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Layout */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -51,10 +43,8 @@
             position: relative;
             overflow: hidden;
             background: url('assets/images/entery_page_image/banner-1.png') no-repeat center center/cover;
-            /* background: url('assets/images/entery_page_image/excise-dep.JPG') no-repeat center center/cover; */
         }
 
-        /* Add black overlay on background image */
         .hero::before {
             content: "";
             position: absolute;
@@ -63,7 +53,6 @@
             z-index: 0;
         }
 
-        /* Main card (glass) */
         .entry-card {
             position: relative;
             z-index: 2;
@@ -83,7 +72,6 @@
             align-items: stretch;
         }
 
-        /* left: image */
         .entry-visual {
             position: relative;
             overflow: hidden;
@@ -93,7 +81,6 @@
         .entry-visual img {
             width: 100%;
             height: 100%;
-            /* object-fit: cover; */
             display: block;
             transition: transform 7s ease;
         }
@@ -102,14 +89,6 @@
             transform: scale(1.06);
         }
 
-        /* .entry-visual::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, rgba(3, 8, 18, 0.65) 25%, rgba(3, 8, 18, 0.12) 60%, transparent 100%);
-        } */
-
-        /* right: content */
         .entry-body {
             padding: 20px;
             display: flex;
@@ -254,7 +233,6 @@
 </head>
 
 <body>
-
     <main class="hero">
         <section class="entry-card">
             <div class="entry-grid">
@@ -284,10 +262,6 @@
 
                             <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
                             <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                                {{-- <li>This app pertains to providing information related to evasion of <strong>GST /
-                                        VAT /
-                                        CST
-                                        / Excise</strong> only. No other information should be given.</li> --}}
                                 <li>This app pertains only to providing information related to evasion of GST/ VAT/ CST/
                                     Excise.</li>
                                 <li>The name of the informer will be kept secret.
@@ -295,32 +269,15 @@
                                 <li>The informer must verify that the information being provided is correct to his best
                                     of knowledge and it is being provided only with the purpose to curb tax evasion.
                                 </li>
-
-
-                                {{-- <li>
-                                    It is hereby verified that the information provided is accurate and correct to the
-                                    best of my knowledge and belief.
-                                </li> --}}
-                                {{-- <li>It shall be noted that providing information does not entitle the informer to
-                                    any
-                                    award.
-                                </li> --}}
-                                {{-- <li>The name of the informer will be kept secret.</li> --}}
                             </ul>
 
                             <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 10px;">
 
                             <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
                             <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                                {{-- <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से
-                                    संबंधित
-                                    जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li> --}}
                                 <li>यह ऐप केवल जीएसटी/वैट/सीएसटी/उत्पाद शुल्क की चोरी से संबंधित जानकारी प्रदान करने के
                                     लिए है।</li>
                                 <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
-                                {{-- <li>कृपया ध्यान दें कि जानकारी प्रदान करने से सूचना देने वाले को कोई पुरस्कार नहीं
-                                    मिलेगा।
-                                </li> --}}
                                 <li>सूचना देने वाले को यह सत्यापित करना होगा कि दी जा रही जानकारी उनकी सर्वोत्तम जानकारी
                                     के अनुसार सही है और यह केवल कर चोरी को रोकने के उद्देश्य से प्रदान की जा रही है।
                                 </li>
@@ -341,17 +298,16 @@
     </main>
 
     @if (session('status'))
-    <script>
-        Swal.fire({
+        <script>
+            Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: '{{ session('status') }}',
                 confirmButtonText: 'OK'
             });
-    </script>
+        </script>
     @endif
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

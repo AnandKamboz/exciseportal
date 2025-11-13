@@ -6,14 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excise Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
-        /* =================== General Form Styles =================== */
         .form-control {
             border-radius: 15px;
             padding: 0.75rem;
@@ -39,7 +33,6 @@
             text-align: center;
         }
 
-        /* =================== Loader Styles =================== */
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -76,15 +69,7 @@
             display: none !important;
         }
 
-        /* =================== Login Page =================== */
         .login-page {
-            /* position: relative;
-            height: 100vh;
-            width: 100%;
-            
-            align-items: center;
-            justify-content: center;
-            overflow: hidden; */
             display: flex;
         }
 
@@ -123,7 +108,6 @@
             right: 30%;
         }
 
-        /* =================== Glass Login Box =================== */
         .login-glass {
             position: relative;
             width: 450px;
@@ -206,23 +190,6 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        /* =================== Background Gradient =================== */
-        .background-radial-gradient {
-            /* background-color: hsl(218, 41%, 15%); */
-            /* background-image: radial-gradient(650px circle at 0% 0%,
-                    hsl(218, 41%, 35%) 15%,
-                    hsl(218, 41%, 30%) 35%,
-                    hsl(218, 41%, 20%) 75%,
-                    hsl(218, 41%, 19%) 80%,
-                    transparent 100%),
-                radial-gradient(1250px circle at 100% 100%,
-                    hsl(218, 41%, 45%) 15%,
-                    hsl(218, 41%, 30%) 35%,
-                    hsl(218, 41%, 20%) 75%,
-                    hsl(218, 41%, 19%) 80%,
-                    transparent 100%); */
-        }
-
         #radius-shape-1 {
             height: 220px;
             width: 220px;
@@ -242,7 +209,6 @@
             overflow: hidden;
         }
 
-        /* =================== Glass Effect Container =================== */
         .bg-glass {
             background: rgba(255, 255, 255, 0.15) !important;
             backdrop-filter: blur(60px) saturate(160%);
@@ -254,10 +220,8 @@
 
         .bg-glass:hover {
             transform: translateY(-6px);
-            /* box-shadow: 0 0 40px rgba(255, 255, 255, 0.3); */
         }
 
-        /* =================== Form Styling =================== */
         .card-body {
             color: #393939;
             display: flex;
@@ -352,17 +316,6 @@
             margin-right: 8px;
         }
 
-        /* .header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            border-bottom: 2px solid #7386ff;
-            background: linear-gradient(to right, #ffffff, #f1f1f1);
-            flex-wrap: wrap;
-        } */
-
         .header {
             width: 100%;
             display: flex;
@@ -371,21 +324,12 @@
             padding: 15px 30px;
             border-bottom: 2px solid #7386ff;
             flex-wrap: wrap;
-
-
-
             background: linear-gradient(to bottom, rgb(186 197 255 / 45%), rgb(86 243 243 / 27%)), url("/assets/images/entery_page_image/new-bg1.jpg");
             background-repeat: no-repeat;
             background-position: right center;
-            /* align image to right */
             background-size: cover;
-            /* show full image (no crop, no stretch) */
             background-color: #f7f7f7;
-            /* soft fallback */
         }
-
-
-
 
         .header img {
             height: 90px;
@@ -433,7 +377,6 @@
         <div class="spinner"></div>
     </div>
 
-
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="contact-item">
@@ -457,59 +400,21 @@
         </div>
     </header>
 
-
-
     <section class="background-radial-gradient  login-page">
         <div class="container px-4  px-md-5 text-center text-lg-start my-5">
             <div class="row gx-lg-5 align-items-center mb-5 ">
-
-
                 <div class="col-lg-7 mb-5 mb-lg-0" style="z-index: 10;">
-
-                    {{--
-                    <div class="p-4 rounded-4 shadow-lg"
-                        style="background: linear-gradient(135deg, #153462, #1A4D8C); color: #f1f6ff; border-left: 6px solid #00c4ff;  font-size: 14px;">
-                        <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
-                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                            <li>This app pertains to providing information related to evasion of <strong>GST / VAT / CST
-                                    / Excise</strong> only. No other information should be given.</li>
-                            <li>The name of the informer will be kept secret.</li>
-                        </ul>
-
-                        <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 1.5rem 0;">
-
-                        <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
-                        <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                            <li>यह ऐप केवल <strong>जीएसटी / वैट / सीएसटी / उत्पाद शुल्क</strong> की चोरी से संबंधित
-                                जानकारी प्रदान करने के लिए है। कोई अन्य जानकारी नहीं दी जानी चाहिए।</li>
-                            <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
-                        </ul>
-                    </div>
-                    --}}
-
-
-                    <!-- Image version (replace the src path as needed) -->
                     <div class="p-0 rounded-4 shadow-lg overflow-hidden" style="background: #fff;">
                         <img src="{{ asset('assets/images/entery_page_image/login-image.jpg') }}"
                             alt="Disclaimer Graphic" class="img-fluid w-100 d-block"
                             style="object-fit: cover; max-height: 480px;">
                     </div>
-
                 </div>
 
-
-
                 <div class="col-lg-5 mb-5 mb-lg-0 position-relative">
-                    {{-- <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
-                    <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div> --}}
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
-                            {{-- <div class="text-center mb-4">
-                                <img src="{{ asset('assets/images/banner/haryana-logo.png') }}" alt="Logo" width="80"
-                                    height="80" class="rounded-circle">
-                            </div> --}}
                             <h4 class="text-center mb-4 fw-bold">Login/Register</h4>
-
                             <form id="loginForm">
                                 @csrf
                                 <div id="mobileSection" class="mb-3">
@@ -524,7 +429,6 @@
                                 <div class="form-outline mb-4 d-flex align-items-center justify-content-between d-none"
                                     id="captcha_code">
                                     <div class="captcha bg-white text-dark px-3 py-2 rounded fw-bold">
-                                        {{-- {{ session('captcha') }} --}}
                                         <img src="{{ captcha_src() }}" id="captcha" alt="captcha">
 
                                         <button type="button"
@@ -542,8 +446,8 @@
                                 </div>
 
                                 <div id="otpSection" class="hidden mt-3">
-                                    <input type="text" name="otp" id="otp" class="form-control otp-input" maxlength="6"
-                                        placeholder="Enter 6 digit OTP" />
+                                    <input type="text" name="otp" id="otp" class="form-control otp-input"
+                                        maxlength="6" placeholder="Enter 6 digit OTP" />
                                     <button type="button" id="loginBtn"
                                         class="btn btn-primary btn-block w-100 mt-3">Login</button>
                                 </div>
@@ -555,15 +459,10 @@
         </div>
     </section>
 
-    {{-- <script>
-        function reloadCaptcha() {
-                document.getElementById('captcha').src = "{{ captcha_src() }}" + '?' + Date.now();
-        }
-    </script> --}}
     <script>
         function reloadCaptcha() {
-           $('#loader').removeClass('d-none');
-           $('#captchaInput').val('');
+            $('#loader').removeClass('d-none');
+            $('#captchaInput').val('');
             var img = document.getElementById('captcha');
             var btnSpinner = document.getElementById('btn-spinner');
             var btnText = document.getElementById('btn-text');
@@ -578,22 +477,17 @@
                 btnText.classList.remove('d-none');
                 $('#loader').addClass('d-none');
             };
-            // $('#loader').addClass('d-none');
         }
 
         document.getElementById('captchaInput').addEventListener('input', function(e) {
-            // Sirf alphabets (A–Z, a–z) aur numbers (0–9) allow karne ke liye
             let value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
-
-            // Agar 6 se zyada character likh diye gaye ho to cut kar de
             if (value.length > 6) {
                 value = value.slice(0, 6);
             }
 
             e.target.value = value;
         });
-    </script>
-    <script>
+
         const mobileInput = document.getElementById('mobile');
         const otpInput = document.getElementById('otp');
         const captchaInput = document.getElementById('captchaInput');
@@ -680,7 +574,6 @@
                 return;
             }
 
-            // Captcha validation
             if (captchaInput.value.trim() === '') {
                 $('#loader').addClass('d-none');
                 Swal.fire({
@@ -694,50 +587,7 @@
                 return;
             }
 
-
-           
-
-            // axios.post("{{ route('verify-otp') }}", {
-            //         mobile: mobileInput.value,
-            //         otp: otpInput.value,
-            //         captcha: captchaInput.value,
-            //         _token: document.querySelector('input[name="_token"]').value
-            //     })
-            //     .then(res => {
-            //         $('#loader').addClass('d-none');
-
-            //         if (res.data.success) {
-            //             window.location.href = res.data.redirect_url;
-            //         } else {
-            //             Swal.fire({
-            //                 icon: 'error',
-            //                 title: 'Oops...',
-            //                 text: res.data.message || 'Invalid OTP!',
-            //                 confirmButtonText: 'OK'
-            //             }).then(() => {
-            //                 if (res.data.refresh) {
-            //                     location.reload();
-            //                 }
-            //             });
-
-            //             $('#otp').val("");
-            //             loginBtn.disabled = false;
-            //             loginBtn.innerText = 'Send Otp';
-            //         }
-            //     })
-            //     .catch(err => {
-            //         $('#loader').addClass('d-none');
-            //         Swal.fire({
-            //             icon: 'error',
-            //             title: 'Oops...',
-            //             text: err.response?.data?.message || 'Server error!',
-            //             confirmButtonText: 'OK'
-            //         });
-            //         loginBtn.disabled = false;
-            //         loginBtn.innerText = 'Login';
-            //     });
-
-           axios.post("{{ route('verify-otp') }}", {
+            axios.post("{{ route('verify-otp') }}", {
                     mobile: mobileInput.value,
                     otp: otpInput.value,
                     captcha: captchaInput.value,
@@ -746,7 +596,7 @@
                 .then(res => {
                     $('#loader').addClass('d-none');
 
-                   if (res.data.success) {
+                    if (res.data.success) {
                         window.location.href = res.data.redirect_url;
                     } else {
                         Swal.fire({
@@ -779,15 +629,20 @@
     </script>
 
     @if (session('status'))
-    <script>
-        Swal.fire({
+        <script>
+            Swal.fire({
                 icon: 'success',
                 title: 'Logged Out',
                 text: '{{ session('status') }}',
                 confirmButtonText: 'OK'
             });
-    </script>
+        </script>
     @endif
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 
 </html>
