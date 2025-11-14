@@ -32,7 +32,9 @@ class DatabaseSeeder extends Seeder
             RoleGroupSeeder::class,
             DistrictsTableSeeder::class,
             UserSeeder::class,
-            RoleTypesSeeder::class, // Remove RoleGroup::class
+            RoleTypesSeeder::class, 
+            StatesSeeder::class,
+            DistrictsSeeder::class,
         ]);
     }
 }
