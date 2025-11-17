@@ -306,23 +306,61 @@
                             name="informerAddress" class="form-control" rows="3">{{ $userDataForNewApplication->complainant_address ?? ($userData->complainant_address ?? '') }}</textarea>
                     </div>
 
+
+                    {{-- <select id="my_state" name="my_state">
+                        <option value="">Select State</option>
+                        @foreach ($indiaStates as $a)
+                            <option value="{{ $a->id }}" @if (isset($userData) && intval($userData->complainant_state) == $a->id) selected @endif>
+                                {{ $a->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+
+                    <select id="di" name="di">
+                        <option value="">Select District</option>
+                    </select> --}}
+
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label required">City</label>
-                            <input type="text" id="informerCity" name="informerCity" class="form-control"
-                                placeholder="Enter City"
-                                value="{{ $userDataForNewApplication->complainant_city ?? ($userData->complainant_city ?? '') }}"
-                                @if (!empty($userDataForNewApplication->complainant_city)) disabled @endif required>
+
+                        <!-- State -->
+                        <div class="col-sm-6 mb-3">
+                            <label for="my_state" class="form-label required">State</label>
+                            <select id="my_state" name="my_state" class="form-control">
+                                <option value="">Select State</option>
+                                @foreach ($indiaStates as $a)
+                                    <option value="{{ $a->id }}"
+                                        @if (isset($userData) && intval($userData->complainant_state) == $a->id) selected @endif>
+                                        {{ $a->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label required">District</label>
-                            <input type="text" id="informerDistrict" name="informerDistrict" class="form-control"
-                                placeholder="Enter District"
-                                value="{{ $userDataForNewApplication->complainant_district ?? ($userData->complainant_district ?? '') }}"
-                                @if (!empty($userDataForNewApplication->complainant_district)) disabled @endif required>
+                        <!-- District -->
+                        <div class="col-sm-6 mb-3">
+                            <label for="di" class="form-label required">District</label>
+                            <select id="di" name="di" class="form-control">
+                                <option value="">Select District</option>
+                            </select>
                         </div>
+
                     </div>
+
+
+
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label required">City</label>
+                        <input type="text" id="informerCity" name="informerCity" class="form-control"
+                            placeholder="Enter City"
+                            value="{{ $userDataForNewApplication->complainant_city ?? ($userData->complainant_city ?? '') }}"
+                            @if (!empty($userDataForNewApplication->complainant_city)) disabled @endif required>
+                    </div>
+
+
+
+
 
                     <div class="text-end">
                         <button type="button" id="toStep2" class="btn btn-step">Next</button>
@@ -565,6 +603,9 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- JS -->
     <script>
         function showStep(step) {
@@ -580,7 +621,11 @@
             const phone = informerPhone.value.trim();
             const address = informerAddress.value.trim();
             const city = informerCity.value.trim();
-            const district = informerDistrict.value.trim();
+            // const my_state = my_state.value.trim();
+            let my_state_input = document.getElementById("my_state");
+            let my_state = my_state_input.value.trim();
+
+            const district = di.value.trim();
             const aadhar = informerAadhar.value.trim();
             const email = informerEmail.value.trim();
 
@@ -625,9 +670,16 @@
                 return Swal.fire('Error', 'Enter city.', 'error');
             }
 
+
+
             if (!district) {
                 $('#loader').addClass('d-none');
                 return Swal.fire('Error', 'Enter district.', 'error');
+            }
+
+            if (!my_state) {
+                $('#loader').addClass('d-none');
+                return Swal.fire('Error', 'Select State.', 'error');
             }
 
 
@@ -637,6 +689,7 @@
                 informer_address: address,
                 informer_city: city,
                 informer_district: district,
+                my_state: my_state,
                 informer_email: email,
             };
 
@@ -837,11 +890,11 @@
                     return false;
                 }
 
-                if (!district) {
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter District.', 'error');
-                    return false;
-                }
+                // if (!district) {
+                //     $('#loader').addClass('d-none');
+                //     Swal.fire('Error', 'Please enter District.', 'error');
+                //     return false;
+                // }
 
                 if (!description) {
                     $('#loader').addClass('d-none');
@@ -1071,9 +1124,9 @@
                 allowOnlyLetters(this);
             });
 
-            districtInput.addEventListener('input', function() {
-                allowOnlyLetters(this);
-            });
+            // districtInput.addEventListener('input', function() {
+            //     allowOnlyLetters(this);
+            // });
         });
 
 
@@ -1167,8 +1220,49 @@
                 }
             }
         }
+
+
+        $(document).ready(function() {
+            loadDistricts();
+            function loadDistricts(stateId = '', userTriggered = false) {
+                $('#loader').removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('get-dist') }}",
+                    type: "GET",
+                    data: {
+                        state_id: stateId,
+                        userMobile: "{{ $userData->complainant_phone ?? '' }}"
+                    },
+                    success: function(res) {
+                        $('#loader').addClass('d-none');
+
+                        if (!userTriggered && res.selectedState) {
+                            $('#my_state').val(res.selectedState);
+                        }
+
+                        $('#di').html('<option value="">Select District</option>');
+                        res.districts.forEach(function(d) {
+                            $('#di').append(`<option value="${d.id}">${d.name}</option>`);
+                        });
+
+                        if (res.selectedDistrict) {
+                            $('#di').val(res.selectedDistrict);
+                        }
+                    }
+                });
+            }
+
+            $('#my_state').on('change', function() {
+                let stateId = $(this).val();
+                $('#di').html('<option>Loading...</option>');
+                loadDistricts(stateId, true);
+            });
+        });
     </script>
 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\User;
+use App\Models\IndiaDistrict;
+use App\Models\State;
 use App\Models\Complainant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
-
 
 
 class ComplainantController extends Controller
@@ -25,11 +26,13 @@ class ComplainantController extends Controller
         $userMobile = Auth::user()->mobile;
         $userDataForNewApplication = Complainant::where('complainant_phone', $userMobile)->where('is_completed', 1)->first();
         $userData = Complainant::where('complainant_phone', $userMobile)->where('is_completed',0)->first();
-        // $districts = DB::table('districts')->get();
         $districts = DB::table('districts')
             ->orderBy('name', 'asc')
             ->get();
-        return view('complainant.create',compact('userMobile','userData','districts','userDataForNewApplication','districts'));
+
+        $indiaStates = State::all();
+
+        return view('complainant.create',compact('indiaStates','userMobile','userData','districts','userDataForNewApplication','districts'));
     }
 
     public function saveInformer(Request $request)
@@ -40,7 +43,8 @@ class ComplainantController extends Controller
             'informer_address' => 'required|string',
             'informer_email' => 'nullable|email',
             'informer_city' => ['required', 'regex:/^[A-Za-z\s]+$/', 'max:50'],
-            'informer_district' => ['required', 'regex:/^[A-Za-z\s]+$/', 'max:50'],
+            'informer_district' => ['required'],
+            'my_state' => 'required',
         ]);
 
         $mobile = auth()->user()->mobile;
@@ -56,6 +60,7 @@ class ComplainantController extends Controller
                 'complainant_address' => $request->informer_address,
                 'complainant_city' => $request->informer_city,
                 'complainant_district' => $request->informer_district,
+                'complainant_state' => $request->my_state,
                 'complainant_email' => $request->informer_email ?? null,
             ]);
 
@@ -69,6 +74,7 @@ class ComplainantController extends Controller
             $complaint->complainant_city = $request->informer_city; 
             $complaint->complainant_district = $request->informer_district;
             $complaint->complainant_email = $request->informer_email ?? null;
+            $complaint->complainant_state = $request->my_state ?? null;
             $complaint->complainant_phone = $mobile;
             $complaint->user_id = auth()->id();
             $complaint->is_completed = 0;
@@ -665,7 +671,30 @@ class ComplainantController extends Controller
     ]);
 }
 
+    // public function getDistrict(Request $request)
+    // {
+    //     $dist = $request->input('state_id');
+    //     $districts= IndiaDistrict::where('state_id',$dist)->get();
+    //     return $districts;
+    // }
+
+    public function getDistrict(Request $request)
+    {
+        $userData = Complainant::where('complainant_phone', auth::user()->mobile)
+            ->first();
+
+        $stateId = $request->state_id ?? $userData->complainant_state;
+
+        $districts = IndiaDistrict::where('state_id', $stateId)->get();
+
+        return response()->json([
+            'districts' => $districts,
+            'selectedDistrict' => $userData->complainant_district ?? null,
+            'selectedState' => $stateId
+        ]);
+    }
 
 
+    
 
 }

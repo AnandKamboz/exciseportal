@@ -64,10 +64,9 @@ return new class extends Migration
                 $table->string('complainant_email')->nullable();
                 $table->string('complainant_aadhar', 12);
                 $table->text('complainant_address');
+                $table->text('complainant_state');
                 $table->string('complainant_city')->nullable();
                 $table->string('complainant_district')->nullable();
-
-
                 $table->string('district')->nullable();
 
 

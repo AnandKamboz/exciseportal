@@ -78,6 +78,9 @@ Route::middleware(['auth','userrole'])->group(function () {
     Route::get('/user/complaint/{secure_id}', [UserComplaintController::class, 'show'])->name('user.setails');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('/user/dashboard', [UserDashboard::class, 'userDashboard'])->name('user.dashboard');
+    Route::get('/get-dist', [ComplainantController::class, 'getDistrict'])->name('get-dist');
+
+    
 });
 
 Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
