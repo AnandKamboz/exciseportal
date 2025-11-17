@@ -324,7 +324,7 @@
                     <div class="row">
 
                         <!-- State -->
-                        <div class="col-sm-6 mb-3">
+                        {{-- <div class="col-sm-6 mb-3">
                             <label for="my_state" class="form-label required">State</label>
                             <select id="my_state" name="my_state" class="form-control">
                                 <option value="">Select State</option>
@@ -335,20 +335,59 @@
                                     </option>
                                 @endforeach
                             </select>
+                        </div> --}}
+
+                        <div class="col-sm-6 mb-3">
+                            <label for="my_state" class="form-label required">State</label>
+
+                            <select id="my_state" name="my_state" class="form-control"
+                                @if (isset($userDataForNewApplication)) disabled @endif>
+                                <option value="">Select State</option>
+
+                                @foreach ($indiaStates as $a)
+                                    <option value="{{ $a->id }}"
+                                        @if (
+                                            (isset($userData) && intval($userData->complainant_state) == $a->id) ||
+                                                (isset($userDataForNewApplication) && intval($userDataForNewApplication->complainant_state) == $a->id)) selected @endif>
+                                        {{ $a->name }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+
                         </div>
 
+
                         <!-- District -->
-                        <div class="col-sm-6 mb-3">
+                        {{-- <div class="col-sm-6 mb-3">
                             <label for="di" class="form-label required">District</label>
                             <select id="di" name="di" class="form-control">
                                 <option value="">Select District</option>
                             </select>
+                        </div> --}}
+
+                        <div class="col-sm-6 mb-3">
+                            <label for="di" class="form-label required">District</label>
+
+                            <select id="di" name="di" class="form-control"
+                                @if (isset($userDataForNewApplication)) disabled @endif>
+                                <option value="">Select District</option>
+
+                                @if (isset($districtsList))
+                                    @foreach ($districtsList as $d)
+                                        <option value="{{ $d->id }}"
+                                            @if (
+                                                (isset($userData) && intval($userData->complainant_district) == $d->id) ||
+                                                    (isset($userDataForNewApplication) && intval($userDataForNewApplication->complainant_district) == $d->id)) selected @endif>
+                                            {{ $d->name }}
+                                        </option>
+                                    @endforeach
+                                @endif
+
+                            </select>
                         </div>
 
                     </div>
-
-
-
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label required">City</label>
@@ -357,10 +396,6 @@
                             value="{{ $userDataForNewApplication->complainant_city ?? ($userData->complainant_city ?? '') }}"
                             @if (!empty($userDataForNewApplication->complainant_city)) disabled @endif required>
                     </div>
-
-
-
-
 
                     <div class="text-end">
                         <button type="button" id="toStep2" class="btn btn-step">Next</button>
@@ -1224,6 +1259,7 @@
 
         $(document).ready(function() {
             loadDistricts();
+
             function loadDistricts(stateId = '', userTriggered = false) {
                 $('#loader').removeClass('d-none');
 

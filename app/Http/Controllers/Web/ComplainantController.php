@@ -673,26 +673,48 @@ class ComplainantController extends Controller
 
     // public function getDistrict(Request $request)
     // {
-    //     $dist = $request->input('state_id');
-    //     $districts= IndiaDistrict::where('state_id',$dist)->get();
-    //     return $districts;
+    //     $userData = Complainant::where('complainant_phone', auth::user()->mobile)
+    //         ->first();
+
+    //     $stateId = $request->state_id ?? $userData->complainant_state;
+
+    //     $districts = IndiaDistrict::where('state_id', $stateId)->get();
+
+    //     return response()->json([
+    //         'districts' => $districts,
+    //         'selectedDistrict' => $userData->complainant_district ?? null,
+    //         'selectedState' => $stateId
+    //     ]);
     // }
 
+
     public function getDistrict(Request $request)
-    {
-        $userData = Complainant::where('complainant_phone', auth::user()->mobile)
-            ->first();
+{
+    // Mobile number se data
+    $userData = Complainant::where('complainant_phone', Auth::user()->mobile)->first();
 
-        $stateId = $request->state_id ?? $userData->complainant_state;
+    // State ID decide karo
+    $stateId = $request->state_id 
+                ?? ($userData->complainant_state ?? null);
 
-        $districts = IndiaDistrict::where('state_id', $stateId)->get();
-
+    // Agar state hi nahi mila → blank return karo
+    if (!$stateId) {
         return response()->json([
-            'districts' => $districts,
-            'selectedDistrict' => $userData->complainant_district ?? null,
-            'selectedState' => $stateId
+            'districts'        => [],
+            'selectedDistrict' => "",
+            'selectedState'    => ""
         ]);
     }
+
+    // State ke according districts
+    $districts = IndiaDistrict::where('state_id', $stateId)->get();
+
+    return response()->json([
+        'districts'        => $districts,
+        'selectedDistrict' => $userData->complainant_district ?? "",
+        'selectedState'    => $stateId ?? ""
+    ]);
+}
 
 
     
