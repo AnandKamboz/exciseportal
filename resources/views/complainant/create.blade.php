@@ -791,7 +791,7 @@
                         else if (type === 'excise') type = 'Excise';
 
                         document.getElementById('step3Title').innerHTML =
-                            `Step 3 — Offence / Evasion Details (${type})`;
+                            `Step 3 — Details of Information (${type})`;
 
                         showStep(3);
 
