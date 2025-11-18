@@ -68,6 +68,7 @@ return new class extends Migration
                 $table->string('complainant_city')->nullable();
                 $table->string('complainant_district')->nullable();
                 $table->string('district')->nullable();
+                
 
 
 
@@ -107,6 +108,7 @@ return new class extends Migration
 
                 // 🔹 System Fields
                 $table->unsignedBigInteger('user_id')->nullable()->comment('Linked user ID if logged in');
+                $table->string('declaration')->default("0");
                 $table->boolean('is_completed')->default(false);
                 $table->timestamps();
         });

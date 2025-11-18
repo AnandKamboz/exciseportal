@@ -520,6 +520,7 @@ class ComplainantController extends Controller
 
     public function submitComplaint(Request $request)
     {
+        // dd($request->declaration,$request->toArray());
         $validator = Validator::make($request->all(), [
             'taxType' => 'required|in:gst,vat,excise',
         ], [
@@ -659,6 +660,8 @@ class ComplainantController extends Controller
 
         $complaint->complaint_type = $type;
 
+        // dd($request->declaration);
+
         // 🔹 GST Complaint Data
         if ($type === 'gst') {
             $complaint->gst_firm_name = $request->gstFirmName;
@@ -668,6 +671,7 @@ class ComplainantController extends Controller
             $complaint->district = $request->gstDistrict;
             $complaint->gst_description = $request->gstDescription;
             $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
+            $complaint->declaration = $request->has('declaration') ? 1 : 0;
 
             if ($request->hasFile('gstProof')) {
                 $files = $request->file('gstProof');
@@ -698,6 +702,7 @@ class ComplainantController extends Controller
             $complaint->district = $request->vatDistrict;
             $complaint->vat_description = $request->vatDescription;
             $complaint->vat_vehicle_number = $request->vatVehicleNumber; // ✅ Added
+            $complaint->declaration = $request->has('declaration') ? 1 : 0;
 
             if ($request->hasFile('vatProof')) {
                 $files = $request->file('vatProof');
@@ -728,6 +733,7 @@ class ComplainantController extends Controller
             $complaint->excise_details = $request->exciseDetails;
             $complaint->excise_vehicle_number = $request->exciseVehicleNumber ?? '';
             $complaint->district = $request->exciseDistrict;
+            $complaint->declaration = $request->has('declaration') ? 1 : 0;
 
             if ($request->hasFile('exciseProof')) {
                 $files = $request->file('exciseProof');

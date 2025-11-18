@@ -266,9 +266,9 @@
                                     Excise.</li>
                                 <li>The name of the informer will be kept secret.
                                 </li>
-                                <li>The informer must verify that the information being provided is correct to his best
+                                {{-- <li>The informer must verify that the information being provided is correct to his best
                                     of knowledge and it is being provided only with the purpose to curb tax evasion.
-                                </li>
+                                </li> --}}
                             </ul>
 
                             <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 10px;">
@@ -278,9 +278,9 @@
                                 <li>यह ऐप केवल जीएसटी/वैट/सीएसटी/उत्पाद शुल्क की चोरी से संबंधित जानकारी प्रदान करने के
                                     लिए है।</li>
                                 <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
-                                <li>सूचना देने वाले को यह सत्यापित करना होगा कि दी जा रही जानकारी उनकी सर्वोत्तम जानकारी
+                                {{-- <li>सूचना देने वाले को यह सत्यापित करना होगा कि दी जा रही जानकारी उनकी सर्वोत्तम जानकारी
                                     के अनुसार सही है और यह केवल कर चोरी को रोकने के उद्देश्य से प्रदान की जा रही है।
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                     </div>

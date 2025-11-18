@@ -260,7 +260,8 @@
 
                 <!-- STEP 1 -->
                 <div class="step active" data-step="1">
-                    <h5>Step 1 — Details of Informer </h5>
+                    {{-- <h5>Step 1 — Details of Informer </h5> --}}
+                    <h5>Step 1 — Please enter your details</h5>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -424,7 +425,7 @@
                             </option>
                             <option value="vat"
                                 {{ isset($userData) && $userData->complaint_type === 'vat' ? 'selected' : '' }}>
-                                Value Added Tax (VAT) / Central Sales Tax (CST)
+                                Value Added Tax (VAT) & Central Sales Tax (CST)
                             </option>
                         </select>
 
@@ -629,6 +630,25 @@
                         </div>
                     </div>
 
+                    <div class="mb-3 mt-3">
+                        <label class="form-label required">Declaration</label>
+                        <div class="form-check">
+                            <input class="form-check-input declaration-checkbox" type="checkbox" name="declaration"
+                                value="1">
+                            <label class="form-check-label">
+                                <ol class="mb-0">
+                                    <li>I have carefully examined the contents of the information being submitted.</li>
+                                    <li>The contents of the information being submitted are correct to the best of my
+                                        knowledge and understanding.</li>
+                                    <li>The information being provided is solely with a purpose to help curb evasion of
+                                        tax/revenue.</li>
+                                </ol>
+                            </label>
+                        </div>
+                        <small class="text-danger d-none" id="declarationError">Please select the checkbox.</small>
+                    </div>
+
+
                     <div class="d-flex justify-content-between">
                         <button type="button" id="backTo2" class="btn btn-secondary">Back</button>
                         <button type="button" id="submitBtn" class="btn btn-success">Submit</button>
@@ -656,7 +676,6 @@
             const phone = informerPhone.value.trim();
             const address = informerAddress.value.trim();
             const city = informerCity.value.trim();
-            // const my_state = my_state.value.trim();
             let my_state_input = document.getElementById("my_state");
             let my_state = my_state_input.value.trim();
 
@@ -749,6 +768,7 @@
         document.getElementById('backTo1').onclick = () => showStep(1);
 
         document.getElementById('toStep3').onclick = () => {
+            document.querySelector('.declaration-checkbox').checked = false;
             const complaintType = taxType.value;
             if (!complaintType) return Swal.fire('Error', 'Please select a complaint type.', 'error');
 
@@ -767,7 +787,7 @@
                     if (response.data.success) {
                         let type = response.data.complaint_type.toLowerCase();
                         if (type === 'gst') type = 'GST';
-                        else if (type === 'vat') type = 'VAT/CST';
+                        else if (type === 'vat') type = 'VAT&CST';
                         else if (type === 'excise') type = 'Excise';
 
                         document.getElementById('step3Title').innerHTML =
@@ -991,6 +1011,38 @@
                     return Swal.fire('Error', 'Details exceed 150 words.', 'error');
                 }
             }
+
+            const declaration = document.querySelector('.declaration-checkbox');
+
+            if (!declaration || declaration.checked === false) {
+                $('#loader').addClass('d-none');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Please confirm the declaration',
+                    text: 'You must tick the declaration checkbox before submitting.'
+                });
+
+                return false;
+            }
+
+
+            $('#loader').addClass('d-none');
+            const confirmSubmit = await Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to submit this information?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Submit",
+                cancelButtonText: "Cancel"
+            });
+            $('#loader').removeClass('d-none');
+
+            if (!confirmSubmit.isConfirmed) {
+                $('#loader').addClass('d-none');
+                return false;
+            }
+
 
             const formData = new FormData(multiStepForm);
             try {
