@@ -1235,9 +1235,7 @@
                 let vatProof = $('#vatProof')[0].files[0];
                 const locality = vatLocality.value.trim();
                 const district = vatDistrict.value.trim();
-                // const mycity = vatCity.value;
-                // const vatCity = mycity.trim();
-                const mycity = vatCity.value;
+                const mycity = $('#vatCity').val();
                 vatCity = mycity.trim();
 
                 const description = vatDescription.value.trim();
