@@ -541,43 +541,51 @@ class ComplainantController extends Controller
         // 🔹 Validation Rules for Each Complaint Type
         $rules = match ($type) {
             'gst' => [
-                'gstFirmName' => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-                // 'gstGstin'       => 'nullable|alpha_num|size:15',
+                'gstLocality' => 'required|string|max:255',
+                'gstDistrict' => 'required|string|max:255',
+                'gstCity' => 'required|string|max:255',
+                'gstDescription' => 'required|string|max:150',
+                'involvedType' => 'nullable|in:firm,vehicle',
+                'gstFirmName' => 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/u',
                 'gstGstin' => [
                     'nullable',
                     'size:15',
                     'regex:/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i',
                 ],
-                'gstFirmAddress' => 'required|string',
-                'gstLocality' => 'required|string|max:255',
-                'gstDistrict' => 'required|string|max:255',
-                'gstDescription' => 'required|string|max:150',
-                'gstProof.*' => 'file|mimes:pdf,jpg,jpeg,png|max:1024', // Each ≤ 1MB
+                'gstFirmAddress' => 'nullable|string',
                 'gstVehicleNumber' => [
-                    'nullable',                  // optional field
+                    'nullable',               
                     'string',
-                    'max:10',                    // max 10 characters
+                    'max:10',                  
                     'regex:/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1,4}$/i',
                 ],
+                'gstPersonName' =>  'nullable|string',
+                'gstProof.*' => 'file|mimes:pdf,jpg,jpeg,png|max:1024',
+                // 'declaration' => 'accepted', 
             ],
+
+            // gstPersonName
+            // involvedType
+
+
+
             'vat' => [
-                'vatFirmName' => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-                // 'vatTin'         => 'nullable|alpha_num',
+                'vatFirmName' => 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/u',
                 'vatTin' => [
                     'nullable',
                     'alpha_num',
                     'size:11',
                     'regex:/^[0-9A-Z]{11}$/i',
                 ],
-                'vatFirmAddress' => 'required|string',
+                'vatFirmAddress' => 'nullable|string',
                 'vatLocality' => 'required|string|max:255',
                 'vatDistrict' => 'required|string|max:255',
                 'vatDescription' => 'required|string|max:150',
-                'vatProof.*' => 'file|mimes:pdf,jpg,jpeg,png|max:1024', // Each ≤ 1MB
+                'vatProof.*' => 'required|file|mimes:pdf,jpg,jpeg,png|max:1024', 
                 'vatVehicleNumber' => [
-                    'nullable',          // optional field
+                    'nullable',          
                     'string',
-                    'max:10',            // maximum 10 characters
+                    'max:10',           
                     'regex:/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1,4}$/i',
                 ],
 
@@ -589,6 +597,7 @@ class ComplainantController extends Controller
                 'excisePlace' => 'required|string|max:255',
                 'exciseTime' => 'required|string|max:255',
                 'exciseProof.*' => 'file|mimes:pdf,jpg,jpeg,png|max:1024',
+                'exciseCity' => 'required',
                 'exciseVehicleNumber' => [
                     'nullable',
                     'string',
@@ -672,6 +681,13 @@ class ComplainantController extends Controller
             $complaint->gst_description = $request->gstDescription;
             $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
             $complaint->declaration = $request->has('declaration') ? 1 : 0;
+            $complaint->gst_person_name = $request->gstPersonName ?? '';
+            $complaint->involved_type = $request->involvedType ?? '';
+            $complaint->gst_city = $request->gstCity;
+
+
+            // gstPersonName
+            // involvedType
 
             if ($request->hasFile('gstProof')) {
                 $files = $request->file('gstProof');
@@ -694,14 +710,18 @@ class ComplainantController extends Controller
         }
 
         // 🔹 VAT Complaint Data
+
         if ($type === 'vat') {
+            $complaint->vat_locality = $request->vatLocality;
+            $complaint->district = $request->vatDistrict;
+            $complaint->vat_city = $request->vatCity;
+            $complaint->vat_description = $request->vatDescription;
+            $complaint->involved_type = $request->vatInvolvedType;
             $complaint->vat_firm_name = $request->vatFirmName;
             $complaint->vat_tin = strtoupper($request->vatTin);
             $complaint->vat_firm_address = $request->vatFirmAddress;
-            $complaint->vat_locality = $request->vatLocality;
-            $complaint->district = $request->vatDistrict;
-            $complaint->vat_description = $request->vatDescription;
-            $complaint->vat_vehicle_number = $request->vatVehicleNumber; // ✅ Added
+            $complaint->vat_vehicle_number = $request->vatVehicleNumber;
+            $complaint->vat_person_name = $request->vatPersonName ?? '';
             $complaint->declaration = $request->has('declaration') ? 1 : 0;
 
             if ($request->hasFile('vatProof')) {
@@ -720,7 +740,7 @@ class ComplainantController extends Controller
                     $file->storeAs("complaints/{$applicationId}", $fileName, 'public');
                     $uploadedFiles[] = $fileName;
                 }
-                $complaint->vat_proof = json_encode($uploadedFiles); // store as JSON
+                $complaint->vat_proof = json_encode($uploadedFiles);
             }
         }
 
@@ -733,7 +753,10 @@ class ComplainantController extends Controller
             $complaint->excise_details = $request->exciseDetails;
             $complaint->excise_vehicle_number = $request->exciseVehicleNumber ?? '';
             $complaint->district = $request->exciseDistrict;
+            $complaint->excise_city = $request->exciseCity;
             $complaint->declaration = $request->has('declaration') ? 1 : 0;
+
+            
 
             if ($request->hasFile('exciseProof')) {
                 $files = $request->file('exciseProof');

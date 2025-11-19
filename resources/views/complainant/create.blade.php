@@ -442,28 +442,9 @@
                 <!-- STEP 3 -->
                 <div class="step" data-step="3">
                     <h5 id="step3Title">Step 3 — Offence / Evasion Details</h5>
-                    <!-- GST Fields -->
+
                     <div id="gstFields" style="display:none;">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label required">Firm Name</label>
-                                <input id="gstFirmName" name="gstFirmName" type="text" class="form-control"
-                                    placeholder="Enter firm name">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">GSTIN</label>
-                                <input id="gstGstin" name="gstGstin" type="text" class="form-control"
-                                    placeholder="15 character GSTIN">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label required">Firm Address</label>
-                            <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control" rows="2"
-                                placeholder="Building No., Street Name , City , State, Pincode"></textarea>
-                        </div>
-
+                        <!-- Location + District -->
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label required">Location</label>
@@ -476,23 +457,33 @@
                                 <select id="gstDistrict" name="gstDistrict" class="form-select" required>
                                     <option value="">Select District</option>
                                     @foreach ($districts as $district)
-                                        <option value="{{ $district->id }}">{{ $district->name }}
-                                        </option>
+                                        <option value="{{ $district->id }}">{{ $district->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label required">Description of Information <small
-                                    class="text-muted">(Max
-                                    150 words)</small></label>
-                            <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3"
-                                placeholder="Provide details about the activity"></textarea>
-                            <small class="text-muted" id="descCount">0 / 150 words</small>
+                        <!-- City + Description -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label required">City</label>
+                                <input type="text" id="gstCity" name="gstCity" class="form-control"
+                                    placeholder="Enter City">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">
+                                    Description of Information
+                                    <small class="text-muted">(Max 150 words)</small>
+                                </label>
+                                <textarea id="gstDescription" name="gstDescription" class="form-control" rows="2"
+                                    placeholder="Provide details about the activity"></textarea>
+                                <small class="text-muted" id="descCount">0 / 150 words</small>
+                            </div>
                         </div>
 
-                        <div class="row mb-3">
+                        {{-- <div class="mb-3"> --}}
+                        <div class="row">
                             <div class="col-md-6">
                                 <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
                                 <input id="gstProof" name="gstProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
@@ -500,34 +491,79 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Vehicle Number (If available)</label>
-                                <input id="gstVehicleNumber" name="gstVehicleNumber" type="text"
-                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
-                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                                <label class="form-label">Who is involved? (Please provide details , if
+                                    available)</label>
+                                <select class="form-select" name="involvedType" id="involvedType">
+                                    <option value="">-- Select --</option>
+                                    <option value="firm">Firm</option>
+                                    <option value="vehicle">Vehicle</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- </div> --}}
+
+                        <!-- Firm Fields -->
+                        <div id="firmFields" style="display:none;" class="mt-4">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Firm Name</label>
+                                    <input id="gstFirmName" name="gstFirmName" type="text" class="form-control"
+                                        placeholder="Enter firm name">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">GSTIN</label>
+                                    <input id="gstGstin" name="gstGstin" type="text" class="form-control"
+                                        placeholder="15 character GSTIN">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Firm Address</label>
+                                <textarea id="gstFirmAddress" name="gstFirmAddress" class="form-control" rows="2"
+                                    placeholder="Building No., Street Name , City , State, Pincode"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Fields -->
+                        <div id="vehicleFields" style="display:none;" class="mt-4">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Vehicle Number</label>
+                                    <input id="gstVehicleNumber" name="gstVehicleNumber" type="text"
+                                        class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
+                                        maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Person Name</label>
+                                    <input id="gstPersonName" name="gstPersonName" type="text"
+                                        class="form-control" placeholder="Name of person involved">
+                                </div>
                             </div>
                         </div>
                     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <div id="vatFields" style="display:none;">
-                        <div class="mb-3">
-                            <label class="form-label required">Firm Name</label>
-                            <input id="vatFirmName" name="vatFirmName" type="text" class="form-control"
-                                placeholder="Enter firm name">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">TIN</label>
-                            <input id="vatTin" name="vatTin" type="text" class="form-control"
-                                placeholder="Tax Identification Number">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label required">Firm Address</label>
-                            <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2"
-                                placeholder="Building No., Street Name, Area/Locality, State, Pincode"></textarea>
-                        </div>
-
-                        <!-- ✅ New Fields -->
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label required">Location</label>
@@ -546,16 +582,28 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label required">Description of Information <small
-                                    class="text-muted">(Max
-                                    150 words)</small></label>
-                            <textarea id="vatDescription" name="vatDescription" class="form-control" rows="3" maxlength="150"
-                                placeholder="Provide details about the activity"></textarea>
-                            <small class="text-muted" id="vatDescCount">0 / 150 words</small>
+                        <!-- City + Description -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label required">City</label>
+                                <input type="text" id="vatCity" name="vatCity" class="form-control"
+                                    placeholder="Enter City">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">
+                                    Description of Information
+                                    <small class="text-muted">(Max 150 words)</small>
+                                </label>
+                                <textarea id="vatDescription" name="vatDescription" class="form-control" rows="2"
+                                    placeholder="Provide details about the activity"></textarea>
+                                <small class="text-muted" id="vatDescCount">0 / 150 words</small>
+                            </div>
                         </div>
 
+
                         <div class="row mb-3">
+                            <!-- Upload Proof -->
                             <div class="col-md-6">
                                 <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
                                 <input id="vatProof" name="vatProof[]" type="file" accept=".pdf,.jpg,.jpeg,.png"
@@ -563,16 +611,62 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Vehicle Number (If available)</label>
-                                <input id="vatVehicleNumber" name="vatVehicleNumber" type="text"
-                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
-                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                                <label class="form-label">Who is involved? (Please provide details , if
+                                    available)</label>
+                                <select class="form-select" id="vatInvolvedType" name="vatInvolvedType">
+                                    <option value="">-- Select --</option>
+                                    <option value="firm">Firm</option>
+                                    <option value="vehicle">Vehicle</option>
+                                </select>
                             </div>
                         </div>
+
+                        <!-- Firm Fields -->
+                        <div id="vatFirmFields" style="display:none;">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Firm Name</label>
+                                    <input id="vatFirmName" name="vatFirmName" type="text" class="form-control"
+                                        placeholder="Enter firm name">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">TIN</label>
+                                    <input id="vatTin" name="vatTin" type="text" class="form-control"
+                                        placeholder="Enter 11-digit TIN">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Firm Address</label>
+                                <textarea id="vatFirmAddress" name="vatFirmAddress" class="form-control" rows="2"
+                                    placeholder="Building No., Street Name, Area/Locality, State, Pincode"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Fields -->
+                        <div id="vatVehicleFields" style="display:none;">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Vehicle Number</label>
+                                    <input id="vatVehicleNumber" name="vatVehicleNumber" type="text"
+                                        class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
+                                        maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Person Name</label>
+                                    <input id="vatPersonName" name="vatPersonName" type="text"
+                                        class="form-control" placeholder="Enter person name">
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
 
                     <!-- Excise Fields -->
-                    <div id="exciseFields" style="display:none;">
+                    {{-- <div id="exciseFields" style="display:none;">
                         <div class="mb-3">
                             <label class="form-label required">Name of Offender / Licensee</label>
                             <input id="exciseName" name="exciseName" type="text" class="form-control">
@@ -628,7 +722,88 @@
                             <small class="text-muted">Allowed formats: JPG, JPEG, PNG, PDF</small>
                             <ul id="proofList" class="mt-2"></ul>
                         </div>
+                    </div> --}}
+
+                    <div id="exciseFields" style="display:none;">
+
+                        <div class="row">
+                            <!-- 1. Place / Location -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Place/Location of Offence</label>
+                                <input id="excisePlace" name="excisePlace" type="text" class="form-control">
+                            </div>
+
+                            <!-- 2. District -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">District</label>
+                                <select id="exciseDistrict" name="exciseDistrict" class="form-select" required>
+                                    <option value="">Select District</option>
+                                    @foreach ($districts as $district)
+                                        <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- 3. New City Field -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">City</label>
+                                <input id="exciseCity" name="exciseCity" type="text" class="form-control"
+                                    placeholder="Enter City">
+                            </div>
+
+                            <!-- 4. Details of Offence -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Details of Offence (max 150 words)</label>
+                                <textarea id="exciseDetails" name="exciseDetails" class="form-control" rows="1"></textarea>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small id="wordCount" class="word-count">0 / 150 words</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- 5. Name of Offender -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Name of Offender / Licensee</label>
+                                <input id="exciseName" name="exciseName" type="text" class="form-control">
+                            </div>
+
+                            <!-- 6. Licensee Description -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Licensee Description</label>
+                                <input id="exciseDesc" name="exciseDesc" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- 7. Time & Date -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label required">Time and Date of Offence</label>
+                                <input id="exciseTime" name="exciseTime" type="datetime-local" class="form-control">
+                            </div>
+
+                            <!-- 8. Vehicle Number -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Vehicle Number (If available)</label>
+                                <input id="exciseVehicleNumber" name="exciseVehicleNumber" type="text"
+                                    class="form-control" placeholder="Enter Vehicle Number (e.g., HR26AB1234)"
+                                    maxlength="10" oninput="this.value=this.value.toUpperCase()">
+                            </div>
+                        </div>
+
+                        <!-- 9. Proof Upload -->
+                        <div class="mb-3">
+                            <label class="form-label required">Upload Proof (Max 5 files, each ≤1MB)</label>
+                            <input id="exciseProof" name="exciseProof[]" type="file" class="form-control"
+                                accept=".jpg,.jpeg,.png,.pdf" multiple>
+                            <small class="text-muted">Allowed formats: JPG, JPEG, PNG, PDF</small>
+                            <ul id="proofList" class="mt-2"></ul>
+                        </div>
+
                     </div>
+
 
                     <div class="mb-3 mt-3">
                         <label class="form-label required">Declaration</label>
@@ -787,7 +962,7 @@
                     if (response.data.success) {
                         let type = response.data.complaint_type.toLowerCase();
                         if (type === 'gst') type = 'GST';
-                        else if (type === 'vat') type = 'VAT&CST';
+                        else if (type === 'vat') type = 'VAT & CST';
                         else if (type === 'excise') type = 'Excise';
 
                         document.getElementById('step3Title').innerHTML =
@@ -822,66 +997,148 @@
             $('#loader').removeClass('d-none');
             const tax = taxType.value;
 
+            // if (tax == 'gst') {
+            //     const firmName = gstFirmName.value.trim();
+            //     const gstin = gstGstin.value.trim();
+            //     const firmAddress = gstFirmAddress.value.trim();
+            //     let gstProof = $('#gstProof')[0].files[0];
+            //     const locality = gstLocality.value.trim();
+            //     const district = gstDistrict.value.trim();
+            //     const description = gstDescription.value.trim();
+            //     const vehicleNumber = gstVehicleNumber.value.trim();
+            //     if (!firmName) {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire('Error', 'Please enter Firm Name.', 'error');
+            //         return false;
+            //     }
+
+            //     if (gstin) {
+            //         if (gstin.length !== 15) {
+            //             $('#loader').addClass('d-none');
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Invalid GSTIN',
+            //                 text: 'GSTIN must be exactly 15 characters long.'
+            //             });
+            //             return false;
+            //         }
+            //     }
+
+            //     if (gstin) {
+            //         const gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+            //         if (gstin.length !== 15) {
+            //             $('#loader').addClass('d-none');
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Invalid GSTIN',
+            //                 text: 'GSTIN must be exactly 15 characters long.'
+            //             });
+            //             return false;
+            //         }
+
+            //         if (!gstinPattern.test(gstin)) {
+            //             $('#loader').addClass('d-none');
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Invalid GSTIN Format',
+            //                 text: 'Please enter a valid GSTIN (e.g., 22AAAAA0000A1Z5).'
+            //             });
+            //             return false;
+            //         }
+            //     }
+
+
+            //     if (!firmAddress) {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire('Error', 'Please enter Firm Address.', 'error');
+            //         return false;
+            //     }
+
+            //     if (!gstProof) {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire('Error', 'Please upload a proof document.', 'error');
+            //         return false;
+            //     }
+
+            //     let allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
+            //     let fileExtension = gstProof.name.split('.').pop().toLowerCase();
+
+            //     if (!allowedExtensions.includes(fileExtension)) {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire('Error', 'Invalid file type. Only PDF, JPG, JPEG, or PNG are allowed.', 'error');
+            //         $('#gstProof').val('');
+            //         return false;
+            //     }
+
+            //     if (gstProof.size > 1024 * 1024) {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
+            //         $('#gstProof').val('');
+            //         return false;
+            //     }
+
+
+            //     if (!locality) {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire('Error', 'Please enter Locality.', 'error');
+            //         return false;
+            //     }
+
+            //     if (!district) {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire('Error', 'Please enter District.', 'error');
+            //         return false;
+            //     }
+
+            //     if (!description) {
+            //         $('#loader').addClass('d-none');
+            //         Swal.fire('Error', 'Please enter Description of Information.', 'error');
+            //         return false;
+            //     }
+
+            // }
+
             if (tax == 'gst') {
-                const firmName = gstFirmName.value.trim();
-                const gstin = gstGstin.value.trim();
-                const firmAddress = gstFirmAddress.value.trim();
-                let gstProof = $('#gstProof')[0].files[0];
+
+                const involvedType = document.querySelector("input[name='involvedType']:checked");
+
                 const locality = gstLocality.value.trim();
                 const district = gstDistrict.value.trim();
                 const description = gstDescription.value.trim();
-                const vehicleNumber = gstVehicleNumber.value.trim();
-                if (!firmName) {
+                const city = gstCity.value.trim();
+                let gstProof = $('#gstProof')[0].files[0];
+
+                // -----------------------------
+                // COMMON VALIDATIONS
+                // -----------------------------
+
+                if (!locality) {
                     $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter Firm Name.', 'error');
+                    Swal.fire('Error', 'Please enter Location.', 'error');
                     return false;
                 }
 
-                if (gstin) {
-                    if (gstin.length !== 15) {
-                        $('#loader').addClass('d-none');
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Invalid GSTIN',
-                            text: 'GSTIN must be exactly 15 characters long.'
-                        });
-                        return false;
-                    }
-                }
-
-                if (gstin) {
-                    const gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-                    if (gstin.length !== 15) {
-                        $('#loader').addClass('d-none');
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Invalid GSTIN',
-                            text: 'GSTIN must be exactly 15 characters long.'
-                        });
-                        return false;
-                    }
-
-                    if (!gstinPattern.test(gstin)) {
-                        $('#loader').addClass('d-none');
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Invalid GSTIN Format',
-                            text: 'Please enter a valid GSTIN (e.g., 22AAAAA0000A1Z5).'
-                        });
-                        return false;
-                    }
-                }
-
-
-                if (!firmAddress) {
+                if (!district) {
                     $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter Firm Address.', 'error');
+                    Swal.fire('Error', 'Please select District.', 'error');
+                    return false;
+                }
+
+                if (!city) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please select City.', 'error');
+                    return false;
+                }
+
+                if (!description) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please enter Description of Information.', 'error');
                     return false;
                 }
 
                 if (!gstProof) {
                     $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please upload a proof document.', 'error');
+                    Swal.fire('Error', 'Please upload a Proof document.', 'error');
                     return false;
                 }
 
@@ -902,14 +1159,109 @@
                     return false;
                 }
 
+                // if (!involvedType) {
+                //     $('#loader').addClass('d-none');
+                //     Swal.fire('Error', 'Please select who is involved (Firm / Vehicle).', 'error');
+                //     return false;
+                // }
+
+                // if (involvedType.value === "firm") {
+                //     const firmName = gstFirmName.value.trim();
+                //     const gstin = gstGstin.value.trim();
+                //     const firmAddress = gstFirmAddress.value.trim();
+
+                //     if (!firmName) {
+                //         $('#loader').addClass('d-none');
+                //         Swal.fire('Error', 'Please enter Firm Name.', 'error');
+                //         return false;
+                //     }
+
+                //     if (!firmAddress) {
+                //         $('#loader').addClass('d-none');
+                //         Swal.fire('Error', 'Please enter Firm Address.', 'error');
+                //         return false;
+                //     }
+
+                //     if (gstin) {
+                //         if (gstin.length !== 15) {
+                //             $('#loader').addClass('d-none');
+                //             Swal.fire('Invalid GSTIN', 'GSTIN must be exactly 15 characters long.', 'error');
+                //             return false;
+                //         }
+
+                //         const gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
+                //         if (!gstinPattern.test(gstin)) {
+                //             $('#loader').addClass('d-none');
+                //             Swal.fire({
+                //                 icon: 'error',
+                //                 title: 'Invalid GSTIN Format',
+                //                 text: 'Please enter a valid GSTIN (e.g., 22AAAAA0000A1Z5).'
+                //             });
+                //             return false;
+                //         }
+                //     }
+                // }
+
+
+                // if (involvedType.value === "vehicle") {
+                //     const vehicleNumber = gstVehicleNumber.value.trim();
+                //     const personName = gstPersonName.value.trim();
+
+                //     if (!vehicleNumber) {
+                //         $('#loader').addClass('d-none');
+                //         Swal.fire('Error', 'Please enter Vehicle Number.', 'error');
+                //         return false;
+                //     }
+
+                //     if (vehicleNumber.length < 6) {
+                //         $('#loader').addClass('d-none');
+                //         Swal.fire('Error', 'Please enter a valid Vehicle Number.', 'error');
+                //         return false;
+                //     }
+
+                //     if (!personName) {
+                //         $('#loader').addClass('d-none');
+                //         Swal.fire('Error', 'Please enter Person Name.', 'error');
+                //         return false;
+                //     }
+                // }
+            }
+
+            if (tax == 'vat') {
+                const firmName = vatFirmName.value.trim();
+                const tin = vatTin.value.trim();
+                const firmAddress = vatFirmAddress.value.trim();
+                let vatProof = $('#vatProof')[0].files[0];
+                const locality = vatLocality.value.trim();
+                const district = vatDistrict.value.trim();
+                // const mycity = vatCity.value;
+                // const vatCity = mycity.trim();
+                const mycity = vatCity.value;
+                vatCity = mycity.trim();
+
+                const description = vatDescription.value.trim();
+                const vehicleNumber = vatVehicleNumber.value.trim();
+
+                // if (!firmName) {
+                //     $('#loader').addClass('d-none');
+                //     Swal.fire('Error', 'Please enter Firm Name.', 'error');
+                //     return false;
+                // }
 
                 if (!locality) {
                     $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter Locality.', 'error');
+                    Swal.fire('Error', 'Please enter Location.', 'error');
                     return false;
                 }
 
                 if (!district) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please enter District.', 'error');
+                    return false;
+                }
+
+                if (!vatCity) {
                     $('#loader').addClass('d-none');
                     Swal.fire('Error', 'Please enter District.', 'error');
                     return false;
@@ -921,47 +1273,11 @@
                     return false;
                 }
 
-            }
-
-            if (tax == 'vat') {
-                const firmName = vatFirmName.value.trim();
-                const tin = vatTin.value.trim();
-                const firmAddress = vatFirmAddress.value.trim();
-                let vatProof = $('#vatProof')[0].files[0];
-                const locality = vatLocality.value.trim();
-                const district = vatDistrict.value.trim();
-                const description = vatDescription.value.trim();
-                const vehicleNumber = vatVehicleNumber.value.trim();
-
-                if (!firmName) {
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter Firm Name.', 'error');
-                    return false;
-                }
-
-                if (!locality) {
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter Locality.', 'error');
-                    return false;
-                }
-
-                // if (!district) {
+                // if (!firmAddress) {
                 //     $('#loader').addClass('d-none');
-                //     Swal.fire('Error', 'Please enter District.', 'error');
+                //     Swal.fire('Error', 'Please enter Firm Address.', 'error');
                 //     return false;
                 // }
-
-                if (!description) {
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter Description of Information.', 'error');
-                    return false;
-                }
-
-                if (!firmAddress) {
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter Firm Address.', 'error');
-                    return false;
-                }
 
                 if (!vatProof) {
                     $('#loader').addClass('d-none');
@@ -1025,7 +1341,6 @@
 
                 return false;
             }
-
 
             $('#loader').addClass('d-none');
             const confirmSubmit = await Swal.fire({
@@ -1210,10 +1525,6 @@
             cityInput.addEventListener('input', function() {
                 allowOnlyLetters(this);
             });
-
-            // districtInput.addEventListener('input', function() {
-            //     allowOnlyLetters(this);
-            // });
         });
 
 
@@ -1347,7 +1658,168 @@
                 loadDistricts(stateId, true);
             });
         });
+
+
+
+
+        document.getElementById("involvedType").addEventListener("change", function() {
+            const value = this.value;
+            if (value === "firm") {
+                firmFields.style.display = "block";
+                vehicleFields.style.display = "none";
+                clearInputs(vehicleFields);
+            } else if (value === "vehicle") {
+                firmFields.style.display = "none";
+                vehicleFields.style.display = "block";
+                clearInputs(firmFields);
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const involvedType = document.getElementById("involvedType");
+            const firmFields = document.getElementById("firmFields");
+            const vehicleFields = document.getElementById("vehicleFields");
+
+            function clearInputs(container) {
+                if (!container) return;
+                container.querySelectorAll("input, textarea, select").forEach(el => {
+                    el.value = "";
+                });
+            }
+
+            involvedType.addEventListener("change", function() {
+                const value = this.value;
+
+                if (value === "firm") {
+
+                    firmFields.style.display = "block";
+                    vehicleFields.style.display = "none";
+                    clearInputs(vehicleFields);
+
+                } else if (value === "vehicle") {
+
+                    firmFields.style.display = "none";
+                    vehicleFields.style.display = "block";
+                    clearInputs(firmFields);
+
+                } else {
+                    firmFields.style.display = "none";
+                    vehicleFields.style.display = "none";
+
+                    clearInputs(firmFields);
+                    clearInputs(vehicleFields);
+                }
+            });
+        });
+
+
+
+
+
+        // document.addEventListener("DOMContentLoaded", function() {
+
+        //     /* ---------------- GST Section ---------------- */
+        //     const firmFields = document.getElementById("firmFields");
+        //     const vehicleFields = document.getElementById("vehicleFields");
+
+        //     function clearInputs(container) {
+        //         if (!container) return;
+        //         container.querySelectorAll("input, textarea").forEach(el => el.value = "");
+        //     }
+
+        //     document.querySelectorAll("input[name='involvedType']").forEach(radio => {
+        //         radio.addEventListener("change", function() {
+
+        //             if (this.value === "firm") {
+        //                 if (firmFields) firmFields.style.display = "block";
+        //                 if (vehicleFields) vehicleFields.style.display = "none";
+        //                 clearInputs(vehicleFields);
+
+        //             } else if (this.value === "vehicle") {
+        //                 if (firmFields) firmFields.style.display = "none";
+        //                 if (vehicleFields) vehicleFields.style.display = "block";
+        //                 clearInputs(firmFields);
+        //             }
+        //         });
+        //     });
+
+
+        //     /* ---------------- VAT Section ---------------- */
+        //     const vatFirmFields = document.getElementById("vatFirmFields");
+        //     const vatVehicleFields = document.getElementById("vatVehicleFields");
+
+        //     document.querySelectorAll("input[name='vatInvolvedType']").forEach(radio => {
+        //         radio.addEventListener("change", function() {
+
+        //             if (this.value === "firm") {
+
+        //                 if (vatFirmFields) vatFirmFields.style.display = "block";
+        //                 if (vatVehicleFields) vatVehicleFields.style.display = "none";
+
+        //                 // clear vehicle fields
+        //                 const veh1 = document.getElementById("vatVehicleNumber");
+        //                 const veh2 = document.getElementById("vatPersonName");
+        //                 if (veh1) veh1.value = "";
+        //                 if (veh2) veh2.value = "";
+
+        //             } else {
+
+        //                 if (vatFirmFields) vatFirmFields.style.display = "none";
+        //                 if (vatVehicleFields) vatVehicleFields.style.display = "block";
+
+        //                 ["vatFirmName", "vatTin", "vatFirmAddress"].forEach(id => {
+        //                     const el = document.getElementById(id);
+        //                     if (el) el.value = "";
+        //                 });
+        //             }
+        //         });
+        //     });
+
+        // });
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const vatInvolvedType = document.getElementById("vatInvolvedType");
+
+            const vatFirmFields = document.getElementById("vatFirmFields");
+            const vatVehicleFields = document.getElementById("vatVehicleFields");
+
+            function clearInputs(container) {
+                if (!container) return;
+                container.querySelectorAll("input, textarea, select").forEach(el => {
+                    el.value = "";
+                });
+            }
+
+            vatInvolvedType.addEventListener("change", function() {
+                const value = this.value;
+
+                if (value === "firm") {
+                    vatFirmFields.style.display = "block";
+                    vatVehicleFields.style.display = "none";
+                    clearInputs(vatVehicleFields);
+
+                } else if (value === "vehicle") {
+                    vatFirmFields.style.display = "none";
+                    vatVehicleFields.style.display = "block";
+                    clearInputs(vatFirmFields);
+
+                } else {
+                    // empty selection
+                    vatFirmFields.style.display = "none";
+                    vatVehicleFields.style.display = "none";
+                    clearInputs(vatFirmFields);
+                    clearInputs(vatVehicleFields);
+                }
+            });
+
+        });
     </script>
+
+
+
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
