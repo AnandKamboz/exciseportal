@@ -25,6 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
            'userrole' => \App\Http\Middleware\UserMiddleware::class,
+           'detcrole' => \App\Http\Middleware\DetcMiddleware::class,
+           'hq' => \App\Http\Middleware\HqMiddleware::class,
         ]);
 
         //

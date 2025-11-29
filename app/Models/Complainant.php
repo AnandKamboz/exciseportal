@@ -18,4 +18,8 @@ class Complainant extends Model
         return $this->belongsTo(District::class, 'against_district_id');
     }
 
+    public function detcAction()
+    {
+        return $this->hasOne(DetcAction::class, 'user_application_id', 'application_id');
+    }
 }

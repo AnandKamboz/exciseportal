@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\DetcController;
 use App\Http\Controllers\Web\InspectorDashboard;
 use App\Http\Controllers\Web\LogoutController;
 use App\Http\Controllers\Web\UserComplaintController;
+use App\Http\Controllers\Web\HqController;
 use App\Http\Controllers\Web\UserDashboard;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -31,7 +32,7 @@ use Mews\Captcha\Facades\Captcha;
 // Route::post('/user/complaint/update/{secure_id}', [DetcController::class, 'updateComplaintStatus'])
 //     ->name('user.updateComplaintStatus');
 
-// Route::get('/inspector/dashboard', [InspectorDashboard::class, 'dashboard'])->name('inspector.dashboard');
+Route::get('/inspector/dashboard', [InspectorDashboard::class, 'dashboard'])->name('inspector.dashboard');
 // Route::get('inspector/complaint/{secure_id}', [InspectorDashboard::class, 'show'])->name('inspector.details');
 // Route::get('/inspector/feedback', [InspectorDashboard::class, 'inspectorFedback'])->name('inspector.feedback');
 // Route::post('/inspector/action', [InspectorDashboard::class, 'storeAction'])->name('inspector.action');
@@ -71,6 +72,16 @@ Route::middleware(['auth', 'userrole'])->group(function () {
 });
 
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
-Route::get('/detc/dashboard', [DetcController::class, 'dashboard'])->name('detc.dashboard');
-Route::get('detc/complaint/{secure_id}', [DetcController::class, 'show'])->name('detc.details');
-Route::post('/detc/action/store', [DetcActionController::class, 'store'])->name('detc.action.store');
+
+Route::prefix('detc')->name('detc.')->middleware(['auth', 'detcrole'])->group(function () {
+    Route::get('/dashboard', [DetcController::class, 'dashboard'])->name('dashboard');
+    Route::get('/complaint/{secure_id}', [DetcController::class, 'show'])->name('details');
+    Route::post('/action/store/{secure_id}', [DetcController::class, 'store'])->name('action.store');
+});
+
+
+// Hq dashbaord 
+Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
+    Route::get('dashboard', [HqController::class, 'dashboard'])->name('dashboard');
+    Route::get('/information/{secure_id}', [HqController::class, 'show'])->name('details');
+});

@@ -9,12 +9,10 @@ use App\Models\RoleGroup;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
-
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -194,53 +192,33 @@ class AuthController extends Controller
     public function verifyOtp(Request $request)
     {
 
-        // $request->validate([
-        //     'mobile'  => 'required|numeric|digits:10',
-        //     'otp'     => 'required|numeric|digits:6',
-        //     'captcha' => 'required|size:6|captcha',
-        // ], [
-        //     'mobile.required'  => 'Mobile number is required.',
-        //     'mobile.numeric'   => 'Mobile number must be numeric.',
-        //     'mobile.digits'    => 'Mobile number must be exactly 10 digits.',
-        //     'otp.required'     => 'OTP is required.',
-        //     'otp.numeric'      => 'OTP must be numeric.',
-        //     'otp.digits'       => 'OTP must be exactly 6 digits.',
-        //     'captcha.required' => 'Captcha is required.',
-        //     'captcha.size'     => 'Captcha must be 6 characters.',
-        //     'captcha.captcha'  => 'Captcha is invalid. Please try again.',
-        // ]);
-
-            $validator = Validator::make($request->all(), [
-            'mobile'  => 'required|numeric|digits:10',
-            'otp'     => 'required|numeric|digits:6',
+        $validator = Validator::make($request->all(), [
+            'mobile' => 'required|numeric|digits:10',
+            'otp' => 'required|numeric|digits:6',
             'captcha' => 'required|size:6|captcha',
         ], [
-            'mobile.required'  => 'Mobile number is required.',
-            'mobile.numeric'   => 'Mobile number must be numeric.',
-            'mobile.digits'    => 'Mobile number must be exactly 10 digits.',
-            'otp.required'     => 'OTP is required.',
-            'otp.numeric'      => 'OTP must be numeric.',
-            'otp.digits'       => 'OTP must be exactly 6 digits.',
+            'mobile.required' => 'Mobile number is required.',
+            'mobile.numeric' => 'Mobile number must be numeric.',
+            'mobile.digits' => 'Mobile number must be exactly 10 digits.',
+            'otp.required' => 'OTP is required.',
+            'otp.numeric' => 'OTP must be numeric.',
+            'otp.digits' => 'OTP must be exactly 6 digits.',
             'captcha.required' => 'Captcha is required.',
-            'captcha.size'     => 'Captcha must be 6 characters.',
-            'captcha.captcha'  => 'Captcha is invalid. Please try again.',
+            'captcha.size' => 'Captcha must be 6 characters.',
+            'captcha.captcha' => 'Captcha is invalid. Please try again.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => $validator->errors()->first(), 
-                'new_captcha' => captcha_src(),           
+                'message' => $validator->errors()->first(),
+                'new_captcha' => captcha_src(),
             ]);
         }
 
-    
         $mobile = $request->mobile;
         $otpInput = $request->otp;
         $captcha = $request->captcha;
-
-
-
 
         // ✅ OTP check
         $otpRecord = Otp::where('mobile', $mobile)
@@ -286,14 +264,16 @@ class AuthController extends Controller
         // ✅ Get role name
         $role = $user->roles()->pluck('role_name')->first();
 
-        // ✅ Dashboard redirection based on role
-        if ($role === 'detc') {
-            $redirectUrl = route('detc.dashboard');
-        } elseif ($role === 'excise inspector') {
-            $redirectUrl = route('inspector.dashboard');
-        } else {
-            $redirectUrl = route('user.dashboard');
-        }
+      
+        // if ($role === 'detc') {
+        //     $redirectUrl = route('detc.dashboard');
+        // } elseif ($role === 'excise inspector') {
+        //     $redirectUrl = route('inspector.dashboard');
+        // } elseif ($role === 'hq') {
+        //     $redirectUrl = route('hq.dashboard');
+        // }else {
+        //     $redirectUrl = route('user.dashboard');
+        // }
 
         if ($role === 'detc') {
                 $redirectUrl = route('detc.dashboard');
@@ -308,6 +288,9 @@ class AuthController extends Controller
 
                 if ($complaintExists) {
                     $redirectUrl = route('user.dashboard');
+                }
+                elseif ($role === 'hq') {
+                    $redirectUrl = route('hq.dashboard');
                 } else {
                     $redirectUrl = route('complainant');
                 }

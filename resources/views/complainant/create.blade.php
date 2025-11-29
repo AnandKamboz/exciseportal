@@ -440,9 +440,9 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label required">Type of Complaint</label>
+                                <label class="form-label required">Type of Information</label>
                                 <select id="complaintType" name="complaintType" class="form-select" required>
-                                    <option value="">Select Complaint Type</option>
+                                    <option value="">Select Information</option>
                                     <option value="wrong_rate_of_tax">Wrong rate of tax</option>
                                     <option value="receipt_not_issued">Receipt not being issued</option>
                                     <option value="any_other">Any Other</option>
