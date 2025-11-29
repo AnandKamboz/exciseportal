@@ -4,203 +4,182 @@
 @section('page_title', 'Information Details')
 
 @section('content')
+
+    @php
+        // State Name
+        $stateName = null;
+        if (!empty($complain->complainant_state)) {
+            $stateName = \App\Models\State::where('id', $complain->complainant_state)->value('name');
+        }
+
+        // District Name
+        $districtName = null;
+        if (!empty($complain->complainant_district)) {
+            $districtName = \App\Models\IndiaDistrict::where('id', $complain->complainant_district)->value('name');
+        }
+    @endphp
+
+
     <div class="container-fluid py-4">
-        <div class="card shadow-lg border-0 rounded-4 p-4" style="background: #FFFDF8;">
+        <div class="card shadow-lg border-0 rounded-4 p-4" style="background:#FFFDF8;">
+
             <h4 class="fw-bold text-primary mb-4 border-bottom pb-2">📝 Information Details</h4>
 
-            {{-- Basic Information --}}
+            {{-- ===================== SECTION 1 ====================== --}}
+            <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                👤 Informer Details
+            </h5>
+
+            @php
+                $informerFields = [
+                    'application_id' => 'Application ID',
+                    'complainant_name' => 'Name',
+                    'complainant_phone' => 'Phone',
+                    'complainant_email' => 'Email',
+                    'complainant_aadhar' => 'Aadhar Number',
+                    'complainant_state' => 'State',
+                    'complainant_district' => 'District',
+                    'complainant_address' => 'Address',
+                ];
+            @endphp
+
             <div class="row g-3 mb-4">
-                @if ($complain->application_id)
-                    <div class="col-md-4"><strong>Application ID:</strong> {{ $complain->application_id }}</div>
-                @endif
-                @if ($complain->complainant_name)
-                    <div class="col-md-4"><strong>Name:</strong> {{ ucfirst($complain->complainant_name) }}</div>
-                @endif
-                @if ($complain->complainant_phone)
-                    <div class="col-md-4"><strong>Phone:</strong> {{ $complain->complainant_phone }}</div>
-                @endif
-                @if ($complain->complainant_email)
-                    <div class="col-md-4"><strong>Email:</strong> {{ $complain->complainant_email }}</div>
-                @endif
-                @if ($complain->complainant_aadhaar)
-                    <div class="col-md-4"><strong>Aadhaar:</strong> {{ $complain->complainant_aadhaar }}</div>
-                @endif
-                @if ($complain->complainant_address)
-                    <div class="col-md-8"><strong>Address:</strong> {{ ucfirst($complain->complainant_address) }}</div>
-                @endif
-                @if ($complain->complaint_type)
-                    <div class="col-md-4"><strong>Information Type:</strong> {{ strtoupper($complain->complaint_type) }}
-                    </div>
-                @endif
+                @foreach ($informerFields as $col => $label)
+                    {{-- Special State --}}
+                    @if ($col == 'complainant_state' && $stateName)
+                        <div class="col-md-4">
+                            <div class="p-3 shadow-sm rounded bg-light">
+                                <strong>{{ $label }}:</strong><br>
+                                <span class="text-secondary">{{ ucwords($stateName) }}</span>
+                            </div>
+                        </div>
+                        @continue
+                    @endif
+
+                    {{-- Special District --}}
+                    @if ($col == 'complainant_district' && $districtName)
+                        <div class="col-md-4">
+                            <div class="p-3 shadow-sm rounded bg-light">
+                                <strong>{{ $label }}:</strong><br>
+                                <span class="text-secondary">{{ ucwords($districtName) }}</span>
+                            </div>
+                        </div>
+                        @continue
+                    @endif
+
+                    @if (!empty($complain->$col))
+                        <div class="col-md-4">
+                            <div class="p-3 shadow-sm rounded bg-light">
+                                <strong>{{ $label }}:</strong><br>
+                                <span class="text-secondary">{{ ucwords($complain->$col) }}</span>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+
+
+
+
+            {{-- ===================== SECTION 2 ====================== --}}
+            <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                Entity
+            </h5>
+
+            @php
+                $infoFields = [
+                    'type_of_complaint' => 'Type of Complaint',
+                    'complaint_type' => 'Information Type',
+                    'involved_type' => 'Involved Type',
+
+                    'gst_description' => 'GST Description',
+                    'location' => 'Location',
+                    'gst_address1' => 'Address 1',
+                    'gst_address2' => 'Address 2',
+                    'district_name' => 'District Name',
+                    'pincode' => 'Pincode',
+                    'gst_firm_name' => 'Firm Name',
+                    'gst_firm_address' => 'Firm Address',
+                    'gst_gstin' => 'GSTIN',
+
+
+
+                    'gst_person_name' => 'Person Name',
+                    'gst_locality' => 'Locality',
+                    'gst_city' => 'City',
+                    'gst_vehicle_number' => 'Vehicle Number',
+
+                    'vat_firm_name' => 'VAT Firm Name',
+                    'vat_tin' => 'VAT TIN',
+                    'vat_vehicle_number' => 'VAT Vehicle Number',
+                    'vat_firm_address' => 'VAT Firm Address',
+                    'vat_person_name' => 'VAT Person Name',
+                    'vat_locality' => 'VAT Locality',
+                    'vat_city' => 'VAT City',
+                    'vat_description' => 'VAT Description',
+
+                    'excise_name' => 'Excise Name',
+                    'excise_city' => 'Excise City',
+                    'excise_place' => 'Place',
+                    'excise_time' => 'Time',
+                    'excise_vehicle_number' => 'Vehicle Number',
+                    'excise_desc' => 'Description',
+                    'excise_details' => 'Details',
+                ];
+            @endphp
+
+            <div class="row g-3 mb-4">
+                @foreach ($infoFields as $col => $label)
+                    @if (!empty($complain->$col))
+                        <div class="col-md-4">
+                            <div class="p-3 shadow-sm rounded bg-light">
+                                <strong>{{ $label }}:</strong><br>
+                                <span class="text-secondary">{{ ucwords($complain->$col) }}</span>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+
                 @if ($complain->created_at)
-                    <div class="col-md-4"><strong>Date:</strong> {{ $complain->created_at->format('d-m-Y') }}</div>
-                @endif
-            </div>
-
-            {{-- GST / VAT / Excise Information --}}
-            <hr>
-            <h5 class="fw-semibold text-secondary mb-3">🏢 Related Business / Excise Information</h5>
-
-            <div class="row g-3 mb-4">
-
-                {{-- GST Details --}}
-                @if ($complain->gst_firm_name)
-                    <div class="col-md-4"><strong>Firm Name:</strong> {{ $complain->gst_firm_name }}</div>
-                @endif
-                @if ($complain->gst_gstin)
-                    <div class="col-md-4"><strong>GSTIN:</strong> {{ $complain->gst_gstin }}</div>
-                @endif
-                @if ($complain->gst_firm_address)
-                    <div class="col-md-8"><strong>Firm Address:</strong> {{ $complain->gst_firm_address }}</div>
-                @endif
-                @if ($complain->gst_locality)
-                    <div class="col-md-4"><strong>Locality:</strong> {{ $complain->gst_locality }}</div>
-                @endif
-                {{-- @if ($complain->district)
-                    <div class="col-md-4"><strong>GST District:</strong> {{ $complain->district }}</div>
-                @endif --}}
-                @if ($complain->gst_vehicle_number)
-                    <div class="col-md-4"><strong>Vehicle Number:</strong> {{ $complain->gst_vehicle_number }}</div>
-                @endif
-                @if ($complain->gst_description)
-                    <div class="col-md-12"><strong>Description:</strong> {{ $complain->gst_description }}</div>
-                @endif
-
-                {{-- VAT Details --}}
-                @if ($complain->vat_firm_name)
-                    <div class="col-md-4"><strong>Firm Name:</strong> {{ $complain->vat_firm_name }}</div>
-                @endif
-                @if ($complain->vat_tin)
-                    <div class="col-md-4"><strong>TIN:</strong> {{ $complain->vat_tin }}</div>
-                @endif
-                @if ($complain->vat_firm_address)
-                    <div class="col-md-8"><strong>Firm Address:</strong> {{ $complain->vat_firm_address }}</div>
-                @endif
-                @if ($complain->vat_locality)
-                    <div class="col-md-4"><strong>Locality:</strong> {{ $complain->vat_locality }}</div>
-                @endif
-                {{-- @if ($complain->district)
-                    <div class="col-md-4"><strong>District:</strong> {{ $complain->district }}</div>
-                @endif --}}
-
-                @php
-                    $districtName = \App\Models\District::where('id', $complain->district)->value('name');
-                @endphp
-
-                @if ($districtName)
-                    <div class="col-md-4"><strong>District:</strong> {{ $districtName }}</div>
-                @endif
-
-
-                @if ($complain->vat_vehicle_number)
-                    <div class="col-md-4"><strong>Vehicle Number:</strong> {{ $complain->vat_vehicle_number }}</div>
-                @endif
-                @if ($complain->vat_description)
-                    <div class="col-md-12"><strong>Description:</strong> {{ $complain->vat_description }}</div>
-                @endif
-
-                {{-- Excise Details --}}
-                @if ($complain->excise_name)
-                    <div class="col-md-4"><strong>Name:</strong> {{ $complain->excise_name }}</div>
-                @endif
-                @if ($complain->excise_place)
-                    <div class="col-md-4"><strong>Place:</strong> {{ $complain->excise_place }}</div>
-                @endif
-                @if ($complain->excise_time)
-                    <div class="col-md-4"><strong>Time:</strong> {{ $complain->excise_time }}</div>
-                @endif
-                @if ($complain->excise_vehicle_number)
-                    <div class="col-md-4"><strong>Vehicle Number:</strong> {{ $complain->excise_vehicle_number }}
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light">
+                            <strong>Information Date:</strong> {{ $complain->created_at->format('d-m-Y') }}
+                        </div>
                     </div>
                 @endif
-                @if ($complain->excise_desc)
-                    <div class="col-md-8"><strong>Description:</strong> {{ $complain->excise_desc }}</div>
-                @endif
-                @if ($complain->excise_details)
-                    <div class="col-md-12"><strong>Details:</strong> {{ $complain->excise_details }}</div>
-                @endif
 
             </div>
 
-            {{-- Attached Proofs --}}
-            {{-- @if ($complain->gst_proof || $complain->vat_proof)
-                <hr>
-                <h5 class="fw-semibold text-secondary mb-3">📎 Attached Documents</h5>
-                <div class="row g-3 mb-3">
-                    @if ($complain->gst_proof)
-                        @php $gstFiles = json_decode($complain->gst_proof, true); @endphp
-                        @foreach ($gstFiles as $file)
-                            <div class="col-md-4">
-                                <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
-                                    target="_blank" class="btn btn-sm btn-outline-primary">
-                                    View GST Proof
-                                </a>
-                            </div>
-                        @endforeach
-                    @endif
-                    @if ($complain->vat_proof)
-                        @php $vatFiles = json_decode($complain->vat_proof, true); @endphp
-                        @foreach ($vatFiles as $file)
-                            <div class="col-md-4">
-                                <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
-                                    target="_blank" class="btn btn-sm btn-outline-success">
-                                    View VAT Proof
-                                </a>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-            @endif --}}
 
+            {{-- ===================== DOCUMENTS ====================== --}}
             @if ($complain->gst_proof || $complain->vat_proof || $complain->excise_proof)
                 <hr>
                 <h5 class="fw-semibold text-secondary mb-3">📎 Attached Documents</h5>
-                <div class="row g-3 mb-3">
-                    {{-- GST Proof --}}
-                    @if ($complain->gst_proof)
-                        @php $gstFiles = json_decode($complain->gst_proof, true); @endphp
-                        @foreach ($gstFiles as $file)
-                            <div class="col-md-4">
-                                <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
-                                    target="_blank" class="btn btn-sm btn-outline-primary w-100 text-center">
-                                    View GST Proof
-                                </a>
-                            </div>
-                        @endforeach
-                    @endif
-
-                    {{-- VAT Proof --}}
-                    @if ($complain->vat_proof)
-                        @php $vatFiles = json_decode($complain->vat_proof, true); @endphp
-                        @foreach ($vatFiles as $file)
-                            <div class="col-md-4">
-                                <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
-                                    target="_blank" class="btn btn-sm btn-outline-success w-100 text-center">
-                                    View VAT Proof
-                                </a>
-                            </div>
-                        @endforeach
-                    @endif
-
-                    {{-- Excise Proof --}}
-                    @if ($complain->excise_proof)
-                        @php $exciseFiles = json_decode($complain->excise_proof, true); @endphp
-                        @foreach ($exciseFiles as $file)
-                            <div class="col-md-4">
-                                <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
-                                    target="_blank" class="btn btn-sm btn-outline-warning w-100 text-center">
-                                    View Excise Proof
-                                </a>
-                            </div>
-                        @endforeach
-                    @endif
+                <div class="row g-3">
+                    @foreach (['gst_proof' => 'GST', 'vat_proof' => 'VAT', 'excise_proof' => 'Excise'] as $key => $label)
+                        @if ($complain->$key)
+                            @foreach (json_decode($complain->$key, true) as $file)
+                                <div class="col-md-4">
+                                    <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
+                                        target="_blank" class="btn btn-outline-primary w-100 text-center">
+                                        View {{ $label }} Proof
+                                    </a>
+                                </div>
+                            @endforeach
+                        @endif
+                    @endforeach
                 </div>
             @endif
 
+
+            {{-- BACK BUTTON --}}
             <div class="mt-4 text-center">
-                <a href="{{ route('user.dashboard') }}" class="btn btn-danger px-4">← Back to Dashboard</a>
+                <a href="{{ route('user.dashboard') }}" class="btn btn-danger px-4">
+                    ← Back to Dashboard
+                </a>
             </div>
 
         </div>
     </div>
+
 @endsection

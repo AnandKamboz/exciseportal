@@ -237,7 +237,7 @@
         <section class="entry-card">
             <div class="entry-grid">
                 <div class="entry-visual">
-                    <img src="{{ asset('assets/images/entery_page_image/excise-dep.JPG') }}"
+                    <img src="{{ asset('assets/images/entery_page_image/excise-dep.jpeg') }}"
                         alt="Excise Department background image" loading="lazy">
                 </div>
 
@@ -262,9 +262,10 @@
 
                             <h5 class="fw-semibold text-warning mb-2">Disclaimer</h5>
                             <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                                <li>This app pertains only to providing information related to evasion of GST/ VAT/ CST/
-                                    Excise.</li>
-                                <li>The name of the informer will be kept secret.
+                                <li>This app pertains only for providing information related to evasion of
+                                    {{-- GST/ VAT/ CST/ --}}
+                                    GST.</li>
+                                <li>The details of the informer will be kept masked.
                                 </li>
                                 {{-- <li>The informer must verify that the information being provided is correct to his best
                                     of knowledge and it is being provided only with the purpose to curb tax evasion.
@@ -275,9 +276,9 @@
 
                             <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
                             <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
-                                <li>यह ऐप केवल जीएसटी/वैट/सीएसटी/उत्पाद शुल्क की चोरी से संबंधित जानकारी प्रदान करने के
+                                <li>यह ऐप केवल जीएसटी उत्पाद शुल्क की चोरी से संबंधित जानकारी प्रदान करने के
                                     लिए है।</li>
-                                <li>सूचना देने वाले का नाम गुप्त रखा जाएगा।</li>
+                                <li>सूचना देने वाले की जानकारी गोपनीय रखी जाएगी।</li>
                                 {{-- <li>सूचना देने वाले को यह सत्यापित करना होगा कि दी जा रही जानकारी उनकी सर्वोत्तम जानकारी
                                     के अनुसार सही है और यह केवल कर चोरी को रोकने के उद्देश्य से प्रदान की जा रही है।
                                 </li> --}}
@@ -297,12 +298,14 @@
         </section>
     </main>
 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @if (session('status'))
         <script>
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: '{{ session('status') }}',
+                text: "{{ session('status') }}",
                 confirmButtonText: 'OK'
             });
         </script>
