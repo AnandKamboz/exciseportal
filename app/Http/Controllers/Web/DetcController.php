@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-
 class DetcController extends Controller
 {
     public function dashboard()
@@ -27,7 +26,6 @@ class DetcController extends Controller
 
         // detc_actions table me check karo
         $detcAction = DetcAction::where('user_application_id', $applicationId)->first();
-        
 
         // boolean check
         $actionExists = $detcAction ? true : false;
@@ -40,7 +38,7 @@ class DetcController extends Controller
             DB::table('districts')->where('id', $complain->against_district_id)->first()
         )->name ?? 'Not Found';
 
-        return view('detc.show', compact('complain', 'complainantDistrictName', 'againstDistrictId','actionExists','detcAction'));
+        return view('detc.show', compact('complain', 'complainantDistrictName', 'againstDistrictId', 'actionExists', 'detcAction'));
     }
 
     public function updateComplaintStatus(Request $request, $secure_id)
@@ -51,9 +49,6 @@ class DetcController extends Controller
             'remarks' => 'required|string|max:1000',
         ]);
 
-        //  dd('dddss!');
-
-        // Find complaint by secure_id
         $complaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
 
         $complaint->update([
@@ -144,14 +139,53 @@ class DetcController extends Controller
     //     return back()->with('success', 'Action saved successfully');
     // }
 
+    // public function store(Request $request, $secure_id)
+    // {
+    //     $request->validate([
+    //         'proposed_action' => 'required',
+    //         'action_taken' => 'required_if:proposed_action,actionable',
+    //         'reason' => 'required_if:proposed_action,non_actionable',
+    //         'remarks' => 'required',
+    //         'upload_file'     => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:1024',
+
+    //     ]);
+
+    //     $complaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
+
+    //     if (DetcAction::where('complaint_id', $complaint->id)->exists()) {
+    //         return back()->with('error', 'Action already taken for this complaint');
+    //     }
+
+    //     do {
+    //         $newActionSecureId = Str::random(32);
+    //     } while (DetcAction::where('secure_id', $newActionSecureId)->exists());
+
+    //     DetcAction::create([
+    //         'secure_id' => $newActionSecureId,
+    //         'complaint_id' => $complaint->id,
+    //         'user_application_id' => $complaint->application_id,
+    //         'detc_district' => Auth::user()->district,
+    //         'proposed_action' => $request->proposed_action,
+    //         'action_taken' => $request->action_taken,
+    //         'reason' => $request->reason,
+    //         'remarks' => $request->remarks,
+    //         'detc_user_id' => auth()->id(),
+    //     ]);
+
+    //     return back()->with('success', 'Action saved successfully');
+    // }
+
     public function store(Request $request, $secure_id)
     {
+        // dd($request->toArray());
         $request->validate([
             'proposed_action' => 'required',
             'action_taken' => 'required_if:proposed_action,actionable',
             'reason' => 'required_if:proposed_action,non_actionable',
-            'remarks' => 'required',
+            'upload_file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:1024',
         ]);
+
+        // dd('sdsd');
 
         $complaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
 
@@ -163,6 +197,41 @@ class DetcController extends Controller
             $newActionSecureId = Str::random(32);
         } while (DetcAction::where('secure_id', $newActionSecureId)->exists());
 
+        // ===============================
+        // FILE UPLOAD LOGIC
+        // ===============================
+        // $fileName = null;
+
+        // if ($request->hasFile('upload_file')) {
+
+        //     $file = $request->file('upload_file');
+
+        //     // unique filename
+        //     $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+
+        //     // final path
+        //     $path = 'public/complaints/'.$complaint->application_id.'/';
+
+        //     // store
+        //     $file->storeAs($path, $fileName);
+        // }
+
+        $fileName = null;
+
+        if ($request->hasFile('upload_file')) {
+
+            $file = $request->file('upload_file');
+
+            // unique filename
+            $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+
+            // final path
+            $path = 'complaints/'.$complaint->application_id.'/';
+
+            // store in PUBLIC
+            $file->storeAs($path, $fileName, 'public');
+        }
+
         DetcAction::create([
             'secure_id' => $newActionSecureId,
             'complaint_id' => $complaint->id,
@@ -171,8 +240,9 @@ class DetcController extends Controller
             'proposed_action' => $request->proposed_action,
             'action_taken' => $request->action_taken,
             'reason' => $request->reason,
-            'remarks' => $request->remarks,
+            'remarks' => $request->remarks ?? null,
             'detc_user_id' => auth()->id(),
+            'file_name' => $fileName, // store file name
         ]);
 
         return back()->with('success', 'Action saved successfully');

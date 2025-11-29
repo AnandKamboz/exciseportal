@@ -64,6 +64,16 @@
             color: red;
             font-weight: bold;
         }
+
+        .radio-wrap {
+            display: flex;
+            gap: 15px;
+            margin-top: 6px;
+            padding: 8px 10px;
+            background: #f3f7ff;
+            border-radius: 6px;
+            border: 1px solid #d7dff8;
+        }
     </style>
 
     <div class="container-fluid">
@@ -106,38 +116,35 @@
 
                 @php
                     $fields = [
-                        'type_of_complaint',
-                        'gst_description',
-                        'complainant_district',
-                        'pincode',
-                        'involved_type',
-                        'gst_firm_name',
-                        'gst_gstin',
-                        'gst_firm_address',
-                        'location',
-                        'gst_address2',
-                        'gst_locality',
-                        'gst_city',
-                        'gst_vehicle_number',
-                        'vat_firm_name',
-                        'vat_tin',
-                        'vat_firm_address',
-                        'vat_person_name',
-                        'vat_vehicle_number',
-                        'vat_description',
-                        'excise_name',
-                        'excise_place',
-                        'excise_time',
-                        'excise_vehicle_number',
-                        'excise_desc',
-                        'excise_details',
+                        'type_of_complaint' => 'Type of Information',
+                        'gst_description' => 'GST Description',
+                        'complainant_district' => 'District',
+                        'pincode' => 'Pincode',
+                        'involved_type' => 'Involved Type',
+                        'gst_firm_name' => 'Firm Name',
+                        'gst_gstin' => 'Gstin',
+                        'gst_firm_address' => 'Firm Address',
+                        'location' => 'Location',
+                        'gst_address2' => 'Address Line 2',
+                        'gst_locality' => 'Locality',
+                        'gst_city' => 'City',
+                        'gst_vehicle_number' => 'Vehicle Number',
+                        'vat_firm_name' => 'VAT Firm Name',
+                        'vat_tin' => 'VAT TIN',
+                        'vat_firm_address' => 'VAT Firm Address',
+                        'vat_person_name' => 'VAT Person Name',
+                        'vat_vehicle_number' => 'VAT Vehicle Number',
+                        'vat_description' => 'VAT Description',
+                        'excise_name' => 'Excise Name',
+                        'excise_place' => 'Excise Place',
+                        'excise_time' => 'Excise Time',
+                        'excise_vehicle_number' => 'Excise Vehicle Number',
+                        'excise_desc' => 'Excise Description',
+                        'excise_details' => 'Excise Details',
                     ];
-                    $labels = collect($fields)
-                        ->mapWithKeys(fn($i) => [$i => ucwords(str_replace('_', ' ', $i))])
-                        ->toArray();
                 @endphp
 
-                @foreach ($labels as $col => $label)
+                @foreach ($fields as $col => $label)
                     @if ($col == 'complainant_district')
                         <div class="col-md-4">
                             <div class="info-card">
@@ -182,57 +189,106 @@
 
             <hr>
 
+            {{-- ************* UPDATED FORM AREA START ************** --}}
             @if (!$detcAction)
 
-                {{-- PROCEED BUTTON --}}
-                <div id="proceedSection" class="text-center my-4">
-                    <button class="btn btn-primary btn-lg px-4" id="proceedBtn">Proceed</button>
+                <div class="card shadow-lg border-0 mt-5"
+                    style="background:#ffffff;border-radius:12px;border-left:5px solid #0a3d62;">
+
+                    <div class="p-3" style="background:#0a3d62;border-radius:12px 12px 0 0;color:white;font-weight:600;">
+                        DETC Action Form
+                    </div>
+
+                    <div class="p-4">
+
+                        {{-- PROCEED BUTTON --}}
+                        <div id="proceedSection" class="text-center my-4">
+                            <button class="btn btn-primary btn-lg px-4" id="proceedBtn"
+                                style="font-size:18px;">Proceed</button>
+                        </div>
+
+                        {{-- FORM --}}
+                        <form id="detcForm" action="{{ route('detc.action.store', [$complain->secure_id]) }}"
+                            method="POST" style="display:none;" enctype="multipart/form-data">
+
+                            @csrf
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold required">Proposed Action</label>
+
+                                    <div class="radio-wrap"
+                                        style="background:#eff4ff;border:1px solid #c7d6ff;border-radius:8px;padding:12px;">
+                                        <label><input type="radio" name="proposed_action" value="actionable">
+                                            Actionable</label>
+                                        <label class="ms-4"><input type="radio" name="proposed_action"
+                                                value="non_actionable"> Non Actionable</label>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-6" id="actionableBox" style="display:none;">
+                                    <label class="form-label fw-semibold required mt-2">Select Action</label>
+                                    <select class="form-select" id="actionSelect" name="action_taken">
+                                        <option value="">Select</option>
+                                        <option value="action_taken">Action Taken</option>
+                                        <option value="tax_evasion">Tax Evasion</option>
+                                        <option value="any_other">Any Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6" id="nonActionableBox" style="display:none;">
+                                    <label class="form-label fw-semibold required mt-2">Reason</label>
+                                    <select class="form-select" id="reasonSelect" name="reason">
+                                        <option value="">Select</option>
+                                        <option value="information_incomplete">Information Incomplete</option>
+                                        <option value="false_information">False Information</option>
+                                        <option value="any_other">Any Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mt-3">
+                                        <label class="form-label fw-semibold required">Remarks</label>
+                                        <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Add remarks..."></textarea>
+                                    </div>
+                                </div>
+
+                                {{-- <div class="col-md-6">
+                                    <div class="mt-3">
+                                        <label class="form-label fw-semibold required">Remarks</label>
+                                        <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Add remarks..." required></textarea>
+                                    </div>
+                                </div> --}}
+
+                                <div class="col-md-6">
+                                    <div class="mt-3">
+                                        <label class="form-label fw-semibold">Upload File</label>
+                                        <input type="file" class="form-control" name="upload_file" id="upload_file">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary mt-4 px-5 py-2"
+                                    style="font-size:17px;border-radius:6px;">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
-                {{-- FORM --}}
-                <form id="detcForm" action="{{ route('detc.action.store', [$complain->secure_id]) }}" method="POST"
-                    style="display:none;">
-                    @csrf
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold required">Proposed Action</label>
-                            <select class="form-select" id="proposedAction" name="proposed_action" required>
-                                <option value="">Select</option>
-                                <option value="actionable">Actionable</option>
-                                <option value="non_actionable">Non Actionable</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6" id="actionableBox" style="display:none;">
-                            <label class="form-label fw-semibold required">Select Action</label>
-                            <select class="form-select" id="actionSelect" name="action_taken">
-                                <option value="">Select</option>
-                                <option value="action_taken">Action Taken</option>
-                                <option value="tax_evasion">Tax Evasion</option>
-                                <option value="any_other">Any Other</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6" id="nonActionableBox" style="display:none;">
-                            <label class="form-label fw-semibold required">Reason</label>
-                            <select class="form-select" id="reasonSelect" name="reason">
-                                <option value="">Select</option>
-                                <option value="information_incomplete">Information Incomplete</option>
-                                <option value="false_information">False Information</option>
-                                <option value="any_other">Any Other</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="form-label fw-semibold required">Remarks</label>
-                        <textarea class="form-control" id="remarks" name="remarks" rows="3" required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary mt-3 px-4">Submit</button>
-                </form>
+                {{-- *************** FORM END **************** --}}
             @else
+                {{-- SAME CODE --}}
                 <div class="card shadow-lg border-0 mt-4" style="border-radius:12px;">
                     <div class="card-header"
                         style="background:linear-gradient(45deg,#0a3d62,#1e5f9d);color:white;border-radius:12px 12px 0 0;">
@@ -250,7 +306,6 @@
                                     </span>
                                 </div>
                             </div>
-
                             @if ($detcAction->action_taken)
                                 <div class="col-md-6">
                                     <div class="p-3 shadow-sm rounded"
@@ -308,36 +363,37 @@
         </div>
     </div>
 
-
-    {{-- FIXED JS --}}
+    {{-- JS --}}
     <script>
         document.getElementById('proceedBtn').onclick = () => {
             document.getElementById('proceedSection').style.display = 'none';
             document.getElementById('detcForm').style.display = 'block';
         };
 
-        document.getElementById('proposedAction').onchange = function() {
-            let act = document.getElementById('actionableBox');
-            let non = document.getElementById('nonActionableBox');
+        document.querySelectorAll('input[name="proposed_action"]').forEach((el) => {
+            el.addEventListener('change', function() {
+                let act = document.getElementById('actionableBox');
+                let non = document.getElementById('nonActionableBox');
 
-            let actionSel = act.querySelector('select');
-            let reasonSel = non.querySelector('select');
+                let actionSel = document.getElementById('actionSelect');
+                let reasonSel = document.getElementById('reasonSelect');
 
-            if (this.value === 'actionable') {
-                act.style.display = 'block';
-                non.style.display = 'none';
-                reasonSel.value = '';
-            } else if (this.value === 'non_actionable') {
-                act.style.display = 'none';
-                non.style.display = 'block';
-                actionSel.value = '';
-            } else {
-                act.style.display = 'none';
-                non.style.display = 'none';
-                actionSel.value = '';
-                reasonSel.value = '';
-            }
-        };
+                if (this.value === "actionable") {
+                    act.style.display = "block";
+                    non.style.display = "none";
+                    reasonSel.value = "";
+                } else if (this.value === "non_actionable") {
+                    act.style.display = "none";
+                    non.style.display = "block";
+                    actionSel.value = "";
+                } else {
+                    act.style.display = "none";
+                    non.style.display = "none";
+                    actionSel.value = "";
+                    reasonSel.value = "";
+                }
+            });
+        });
     </script>
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -361,5 +417,118 @@
             });
         </script>
     @endif
+
+    {{-- <script>
+        document.getElementById("detcForm").addEventListener("submit", function(e) {
+
+            let proposed = document.querySelector('input[name="proposed_action"]:checked');
+            let actionable = document.getElementById('actionSelect').value;
+            let nonActionable = document.getElementById('reasonSelect').value;
+            let fileInput = document.getElementById('upload_file');
+            let file = fileInput.files[0];
+
+            // 1. Proposed Action Required
+            if (!proposed) {
+                e.preventDefault();
+                Swal.fire("Required!", "Please select Proposed Action", "warning");
+                return false;
+            }
+
+            // 2. If actionable selected then Action Taken required
+            if (proposed.value === "actionable" && actionable === "") {
+                e.preventDefault();
+                Swal.fire("Required!", "Please select Action Taken", "warning");
+                return false;
+            }
+
+            // 3. If non-actionable selected then Reason required
+            if (proposed.value === "non_actionable" && nonActionable === "") {
+                e.preventDefault();
+                Swal.fire("Required!", "Please select Reason", "warning");
+                return false;
+            }
+
+            // 4. File Validation (optional but if exists then check)
+            if (file) {
+
+                let allowed = ["pdf", "jpg", "jpeg"];
+                let ext = file.name.split('.').pop().toLowerCase();
+
+                if (!allowed.includes(ext)) {
+                    e.preventDefault();
+                    Swal.fire("Invalid File!", "Only pdf, jpg, jpeg allowed!", "error");
+                    return false;
+                }
+
+                if (file.size > 1024 * 1024) {
+                    e.preventDefault();
+                    Swal.fire("Too Large!", "File must be less than 1MB!", "error");
+                    return false;
+                }
+            }
+
+        });
+    </script> --}}
+
+    <script>
+        document.getElementById("detcForm").addEventListener("submit", function(e) {
+
+            let proposed = document.querySelector('input[name="proposed_action"]:checked');
+            let actionable = document.getElementById('actionSelect').value;
+            let nonActionable = document.getElementById('reasonSelect').value;
+            let remarks = document.getElementById('remarks').value.trim();
+            let fileInput = document.getElementById('upload_file');
+            let file = fileInput.files[0];
+
+            // 1. Proposed Action Required
+            if (!proposed) {
+                e.preventDefault();
+                Swal.fire("Required!", "Please select Proposed Action", "warning");
+                return false;
+            }
+
+            // 2. If actionable selected then Action Taken required
+            if (proposed.value === "actionable" && actionable === "") {
+                e.preventDefault();
+                Swal.fire("Required!", "Please select Action Taken", "warning");
+                return false;
+            }
+
+            // 3. If non-actionable selected then Reason required
+            if (proposed.value === "non_actionable" && nonActionable === "") {
+                e.preventDefault();
+                Swal.fire("Required!", "Please select Reason", "warning");
+                return false;
+            }
+
+            // 4. Remarks Required
+            if (remarks === "") {
+                e.preventDefault();
+                Swal.fire("Required!", "Please enter Remarks", "warning");
+                return false;
+            }
+
+            // 5. File Validation (optional)
+            if (file) {
+
+                let allowed = ["pdf", "jpg", "jpeg"];
+                let ext = file.name.split('.').pop().toLowerCase();
+
+                if (!allowed.includes(ext)) {
+                    e.preventDefault();
+                    Swal.fire("Invalid File!", "Only pdf, jpg, jpeg allowed!", "error");
+                    return false;
+                }
+
+                if (file.size > 1024 * 1024) {
+                    e.preventDefault();
+                    Swal.fire("Too Large!", "File must be less than 1MB!", "error");
+                    return false;
+                }
+            }
+        });
+    </script>
+
+
 
 @endsection

@@ -50,7 +50,7 @@
                             <th>Date of Receiving</th>
                             <th>Application Id</th>
                             <th>Category</th>
-                            <th>Type of Complaint</th>
+                            <th>Type of Information</th>
                             <th>Status</th>
                             <th>View</th>
                         </tr>

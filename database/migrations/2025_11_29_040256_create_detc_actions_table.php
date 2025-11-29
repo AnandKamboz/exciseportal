@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('action_taken')->nullable();
             $table->string('reason')->nullable();
             $table->text('remarks')->nullable();
+            $table->string('file_name')->nullable();
             $table->unsignedBigInteger('detc_user_id');
             $table->timestamps();
             // OPTIONAL: foreign key relation

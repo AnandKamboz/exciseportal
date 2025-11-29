@@ -80,7 +80,6 @@
 
 
 
-
             {{-- ===================== SECTION 2 ====================== --}}
             <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
                 Entity
@@ -88,7 +87,7 @@
 
             @php
                 $infoFields = [
-                    'type_of_complaint' => 'Type of Complaint',
+                    'type_of_complaint' => 'Type of Information',
                     'complaint_type' => 'Information Type',
                     'involved_type' => 'Involved Type',
 
@@ -101,9 +100,6 @@
                     'gst_firm_name' => 'Firm Name',
                     'gst_firm_address' => 'Firm Address',
                     'gst_gstin' => 'GSTIN',
-
-
-
                     'gst_person_name' => 'Person Name',
                     'gst_locality' => 'Locality',
                     'gst_city' => 'City',
@@ -134,7 +130,9 @@
                         <div class="col-md-4">
                             <div class="p-3 shadow-sm rounded bg-light">
                                 <strong>{{ $label }}:</strong><br>
-                                <span class="text-secondary">{{ ucwords($complain->$col) }}</span>
+                                <span class="text-secondary">
+                                    {{ ucwords(str_replace('_', ' ', $complain->$col)) }}
+                                </span>
                             </div>
                         </div>
                     @endif
@@ -170,7 +168,6 @@
                     @endforeach
                 </div>
             @endif
-
 
             {{-- BACK BUTTON --}}
             <div class="mt-4 text-center">
