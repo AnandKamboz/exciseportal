@@ -439,7 +439,7 @@
                     <div id="gstFields" class="d-none">
 
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <label class="form-label required">Type of Information</label>
                                 <select id="complaintType" name="complaintType" class="form-select" required>
                                     <option value="">Select Information</option>
@@ -447,7 +447,22 @@
                                     <option value="receipt_not_issued">Receipt not being issued</option>
                                     <option value="any_other">Any Other</option>
                                 </select>
+                            </div> --}}
+
+                            <div class="col-md-6">
+                                <label class="form-label required">Type of Information</label>
+                                <select id="complaintType" name="complaintType" class="form-select" required>
+                                    <option value="">Select Information</option>
+                                    <option value="wrong_rate_of_tax">Wrong rate of tax</option>
+                                    <option value="bill/invoice_not_issued">Bill/Invoice not being issued</option>
+                                    <option value="under_reporting">Under reporting of sales/ purchases</option>
+                                    <option value="fake_itc">Availing fake ITC</option>
+                                    <option value="not_obtained_gstin">Not obtained GSTIN despite being eligible
+                                    </option>
+                                    <option value="any_other">Any Other</option>
+                                </select>
                             </div>
+
 
                             <div class="col-md-6">
                                 <label class="form-label required">

@@ -174,7 +174,7 @@
 
 
             {{-- ================= DETC ACTION ================= --}}
-            @if ($detcAction)
+            {{-- @if ($detcAction)
                 <hr>
                 <h4 class="fw-bold mb-3 mt-3">DETC Action Taken</h4>
 
@@ -221,7 +221,74 @@
                         </div>
                     </div>
                 </div>
+            @endif --}}
+
+            {{-- ================= DETC ACTION ================= --}}
+            @if ($detcAction)
+                <hr>
+                <h4 class="fw-bold mb-3 mt-3">DETC Action Taken</h4>
+
+                <div class="row g-3">
+
+                    @if ($detcAction->proposed_action)
+                        <div class="col-md-4">
+                            <div class="info-card" style="border-left:4px solid #0a3d62;">
+                                <div class="label">Proposed Action</div>
+                                <div class="value">{{ ucwords(str_replace('_', ' ', $detcAction->proposed_action)) }}</div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($detcAction->action_taken)
+                        <div class="col-md-4">
+                            <div class="info-card" style="border-left:4px solid #28a745;">
+                                <div class="label">Action Taken</div>
+                                <div class="value">{{ ucwords(str_replace('_', ' ', $detcAction->action_taken)) }}</div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($detcAction->reason)
+                        <div class="col-md-4">
+                            <div class="info-card" style="border-left:4px solid #ffc107;">
+                                <div class="label">Reason</div>
+                                <div class="value">{{ ucwords(str_replace('_', ' ', $detcAction->reason)) }}</div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="col-md-4">
+                        <div class="info-card" style="border-left:4px solid #6c757d;">
+                            <div class="label">Remarks</div>
+                            <div class="value">{{ $detcAction->remarks }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="info-card" style="border-left:4px solid #17a2b8;">
+                            <div class="label">Date</div>
+                            <div class="value">{{ $detcAction->created_at->format('d-m-Y') }}</div>
+                        </div>
+                    </div>
+
+                    {{-- ⭐⭐ FILE SHOW HERE ⭐⭐ --}}
+                    @if ($detcAction->file_name)
+                        <div class="col-md-4">
+                            <div class="info-card" style="border-left:4px solid #007bff;">
+                                <div class="label">DETC Report</div>
+                                <div class="value">
+                                    <a href="{{ asset('storage/complaints/' . $detcAction->user_application_id . '/' . $detcAction->file_name) }}"
+                                        class="btn btn-primary btn-sm mt-2" target="_blank">
+                                        View Report
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                </div>
             @endif
+
 
 
             <div class="text-center mt-4">
