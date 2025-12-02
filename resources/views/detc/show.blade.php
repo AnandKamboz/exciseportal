@@ -196,7 +196,8 @@
                     style="background:#ffffff;border-radius:12px;border-left:5px solid #0a3d62;">
 
                     <div class="p-3" style="background:#0a3d62;border-radius:12px 12px 0 0;color:white;font-weight:600;">
-                        DETC Action Form
+                        {{-- DETC Action Form --}}
+                        Upload Report
                     </div>
 
                     <div class="p-4">
@@ -292,7 +293,7 @@
                 <div class="card shadow-lg border-0 mt-4" style="border-radius:12px;">
                     <div class="card-header"
                         style="background:linear-gradient(45deg,#0a3d62,#1e5f9d);color:white;border-radius:12px 12px 0 0;">
-                        <h5 class="mb-0 fw-bold text-white">DETC Action Taken</h5>
+                        <h5 class="mb-0 fw-bold text-white">Uploaded Report Details</h5>
                     </div>
 
                     <div class="card-body" style="background:#ffffff;">

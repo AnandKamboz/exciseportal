@@ -44,22 +44,34 @@ class AuthController extends Controller
 
     // public function verifyOtp(Request $request)
     // {
-    //     $request->validate([
+
+    //     $validator = Validator::make($request->all(), [
     //         'mobile' => 'required|numeric|digits:10',
     //         'otp' => 'required|numeric|digits:6',
-    //         'captcha' => 'required|size:6',
+    //         'captcha' => 'required|size:6|captcha',
+    //     ], [
+    //         'mobile.required' => 'Mobile number is required.',
+    //         'mobile.numeric' => 'Mobile number must be numeric.',
+    //         'mobile.digits' => 'Mobile number must be exactly 10 digits.',
+    //         'otp.required' => 'OTP is required.',
+    //         'otp.numeric' => 'OTP must be numeric.',
+    //         'otp.digits' => 'OTP must be exactly 6 digits.',
+    //         'captcha.required' => 'Captcha is required.',
+    //         'captcha.size' => 'Captcha must be 6 characters.',
+    //         'captcha.captcha' => 'Captcha is invalid. Please try again.',
     //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => $validator->errors()->first(),
+    //             'new_captcha' => captcha_src(),
+    //         ]);
+    //     }
 
     //     $mobile = $request->mobile;
     //     $otpInput = $request->otp;
     //     $captcha = $request->captcha;
-
-    //     if ($captcha !== session('captcha')) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Invalid captcha'
-    //         ]);
-    //     }
 
     //     $otpRecord = Otp::where('mobile', $mobile)
     //         ->where('otp', $otpInput)
@@ -68,10 +80,10 @@ class AuthController extends Controller
     //         ->latest()
     //         ->first();
 
-    //     if (!$otpRecord) {
+    //     if (! $otpRecord) {
     //         return response()->json([
     //             'success' => false,
-    //             'message' => 'Invalid or expired OTP'
+    //             'message' => 'Invalid or expired OTP',
     //         ]);
     //     }
 
@@ -99,88 +111,25 @@ class AuthController extends Controller
     //     $role = $user->roles()->pluck('role_name')->first();
 
     //     if ($role === 'detc') {
-    //         $redirectUrl = route('detc.dashboard');
-    //     } elseif ($role === 'excise inspector') {
-    //         $redirectUrl = route('inspector.dashboard');
-    //     } else {
-    //         // ✅ Always redirect to user dashboard
-    //         $redirectUrl = route('user.dashboard');
-    //     }
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'redirect_url' => $redirectUrl,
-    //         'message' => 'Login successful!',
-    //     ]);
-    // }
-
-    // public function verifyOtp(Request $request)
-    // {
-    //     $request->validate([
-    //         'mobile' => 'required|numeric|digits:10',
-    //         'otp' => 'required|numeric|digits:6',
-    //         'captcha' => 'required|size:6',
-    //     ]);
-
-    //     $mobile = $request->mobile;
-    //     $otpInput = $request->otp;
-    //     $captcha = $request->captcha;
-
-    //     if ($captcha !== session('captcha')) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Invalid captcha'
-    //         ]);
-    //     }
-
-    //     $otpRecord = Otp::where('mobile', $mobile)
-    //         ->where('otp', $otpInput)
-    //         ->where('is_used', false)
-    //         ->where('expires_at', '>=', Carbon::now())
-    //         ->latest()
-    //         ->first();
-
-    //     if (!$otpRecord) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Invalid or expired OTP'
-    //         ]);
-    //     }
-
-    //     $otpRecord->update(['is_used' => true]);
-
-    //     do {
-    //         $secureId = Str::random(32);
-    //     } while (User::where('secure_id', $secureId)->exists());
-
-    //     $user = User::firstOrCreate(
-    //         ['mobile' => $mobile],
-    //         ['secure_id' => $secureId]
-    //     );
-
-    //     if ($user->wasRecentlyCreated) {
-    //         $defaultRole = RoleGroup::where('role_name', 'user')->first();
-    //         if ($defaultRole) {
-    //             $user->roles()->attach($defaultRole->id);
-    //         }
-    //     }
-
-    //     auth()->login($user);
-    //     $request->session()->put('mobile', $mobile);
-
-    //     $role = $user->roles()->pluck('role_name')->first();
-
-    //     $recordExists = Complainant::where('complainant_phone', $mobile)
-    //         ->where('is_completed', 1)
-    //         ->exists();
-
-    //         if ($role === 'detc') {
     //             $redirectUrl = route('detc.dashboard');
     //         } elseif ($role === 'excise inspector') {
     //             $redirectUrl = route('inspector.dashboard');
     //         } else {
-    //             $redirectUrl = $recordExists ? route('user.dashboard') : route('complainant');
-    //         }
+    //             $mobile = Auth::user()->mobile;
+    //             $complaintExists = DB::table('complainants')
+    //                 ->where('complainant_phone', $mobile)
+    //                 ->where('is_completed', 1)
+    //                 ->exists();
+
+    //             if ($complaintExists) {
+    //                 $redirectUrl = route('user.dashboard');
+    //             }
+    //             elseif ($role === 'hq') {
+    //                 $redirectUrl = route('hq.dashboard');
+    //             } else {
+    //                 $redirectUrl = route('complainant');
+    //             }
+    //     }
 
     //     return response()->json([
     //         'success' => true,
@@ -191,38 +140,22 @@ class AuthController extends Controller
 
     public function verifyOtp(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'mobile' => 'required|numeric|digits:10',
             'otp' => 'required|numeric|digits:6',
             'captcha' => 'required|size:6|captcha',
-        ], [
-            'mobile.required' => 'Mobile number is required.',
-            'mobile.numeric' => 'Mobile number must be numeric.',
-            'mobile.digits' => 'Mobile number must be exactly 10 digits.',
-            'otp.required' => 'OTP is required.',
-            'otp.numeric' => 'OTP must be numeric.',
-            'otp.digits' => 'OTP must be exactly 6 digits.',
-            'captcha.required' => 'Captcha is required.',
-            'captcha.size' => 'Captcha must be 6 characters.',
-            'captcha.captcha' => 'Captcha is invalid. Please try again.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'error',
+                'status' => false,
                 'message' => $validator->errors()->first(),
                 'new_captcha' => captcha_src(),
-            ]);
+            ], 422);
         }
 
-        $mobile = $request->mobile;
-        $otpInput = $request->otp;
-        $captcha = $request->captcha;
-
-        // ✅ OTP check
-        $otpRecord = Otp::where('mobile', $mobile)
-            ->where('otp', $otpInput)
+        $otpRecord = Otp::where('mobile', $request->mobile)
+            ->where('otp', $request->otp)
             ->where('is_used', false)
             ->where('expires_at', '>=', Carbon::now())
             ->latest()
@@ -230,76 +163,42 @@ class AuthController extends Controller
 
         if (! $otpRecord) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Invalid or expired OTP',
-            ]);
+            ], 401);
         }
 
-        // ✅ Mark OTP used
         $otpRecord->update(['is_used' => true]);
 
-        // ✅ Generate new secure_id
         do {
             $secureId = Str::random(32);
         } while (User::where('secure_id', $secureId)->exists());
 
-        // ✅ Create user record (insert if not exists)
         $user = User::firstOrCreate(
-            ['mobile' => $mobile],
+            ['mobile' => $request->mobile],
             ['secure_id' => $secureId]
         );
 
-        // ✅ Assign default role if newly created
+        // assign role if new user
         if ($user->wasRecentlyCreated) {
-            $defaultRole = RoleGroup::where('role_name', 'user')->first();
-            if ($defaultRole) {
-                $user->roles()->attach($defaultRole->id);
+            $role = RoleGroup::where('role_name', 'user')->first();
+            if ($role) {
+                $user->roles()->attach($role->id);
             }
         }
 
-        // ✅ Login and session
-        auth()->login($user);
-        $request->session()->put('mobile', $mobile);
-
-        // ✅ Get role name
-        $role = $user->roles()->pluck('role_name')->first();
-
-      
-        // if ($role === 'detc') {
-        //     $redirectUrl = route('detc.dashboard');
-        // } elseif ($role === 'excise inspector') {
-        //     $redirectUrl = route('inspector.dashboard');
-        // } elseif ($role === 'hq') {
-        //     $redirectUrl = route('hq.dashboard');
-        // }else {
-        //     $redirectUrl = route('user.dashboard');
-        // }
-
-        if ($role === 'detc') {
-                $redirectUrl = route('detc.dashboard');
-            } elseif ($role === 'excise inspector') {
-                $redirectUrl = route('inspector.dashboard');
-            } else {
-                $mobile = Auth::user()->mobile;
-                $complaintExists = DB::table('complainants')
-                    ->where('complainant_phone', $mobile)
-                    ->where('is_completed', 1)
-                    ->exists();
-
-                if ($complaintExists) {
-                    $redirectUrl = route('user.dashboard');
-                }
-                elseif ($role === 'hq') {
-                    $redirectUrl = route('hq.dashboard');
-                } else {
-                    $redirectUrl = route('complainant');
-                }
-        }
+        // Generate Token
+        $token = $user->createToken('MobileLoginToken')->plainTextToken;
 
         return response()->json([
-            'success' => true,
-            'redirect_url' => $redirectUrl,
-            'message' => 'Login successful!',
-        ]);
+            'status' => true,
+            'message' => 'OTP verified successfully',
+            'data' => [
+                'token' => $token,
+                'secure_id' => $user->secure_id,
+                'mobile' => $user->mobile,
+                'role' => $user->roles()->pluck('role_name')->first(),
+            ],
+        ], 200);
     }
 }

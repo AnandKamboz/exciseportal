@@ -7,12 +7,12 @@ use App\Models\Complainant;
 use App\Models\District;
 use App\Models\IndiaDistrict;
 use App\Models\State;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ComplainantController extends Controller
 {
@@ -44,12 +44,12 @@ class ComplainantController extends Controller
         // ---------------- VALIDATION ----------------
         $request->validate([
             'informer_name' => 'required|string|max:100',
+            Rule::unique('complainants', 'informer_email')->ignore(auth()->id(), 'user_id'),
             'informer_aadhar' => 'required|digits:12',
+            'informer_state' => ['required', 'digits_between:1,2', 'numeric'],
+            'informer_district' => ['required', 'digits_between:1,3', 'numeric'],
             'informer_address1' => 'required|string|max:255',
             'informer_address2' => 'required|string|max:255',
-            'informer_state' => 'required',
-            'informer_district' => 'required',
-            'informer_email' => 'nullable|email',
         ]);
 
         $mobile = auth()->user()->mobile;
@@ -161,13 +161,10 @@ class ComplainantController extends Controller
 
     public function saveComplaintType(Request $request)
     {
-
         $request->complaint_type = 'gst';
-
         $request->validate([
             'complaint_type' => 'required|in:gst,excise,vat',
         ]);
-
         $user = Auth::user();
         $mobile = $user->mobile;
 
@@ -187,344 +184,6 @@ class ComplainantController extends Controller
             'complaint_type' => $request->complaint_type,
         ]);
     }
-
-    // public function submitComplaint(Request $request)
-    // {
-    //     $request->merge([
-    //         'taxType' => 'gst',
-    //     ]);
-
-    //     $validator = Validator::make($request->all(), [
-    //         'taxType' => 'required|in:gst,vat,excise',
-    //     ], [
-    //         'taxType.required' => 'Complaint type is required.',
-    //         'taxType.in' => 'Invalid complaint type selected.',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => $validator->errors()->first(),
-    //         ]);
-    //     }
-
-    //     $type = strtolower($request->taxType);
-    //     $mobile = Auth::user()->mobile;
-
-    //     $rules = match ($type) {
-    //         'gst' => [
-    //             'complaintType' => 'required',
-    //             'gstDescription' => 'required|string|max:150',
-    //             'pincode' => 'required|digits:6',
-    //             'involvedType' => 'nullable|in:firm,vehicle',
-    //             'gstFirmName' => 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/u',
-    //             'gstGstin' => [
-    //                 'nullable',
-    //                 'size:15',
-    //                 'regex:/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i',
-    //             ],
-    //             'gstFirmAddress' => 'nullable|string',
-    //             'gstVehicleNumber' => [
-    //                 'nullable',
-    //                 'string',
-    //                 'max:10',
-    //                 'regex:/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1,4}$/i',
-    //             ],
-    //             'gstPersonName' => 'nullable|string',
-    //             'gstProof.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024',
-    //         ],
-
-    //         'vat' => [
-    //             'vatFirmName' => 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/u',
-    //             'vatTin' => [
-    //                 'nullable',
-    //                 'alpha_num',
-    //                 'size:11',
-    //                 'regex:/^[0-9A-Z]{11}$/i',
-    //             ],
-    //             'vatFirmAddress' => 'nullable|string',
-    //             'vatLocality' => 'required|string|max:255',
-    //             'vatDistrict' => 'required|string|max:255',
-    //             'vatDescription' => 'required|string|max:150',
-    //             'vatProof.*' => 'required|file|mimes:pdf,jpg,jpeg,png|max:1024',
-    //             'vatVehicleNumber' => [
-    //                 'nullable',
-    //                 'string',
-    //                 'max:10',
-    //                 'regex:/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1,4}$/i',
-    //             ],
-
-    //         ],
-    //         'excise' => [
-    //             'exciseName' => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
-    //             'exciseDetails' => 'required|string|max:2000',
-    //             'exciseDesc' => 'nullable|string|max:255',
-    //             'excisePlace' => 'required|string|max:255',
-    //             'exciseTime' => 'required|string|max:255',
-    //             'exciseProof.*' => 'file|mimes:pdf,jpg,jpeg,png|max:1024',
-    //             'exciseCity' => 'required',
-    //             'exciseVehicleNumber' => [
-    //                 'nullable',
-    //                 'string',
-    //                 'max:10',
-    //                 'regex:/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{1,4}$/i',
-    //             ],
-    //         ],
-    //         default => [],
-    //     };
-
-    //     $validator = Validator::make($request->all(), $rules);
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => $validator->errors()->first(),
-    //         ]);
-    //     }
-
-    //     $complaint = Complainant::where('complainant_phone', $mobile)
-    //         ->where('is_completed', 0)
-    //         ->first();
-
-    //     if (! $complaint) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'No pending complaint found for update.',
-    //         ]);
-    //     }
-
-    //     if (empty($complaint->application_id)) {
-    //         $yearSuffix = now()->format('y');
-
-    //         switch (strtoupper($type)) {
-    //             case 'EXCISE':
-    //                 $prefix = 'EXC';
-    //                 break;
-    //             case 'GST':
-    //                 $prefix = 'GST';
-    //                 break;
-    //             case 'VAT':
-    //                 $prefix = 'VAT';
-    //                 break;
-    //             default:
-    //                 $prefix = 'CMP';
-    //         }
-
-    //         do {
-    //             $randomDigits = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
-    //             $applicationId = "{$prefix}{$yearSuffix}-{$randomDigits}";
-
-    //         } while (Complainant::where('application_id', $applicationId)->exists());
-
-    //         $complaint->application_id = $applicationId;
-
-    //     } else {
-    //         $applicationId = $complaint->application_id;
-    //     }
-
-    //     $complaint->complaint_type = $type;
-
-    //     // Here
-
-    //     $pin = $request->pincode;
-    //     $url = 'https://api.postalpincode.in/pincode/'.$pin;
-
-    //     $curl = curl_init();
-
-    //     curl_setopt_array($curl, [
-    //         CURLOPT_URL => $url,
-    //         CURLOPT_RETURNTRANSFER => true,
-    //         CURLOPT_FOLLOWLOCATION => true,
-    //         CURLOPT_SSL_VERIFYPEER => false,
-    //         CURLOPT_SSL_VERIFYHOST => false,
-    //         CURLOPT_TIMEOUT => 10,
-    //     ]);
-
-    //     $response = curl_exec($curl);
-
-    //     if (curl_errno($curl)) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Unable to connect Postal API: '.curl_error($curl),
-    //         ], 400);
-    //     }
-
-    //     curl_close($curl);
-
-    //     $data = json_decode($response, true);
-
-    //     if (empty($data) || $data[0]['Status'] !== 'Success') {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Invalid PIN Code. Please enter a valid Haryana PIN Code.',
-    //         ], 400);
-    //     }
-
-    //     $post = $data[0]['PostOffice'][0];
-
-    //     $apiState = strtolower($post['State']);
-    //     $apiDistrict = $post['District'];
-
-    //     if ($apiState !== 'haryana') {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Please enter a valid Haryana PIN Code. This PIN Code does not belong to Haryana.',
-    //         ], 400);
-    //     }
-
-    //     $normalizedApiDistrict = strtolower(str_replace([' ', '-', '_'], '', $apiDistrict));
-
-    //     $districts = District::all();
-
-    //     $matchedDistrict = null;
-
-    //     foreach ($districts as $dis) {
-    //         $normalizedDbName = strtolower(str_replace([' ', '-', '_'], '', $dis->name));
-
-    //         if ($normalizedDbName === $normalizedApiDistrict) {
-    //             $matchedDistrict = $dis;
-    //             break;
-    //         }
-    //     }
-
-    //     if (! $matchedDistrict) {
-    //         $matchedDistrict = District::where('name', 'LIKE', '%'.$apiDistrict.'%')->first();
-    //     }
-
-    //     if (! $matchedDistrict) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'District not found in system. API district: '.$apiDistrict,
-    //         ], 400);
-    //     }
-
-    //     if ($type === 'gst') {
-    //         $complaint->type_of_complaint = $request->complaintType;
-    //         $complaint->gst_description = $request->gstDescription;
-    //         // $complaint->gst_building_no = $request->buildingNo;
-    //         // $complaint->gst_street_name = $request->streetName;
-    //         // $complaint->gst_address1 = $request->gst_address1;
-    //         // $complaint->gst_address2 = $request->gst_address2;
-    //         $complaint->pincode = $request->pincode;
-    //         $complaint->gst_firm_name = $request->gstFirmName;
-    //         $complaint->gst_gstin = strtoupper($request->gstGstin);
-    //         $complaint->gst_firm_address = $request->gstFirmAddress;
-    //         $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
-    //         $complaint->declaration = $request->has('declaration') ? 1 : 0;
-    //         $complaint->gst_person_name = $request->gstPersonName ?? '';
-    //         $complaint->involved_type = $request->involvedType ?? '';
-    //         $complaint->district_id = $matchedDistrict->id;
-    //         $complaint->district_name = $matchedDistrict->name;
-
-    //         if ($request->hasFile('gstProof')) {
-    //             $files = $request->file('gstProof');
-
-    //             if (count($files) > 5) {
-    //                 return response()->json([
-    //                     'success' => false,
-    //                     'message' => 'You can upload a maximum of 5 files.',
-    //                 ]);
-    //             }
-
-    //             $uploadedFiles = [];
-    //             foreach ($files as $file) {
-    //                 $fileName = time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
-    //                 $file->storeAs("complaints/{$applicationId}", $fileName, 'public');
-    //                 $uploadedFiles[] = $fileName;
-    //             }
-    //             $complaint->gst_proof = json_encode($uploadedFiles);
-    //         }
-    //     }
-
-    //     // 🔹 VAT Complaint Data
-
-    //     if ($type === 'vat') {
-    //         $complaint->vat_locality = $request->vatLocality;
-    //         $complaint->district = $request->vatDistrict;
-    //         $complaint->vat_city = $request->vatCity;
-    //         $complaint->vat_description = $request->vatDescription;
-    //         $complaint->involved_type = $request->vatInvolvedType;
-    //         $complaint->vat_firm_name = $request->vatFirmName;
-    //         $complaint->vat_tin = strtoupper($request->vatTin);
-    //         $complaint->vat_firm_address = $request->vatFirmAddress;
-    //         $complaint->vat_vehicle_number = $request->vatVehicleNumber;
-    //         $complaint->vat_person_name = $request->vatPersonName ?? '';
-    //         $complaint->declaration = $request->has('declaration') ? 1 : 0;
-
-    //         if ($request->hasFile('vatProof')) {
-    //             $files = $request->file('vatProof');
-
-    //             if (count($files) > 5) {
-    //                 return response()->json([
-    //                     'success' => false,
-    //                     'message' => 'You can upload a maximum of 5 files.',
-    //                 ]);
-    //             }
-
-    //             $uploadedFiles = [];
-    //             foreach ($files as $file) {
-    //                 $fileName = time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
-    //                 $file->storeAs("complaints/{$applicationId}", $fileName, 'public');
-    //                 $uploadedFiles[] = $fileName;
-    //             }
-    //             $complaint->vat_proof = json_encode($uploadedFiles);
-    //         }
-    //     }
-
-    //     // 🔹 Excise Complaint Data
-    //     if ($type === 'excise') {
-    //         $complaint->excise_name = $request->exciseName;
-    //         $complaint->excise_desc = $request->exciseDesc;
-    //         $complaint->excise_place = $request->excisePlace;
-    //         $complaint->excise_time = $request->exciseTime;
-    //         $complaint->excise_details = $request->exciseDetails;
-    //         $complaint->excise_vehicle_number = $request->exciseVehicleNumber ?? '';
-    //         $complaint->district = $request->exciseDistrict;
-    //         $complaint->excise_city = $request->exciseCity;
-    //         $complaint->declaration = $request->has('declaration') ? 1 : 0;
-
-    //         if ($request->hasFile('exciseProof')) {
-    //             $files = $request->file('exciseProof');
-
-    //             if (count($files) > 5) {
-    //                 return response()->json([
-    //                     'success' => false,
-    //                     'message' => 'You can upload a maximum of 5 files.',
-    //                 ]);
-    //             }
-
-    //             $uploadedFiles = [];
-    //             foreach ($files as $file) {
-    //                 $fileName = time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
-    //                 $file->storeAs("complaints/{$complaint->application_id}", $fileName, 'public');
-    //                 $uploadedFiles[] = $fileName;
-    //             }
-
-    //             // Save as JSON in database
-    //             $complaint->excise_proof = json_encode($uploadedFiles);
-    //         }
-    //     }
-
-    //     $complaint->is_completed = 1;
-    //     $complaint->save();
-
-    //     // 🔹 Update User Info if Missing
-    //     $user = User::where('mobile', $mobile)->first();
-    //     if ($user && (empty($user->aadhaar) || is_null($user->aadhaar))) {
-    //         $user->update([
-    //             'email' => $request->informerEmail ?? null,
-    //             'aadhaar' => $request->informerAadhar,
-    //             'address' => $request->informerAddress,
-    //             'district' => 'Demo District',
-    //             'updated_at' => now(),
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Complaint updated successfully. Your Application ID is: '.$complaint->application_id,
-    //         'application_id' => $complaint->application_id,
-    //     ]);
-    // }
 
     public function submitComplaint(Request $request)
     {
@@ -548,18 +207,55 @@ class ComplainantController extends Controller
 
         $rules = match ($type) {
             'gst' => [
-                'complaintType' => 'required',
+                'complaintType' => [
+                    'required',
+                    'string',
+                    'in:wrong_rate_of_tax,bill/invoice_not_issued,under_reporting,fake_itc,not_obtained_gstin,any_other',
+                ],
                 'gstDescription' => 'required|string|max:150',
-                'location' => 'required',
-                'pincode' => 'required|digits:6',
+                'location' => 'required|max:150',
+                'district' => ['required', 'numeric', 'digits_between:1,2'],
+                'pincode' => 'required|numeric:6',
+                'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
+                'involvedType' => ['required', 'string', 'in:firm,vehicle'],
+
                 'gstFirmName' => 'nullable|string',
                 'gstGstin' => 'nullable|size:15',
                 'gstFirmAddress' => 'nullable|string',
+
                 'gstVehicleNumber' => 'nullable|string|max:10',
-                'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
+                'gstPersonName' => 'nullable|string|max:50',
+
+                'declaration' => 'required|in:1',
             ],
             default => [],
         };
+
+        // Here Both Firm AND VECHICLE rogather noty allowed
+
+        $firmGroup = [
+            $request->gstFirmName,
+            $request->gstGstin,
+            $request->gstFirmAddress,
+        ];
+
+        $vehicleGroup = [
+            $request->gstVehicleNumber,
+            $request->gstPersonName,
+        ];
+
+        // check if any value exists in group
+        $firmFilled = collect($firmGroup)->filter()->isNotEmpty();
+        $vehicleFilled = collect($vehicleGroup)->filter()->isNotEmpty();
+
+        // ❌ both groups filled
+        if ($firmFilled && $vehicleFilled) {
+            return back()->withErrors([
+                'error' => 'You cannot fill both Firm and Vehicle details together.',
+            ])->withInput();
+        }
+
+        // Here
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -569,6 +265,8 @@ class ComplainantController extends Controller
                 'message' => $validator->errors()->first(),
             ]);
         }
+
+        // Here Both Firm AND VECHICLE rogather noty allowed
 
         // find complaint
         $complaint = Complainant::where('complainant_phone', $mobile)
@@ -667,9 +365,11 @@ class ComplainantController extends Controller
             $complaint->gst_gstin = strtoupper($request->gstGstin);
             $complaint->gst_firm_address = $request->gstFirmAddress;
             $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
+            $complaint->gst_person_name = $request->gstPersonName ?? '';
             $complaint->involved_type = $request->involvedType ?? '';
             $complaint->district_id = $matchedDistrict->id;
             $complaint->district_name = $matchedDistrict->name;
+            $complaint->declaration = '1';
 
             // files
             if ($request->hasFile('gstProof')) {

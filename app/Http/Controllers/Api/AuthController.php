@@ -39,66 +39,9 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // public function verifyOtp(Request $request)
-    // {
-    //     $request->validate([
-    //         'mobile' => 'required|numeric|digits:10',
-    //         'otp'    => 'required|numeric|digits:6',
-    //     ]);
-
-    //     $otpRecord = Otp::where('mobile', $request->mobile)
-    //         ->where('otp', $request->otp)
-    //         ->where('is_used', false)
-    //         ->where('expires_at', '>=', Carbon::now())
-    //         ->latest()
-    //         ->first();
-
-    //     if (!$otpRecord) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Invalid or expired OTP'
-    //         ], 422);
-    //     }
-
-    //     $otpRecord->update(['is_used' => true]);
-
-    //     $user = User::where('mobile', $request->mobile)->first();
-
-    //     if (!$user) {
-    //         do {
-    //             $secureId = Str::random(32);
-    //         } while (User::where('secure_id', $secureId)->exists());
-
-    //         $user = User::create([
-    //             'mobile'    => $request->mobile,
-    //             'secure_id' => $secureId,
-    //         ]);
-
-    //         $defaultRole = RoleGroup::where('role_name', 'user')->first();
-    //         if ($defaultRole) {
-    //             $user->roles()->attach($defaultRole->id);
-    //         }
-    //     }
-
-    //     $token = $user->createToken('api_token')->plainTextToken;
-
-    //     $recordExists = Complainant::where('complainant_phone', $request->mobile)
-    //         ->where('is_completed', 1)
-    //         ->exists();
-
-    //     $isNewUser = $recordExists ? 1 : 0;
-
-    //     return response()->json([
-    //         'success'     => true,
-    //         'message'     => 'Login successful',
-    //         'token'       => $token,
-    //         'user'        => $user,
-    //         'is_new_user' => $isNewUser,
-    //     ], 200);
-    // }
-
-    public function verifyOtp(Request $request)
-{
+    
+   public function verifyOtp(Request $request)
+   {
     $request->validate([
         'mobile' => 'required|numeric|digits:10',
         'otp'    => 'required|numeric|digits:6',
@@ -148,8 +91,7 @@ class AuthController extends Controller
 
     // Get user's role
     $role = $user->roles()->pluck('role_name')->first() ?? 'user';
-
-    // Check if user has already completed a complaint
+    
     $hasCompletedComplaint = Complainant::where('complainant_phone', $request->mobile)
         ->where('is_completed', 1)
         ->exists();
