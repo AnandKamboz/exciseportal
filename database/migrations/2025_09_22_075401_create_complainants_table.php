@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('complainant_name');
             $table->string('complainant_phone', 10);
             $table->string('complainant_email')->nullable();
-            $table->string('complainant_aadhar', 12);
+            $table->string('complainant_aadhar', 12)->nullable();
             $table->string('complainant_address1');
             $table->string('complainant_address2');
             $table->text('complainant_address');

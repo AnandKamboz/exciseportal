@@ -45,7 +45,7 @@ class ComplainantController extends Controller
         $request->validate([
             'informer_name' => 'required|string|max:100',
             Rule::unique('complainants', 'informer_email')->ignore(auth()->id(), 'user_id'),
-            'informer_aadhar' => 'required|digits:12',
+            // 'informer_aadhar' => 'required|digits:12',
             'informer_state' => ['required', 'digits_between:1,2', 'numeric'],
             'informer_district' => ['required', 'digits_between:1,3', 'numeric'],
             'informer_address1' => 'required|string|max:255',
@@ -72,14 +72,15 @@ class ComplainantController extends Controller
             if ($existingIncomplete) {
                 $existingIncomplete->update([
                     'complainant_name' => $completedRecord->complainant_name,
-                    'complainant_aadhar' => $completedRecord->complainant_aadhar,
+                    // 'complainant_aadhar' => $completedRecord->complainant_aadhar,
+                    'complainant_aadhar' => "",
                     'complainant_address1' => $completedRecord->complainant_address1,
                     'complainant_address2' => $completedRecord->complainant_address2,
                     'complainant_address' => $completedRecord->complainant_address,
                     'complainant_state' => $completedRecord->complainant_state,
                     'complainant_district' => $completedRecord->complainant_district,
                     'complainant_email' => $completedRecord->complainant_email,
-                    'complaint_type' => 'gst', // ★ default value
+                    'complaint_type' => 'gst',
                 ]);
 
                 return response()->json([
@@ -217,7 +218,7 @@ class ComplainantController extends Controller
                 'district' => ['required', 'numeric', 'digits_between:1,2'],
                 'pincode' => 'required|numeric:6',
                 'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
-                'involvedType' => ['required', 'string', 'in:firm,vehicle'],
+                'involvedType' => ['nullable', 'string', 'in:firm,vehicle'],
 
                 'gstFirmName' => 'nullable|string',
                 'gstGstin' => 'nullable|size:15',
@@ -231,8 +232,6 @@ class ComplainantController extends Controller
             default => [],
         };
 
-        // Here Both Firm AND VECHICLE rogather noty allowed
-
         $firmGroup = [
             $request->gstFirmName,
             $request->gstGstin,
@@ -244,18 +243,14 @@ class ComplainantController extends Controller
             $request->gstPersonName,
         ];
 
-        // check if any value exists in group
         $firmFilled = collect($firmGroup)->filter()->isNotEmpty();
         $vehicleFilled = collect($vehicleGroup)->filter()->isNotEmpty();
 
-        // ❌ both groups filled
         if ($firmFilled && $vehicleFilled) {
             return back()->withErrors([
                 'error' => 'You cannot fill both Firm and Vehicle details together.',
             ])->withInput();
         }
-
-        // Here
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -266,9 +261,6 @@ class ComplainantController extends Controller
             ]);
         }
 
-        // Here Both Firm AND VECHICLE rogather noty allowed
-
-        // find complaint
         $complaint = Complainant::where('complainant_phone', $mobile)
             ->where('is_completed', 0)->first();
 
@@ -279,7 +271,6 @@ class ComplainantController extends Controller
             ]);
         }
 
-        // generate or reuse application ID
         if (empty($complaint->application_id)) {
 
             $yearSuffix = now()->format('y');
@@ -298,63 +289,65 @@ class ComplainantController extends Controller
         //  PIN CODE VALIDATION
         // **********************************************
 
-        $pin = $request->pincode;
-        $url = 'https://api.postalpincode.in/pincode/'.$pin;
+        // $pin = $request->pincode;
+        // $url = 'https://api.postalpincode.in/pincode/'.$pin;
 
-        $response = file_get_contents($url);
-        $data = json_decode($response, true);
+        // $response = file_get_contents($url);
+        // $data = json_decode($response, true);
 
-        if (empty($data) || $data[0]['Status'] !== 'Success') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid Haryana PIN Code.',
-            ], 400);
-        }
+        // if (empty($data) || $data[0]['Status'] !== 'Success') {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Invalid Haryana PIN Code.',
+        //     ], 400);
+        // }
 
-        $post = $data[0]['PostOffice'][0];
+        // $post = $data[0]['PostOffice'][0];
 
-        $apiState = strtolower($post['State']);
-        $apiDistrict = $post['District'];
+        // $apiState = strtolower($post['State']);
+        // $apiDistrict = $post['District'];
 
-        if ($apiState !== 'haryana') {
-            return response()->json([
-                'success' => false,
-                'message' => 'PIN Code does not belong to Haryana.',
-            ], 400);
-        }
+        // if ($apiState !== 'haryana') {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'PIN Code does not belong to Haryana.',
+        //     ], 400);
+        // }
 
-        // normalize API district for matching
-        $normalizedApi = strtolower(str_replace([' ', '-', '_'], '', $apiDistrict));
+        // $normalizedApi = strtolower(str_replace([' ', '-', '_'], '', $apiDistrict));
 
-        $districts = District::all();
-        $matchedDistrict = null;
+        // $districts = District::all();
+        // $matchedDistrict = null;
 
-        foreach ($districts as $dis) {
-            $normalizedDB = strtolower(str_replace([' ', '-', '_'], '', $dis->name));
-            if ($normalizedDB === $normalizedApi) {
-                $matchedDistrict = $dis;
-                break;
-            }
-        }
+        // foreach ($districts as $dis) {
+        //     $normalizedDB = strtolower(str_replace([' ', '-', '_'], '', $dis->name));
+        //     if ($normalizedDB === $normalizedApi) {
+        //         $matchedDistrict = $dis;
+        //         break;
+        //     }
+        // }
 
-        if (! $matchedDistrict) {
-            return response()->json([
-                'success' => false,
-                'message' => 'District not found in system for this pincode: '.$apiDistrict,
-            ], 400);
-        }
+        // if (! $matchedDistrict) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'District not found in system for this pincode: '.$apiDistrict,
+        //     ], 400);
+        // }
 
-        // 💡 Final IMPORTANT CHECK
-        if ($request->district != $matchedDistrict->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'District mismatch! Pincode belongs to '.$apiDistrict,
-            ], 400);
-        }
+        // if ($request->district != $matchedDistrict->id) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'District mismatch! Pincode belongs to '.$apiDistrict,
+        //     ], 400);
+        // }
 
         // **********************************************
         //      SAVE GST COMPLAINT DATA
         // **********************************************
+
+        $districtInfo = DB::table('districts')
+            ->where('id', $request->district)
+            ->first();
 
         if ($type === 'gst') {
             $complaint->type_of_complaint = $request->complaintType;
@@ -367,8 +360,8 @@ class ComplainantController extends Controller
             $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
             $complaint->gst_person_name = $request->gstPersonName ?? '';
             $complaint->involved_type = $request->involvedType ?? '';
-            $complaint->district_id = $matchedDistrict->id;
-            $complaint->district_name = $matchedDistrict->name;
+            $complaint->district_id = $request->district;
+            $complaint->district_name = $districtInfo->name;
             $complaint->declaration = '1';
 
             // files
