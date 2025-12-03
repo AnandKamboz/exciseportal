@@ -268,7 +268,7 @@
                 <!-- STEP 1 -->
                 <div class="step active" data-step="1">
                     {{-- <h5>Step 1 — Details of Informer </h5> --}}
-                    <h5>Step 1 — Please enter your details</h5>
+                    <h5>Step 1 — Please enter your personal details</h5>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -383,7 +383,9 @@
                 </div>
                 <!-- STEP 3 -->
                 <div class="step" data-step="3">
-                    <h5 id="step3Title" class="mb-2">Step 2 — Details of Information (GST)</h5>
+                    {{-- <h5 id="step3Title" class="mb-2">Step 2 — Details of Information (GST)</h5> --}}
+                    <h5 id="step3Title" class="mb-3">Step 2 — Details of Information about tax evasion under GST
+                    </h5>
                     <div id="gstFields" class="d-none">
 
                         <div class="row mb-3">
@@ -404,13 +406,30 @@
 
                             <div class="col-md-6">
                                 <label class="form-label required">
-                                    Details of Information
+                                    {{-- Details of Information --}}
+                                    {{-- Brief Information/details --}}
+                                    Brief Information/Details
                                     <small class="text-muted">(Max 150 words)</small>
                                 </label>
-                                <textarea id="gstDescription" name="gstDescription" class="form-control" rows="2" placeholder="Provide details about the activity"></textarea>
-                                <small class="text-muted" id="descCount">0 / 150 words</small>
+                                <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3" placeholder="Provide details about the activity"></textarea>
+                                {{-- <small class="text-muted" id="descCount">0 / 150 words</small> --}}
                             </div>
                         </div>
+
+
+                        {{-- <h2>Location/Address of Tax-evesion</h2> --}}
+                        <div style=" background:#f1f4ff;
+                                padding:12px 20px;
+                                border-left:5px solid #0d6efd;
+                                border-radius:6px;
+                                margin-bottom:15px;">
+                            <h2 style="margin:0; font-weight:500; font-size:16px; color:#0d1b2a;">
+                                {{-- Location / Address of Tax Evasion --}}
+                                {{-- Address / Know location of tax eveaion --}}
+                                Address / Known location of tax evasion
+                            </h2>
+                        </div>
+
 
                         <div class="col-md-12 mb-3">
                             <label class="form-label required">
@@ -432,7 +451,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label required">Pincode</label>
+                                <label class="form-label">Pincode (Optional)</label>
                                 <input type="text" id="pincode" name="pincode" class="form-control" placeholder="Enter 6-digit Pincode" maxlength="6" pattern="[0-9]{6}" required>
                             </div>
                         </div>
@@ -441,7 +460,7 @@
                         <div class="row mt-3">
                             <div class="col-md-6 mt-3">
                                 <label class="form-label">
-                                    Upload Picture (Max 5 picture, each ≤ 1MB, formats: JPG, JPEG, PNG)
+                                    Upload Photograph (Max 5 photos, each ≤ 1MB, formats: JPG, JPEG, PNG)
                                 </label>
                                 <input id="gstProof" name="gstProof[]" type="file" accept=".jpg,.jpeg,.png" class="form-control" onchange="validateFiles(this)" multiple>
                             </div>
@@ -492,8 +511,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Who is involved? (Please provide details , if
-                                    available)</label>
+                                <label class="form-label">Who is involved? (Please provide relevant details, if available)</label>
                                 <select class="form-select" id="vatInvolvedType" name="vatInvolvedType">
                                     <option value="">-- Select --</option>
                                     <option value="firm">Firm</option>
@@ -621,7 +639,10 @@
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Who is involved?
-                                <span class="text-muted">(Please provide details , if available and relevant)</span>
+                                <span class="text-muted">
+                                    {{-- (Please provide details , if available and relevant) --}}
+                                    (Please provide relevant details, if available)
+                                </span>
                             </label>
                             <select class="form-select" name="involvedType" id="involvedType">
                                 <option value="">-- Select --</option>
@@ -683,7 +704,7 @@
                                         knowledge and understanding.</li>
                                     <li>The information being provided is solely with the purpose to help curb evasion
                                         of
-                                        tax/revenue.</li>
+                                        tax.</li>
                                 </ol>
                             </label>
                         </div>
@@ -1219,10 +1240,10 @@
         $('#gstDescription').on('input', function() {
             let text = $(this).val().trim();
             let words = text.split(/\s+/).filter(word => word.length > 0);
-            $('#descCount').text(words.length + ' / 150 words');
+            // $('#descCount').text(words.length + ' / 200 words');
 
             if (words.length > 200) {
-                Swal.fire('Error', 'Description cannot exceed 150 words.', 'error');
+                Swal.fire('Error', 'Description cannot exceed 200 words.', 'error');
                 $(this).val(words.slice(0, 200).join(' '));
                 $('#descCount').text('150 / 150 words');
             }

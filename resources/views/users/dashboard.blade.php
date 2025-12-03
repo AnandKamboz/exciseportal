@@ -26,7 +26,7 @@
                             <th>Date of Submission</th>
                             <th>Application Id</th>
                             <th>Category</th>
-                            <th>Current Status</th>
+                            {{-- <th>Current Status</th> --}}
                             <th>View</th>
                         </tr>
                     </thead>
@@ -45,7 +45,7 @@
                                     @endif
                                 </td>
 
-                                <td>{{ 'Pending' }}</td>
+                                {{-- <td>{{ 'Pending' }}</td> --}}
                                 <td>
                                     <a href="{{ route('user.setails', [$complain->secure_id]) }}"
                                         class="btn btn-sm btn-primary">View</a>

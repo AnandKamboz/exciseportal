@@ -6,142 +6,68 @@
 @section('content')
 
     @php
-        // State Name
-        $stateName = null;
-        if (!empty($complain->complainant_state)) {
-            $stateName = \App\Models\State::where('id', $complain->complainant_state)->value('name');
+        $stateName = !empty($complain->complainant_state)
+            ? \App\Models\State::where('id', $complain->complainant_state)->value('name')
+            : null;
+
+        $districtName = !empty($complain->complainant_district)
+            ? \App\Models\IndiaDistrict::where('id', $complain->complainant_district)->value('name')
+            : null;
+    @endphp
+
+
+    {{-- ===================== CUSTOM STYLES ====================== --}}
+    <style>
+        /* Smaller equal-height cards */
+        .info-card {
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 12px !important;
         }
 
-        // District Name
-        $districtName = null;
-        if (!empty($complain->complainant_district)) {
-            $districtName = \App\Models\IndiaDistrict::where('id', $complain->complainant_district)->value('name');
+        /* Smaller thumbnails */
+        .doc-thumb {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 3px solid #eee;
+            cursor: zoom-in;
+            transition: 0.2s;
         }
-    @endphp
+
+        .doc-thumb:hover {
+            transform: scale(1.03);
+        }
+    </style>
+
 
 
     <div class="container-fluid py-4">
         <div class="card shadow-lg border-0 rounded-4 p-4" style="background:#FFFDF8;">
 
-            <h4 class="fw-bold text-primary mb-4 border-bottom pb-2">📝 Information Details</h4>
 
-            {{-- ===================== SECTION 1 ====================== --}}
-            <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
-                👤 Informer Details
-            </h5>
-
-            @php
-                $informerFields = [
-                    'application_id' => 'Application ID',
-                    'complainant_name' => 'Name',
-                    'complainant_phone' => 'Phone',
-                    'complainant_email' => 'Email',
-                    'complainant_aadhar' => 'Aadhar Number',
-                    'complainant_state' => 'State',
-                    'complainant_district' => 'District',
-                    'complainant_address' => 'Address',
-                ];
-            @endphp
+            {{-- ===================== APPLICATION DETAILS ====================== --}}
+            <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">📄 Application Details</h5>
 
             <div class="row g-3 mb-4">
-                @foreach ($informerFields as $col => $label)
-                    {{-- Special State --}}
-                    @if ($col == 'complainant_state' && $stateName)
-                        <div class="col-md-4">
-                            <div class="p-3 shadow-sm rounded bg-light">
-                                <strong>{{ $label }}:</strong><br>
-                                <span class="text-secondary">{{ ucwords($stateName) }}</span>
-                            </div>
-                        </div>
-                        @continue
-                    @endif
 
-                    {{-- Special District --}}
-                    @if ($col == 'complainant_district' && $districtName)
-                        <div class="col-md-4">
-                            <div class="p-3 shadow-sm rounded bg-light">
-                                <strong>{{ $label }}:</strong><br>
-                                <span class="text-secondary">{{ ucwords($districtName) }}</span>
-                            </div>
-                        </div>
-                        @continue
-                    @endif
-
-                    @if (!empty($complain->$col))
-                        <div class="col-md-4">
-                            <div class="p-3 shadow-sm rounded bg-light">
-                                <strong>{{ $label }}:</strong><br>
-                                <span class="text-secondary">{{ ucwords($complain->$col) }}</span>
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
-
-
-
-            {{-- ===================== SECTION 2 ====================== --}}
-            <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
-                Entity
-            </h5>
-
-            @php
-                $infoFields = [
-                    'type_of_complaint' => 'Type of Information',
-                    'complaint_type' => 'Information Type',
-                    'involved_type' => 'Involved Type',
-
-                    'gst_description' => 'GST Description',
-                    'location' => 'Location',
-                    'gst_address1' => 'Address 1',
-                    'gst_address2' => 'Address 2',
-                    'district_name' => 'District Name',
-                    'pincode' => 'Pincode',
-                    'gst_firm_name' => 'Firm Name',
-                    'gst_firm_address' => 'Firm Address',
-                    'gst_gstin' => 'GSTIN',
-                    'gst_person_name' => 'Person Name',
-                    'gst_locality' => 'Locality',
-                    'gst_city' => 'City',
-                    'gst_vehicle_number' => 'Vehicle Number',
-
-                    'vat_firm_name' => 'VAT Firm Name',
-                    'vat_tin' => 'VAT TIN',
-                    'vat_vehicle_number' => 'VAT Vehicle Number',
-                    'vat_firm_address' => 'VAT Firm Address',
-                    'vat_person_name' => 'VAT Person Name',
-                    'vat_locality' => 'VAT Locality',
-                    'vat_city' => 'VAT City',
-                    'vat_description' => 'VAT Description',
-
-                    'excise_name' => 'Excise Name',
-                    'excise_city' => 'Excise City',
-                    'excise_place' => 'Place',
-                    'excise_time' => 'Time',
-                    'excise_vehicle_number' => 'Vehicle Number',
-                    'excise_desc' => 'Description',
-                    'excise_details' => 'Details',
-                ];
-            @endphp
-
-            <div class="row g-3 mb-4">
-                @foreach ($infoFields as $col => $label)
-                    @if (!empty($complain->$col))
-                        <div class="col-md-4">
-                            <div class="p-3 shadow-sm rounded bg-light">
-                                <strong>{{ $label }}:</strong><br>
-                                <span class="text-secondary">
-                                    {{ ucwords(str_replace('_', ' ', $complain->$col)) }}
-                                </span>
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-
-                @if ($complain->created_at)
+                @if (!empty($complain->application_id))
                     <div class="col-md-4">
-                        <div class="p-3 shadow-sm rounded bg-light">
-                            <strong>Information Date:</strong> {{ $complain->created_at->format('d-m-Y') }}
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Application ID:</strong><br>
+                            <span class="text-secondary">{{ $complain->application_id }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->created_at))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Date of Submission:</strong><br>
+                            <span class="text-secondary">{{ $complain->created_at->format('d-m-Y') }}</span>
                         </div>
                     </div>
                 @endif
@@ -149,34 +75,273 @@
             </div>
 
 
-            {{-- ===================== DOCUMENTS ====================== --}}
+
+
+            {{-- ===================== INFORMER DETAILS ====================== --}}
+            <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">👤 Details of Informer</h5>
+
+            <div class="row g-3 mb-4">
+
+                @if (!empty($complain->complainant_name))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Name:</strong><br>
+                            <span class="text-secondary">{{ ucwords($complain->complainant_name) }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->complainant_phone))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Phone:</strong><br>
+                            <span class="text-secondary">{{ $complain->complainant_phone }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->complainant_email))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Email:</strong><br>
+                            <span class="text-secondary">{{ $complain->complainant_email }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($stateName)
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>State:</strong><br>
+                            <span class="text-secondary">{{ ucwords($stateName) }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($districtName)
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>District:</strong><br>
+                            <span class="text-secondary">{{ ucwords($districtName) }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->complainant_address))
+                    <div class="col-md-12">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Address:</strong><br>
+                            <span class="text-secondary">{{ ucwords($complain->complainant_address) }}</span>
+                        </div>
+                    </div>
+                @endif
+
+            </div>
+
+
+
+
+            {{-- ===================== DETAILS OF REPORTED INFORMATION ====================== --}}
+            <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">📘 Details of Reported Information</h5>
+
+            <div class="row g-3 mb-4">
+
+                {{-- Type of Information --}}
+                @if (!empty($complain->type_of_complaint))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Type of Information:</strong><br>
+                            <span class="text-secondary">
+                                {{ ucwords(str_replace('_', ' ', $complain->type_of_complaint)) }}
+                            </span>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Brief Information --}}
+                @if (!empty($complain->gst_description))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Brief Information/Details:</strong><br>
+                            <span class="text-secondary">{{ $complain->gst_description }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Location --}}
+                @if (!empty($complain->location))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Location:</strong><br>
+                            <span class="text-secondary">{{ $complain->location }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Address 1 --}}
+                @if (!empty($complain->gst_address1))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Address 1:</strong><br>
+                            <span class="text-secondary">{{ $complain->gst_address1 }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Address 2 --}}
+                @if (!empty($complain->gst_address2))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Address 2:</strong><br>
+                            <span class="text-secondary">{{ $complain->gst_address2 }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- District --}}
+                @if (!empty($complain->district_name))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>District:</strong><br>
+                            <span class="text-secondary">{{ $complain->district_name }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Pincode --}}
+                @if (!empty($complain->pincode))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Pincode:</strong><br>
+                            <span class="text-secondary">{{ $complain->pincode }}</span>
+                        </div>
+                    </div>
+                @endif
+
+            </div>
+
+
+
+
+            {{-- ===================== ENTITY INVOLVED DETAILS ====================== --}}
+            <h5 class="fw-bold text-white p-2 rounded mb-3" style="background:#3B71CA;">
+                🚚 Information About Entity Involved
+            </h5>
+
+            <div class="row g-3 mb-4">
+
+                @if (!empty($complain->involved_type))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Entity Type:</strong><br>
+                            <span class="text-secondary">{{ $complain->involved_type }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->gst_person_name))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Person Name:</strong><br>
+                            <span class="text-secondary">{{ $complain->gst_person_name }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->gst_gstin))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>GSTIN:</strong><br>
+                            <span class="text-secondary">{{ $complain->gst_gstin }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->gst_firm_name))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Firm Name:</strong><br>
+                            <span class="text-secondary">{{ $complain->gst_firm_name }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->gst_firm_address))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Firm Address:</strong><br>
+                            <span class="text-secondary">{{ $complain->gst_firm_address }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (!empty($complain->gst_vehicle_number))
+                    <div class="col-md-4">
+                        <div class="p-3 shadow-sm rounded bg-light info-card">
+                            <strong>Vehicle Number:</strong><br>
+                            <span class="text-secondary">{{ $complain->gst_vehicle_number }}</span>
+                        </div>
+                    </div>
+                @endif
+
+            </div>
+
+
+
+
+            {{-- ===================== UPLOADED DOCUMENTS ====================== --}}
             @if ($complain->gst_proof || $complain->vat_proof || $complain->excise_proof)
-                <hr>
-                <h5 class="fw-semibold text-secondary mb-3">📎 Attached Documents</h5>
+
+                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 mt-4">📷 Uploaded Photographs</h5>
+
                 <div class="row g-3">
-                    @foreach (['gst_proof' => 'GST', 'vat_proof' => 'VAT', 'excise_proof' => 'Excise'] as $key => $label)
-                        @if ($complain->$key)
-                            @foreach (json_decode($complain->$key, true) as $file)
-                                <div class="col-md-4">
-                                    <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
-                                        target="_blank" class="btn btn-outline-primary w-100 text-center">
-                                        View {{ $label }} Proof
+
+                    @foreach (['gst_proof', 'vat_proof', 'excise_proof'] as $proofType)
+                        @if ($complain->$proofType)
+                            @foreach (json_decode($complain->$proofType, true) as $file)
+                                @php
+                                    $imgPath = asset('storage/complaints/' . $complain->application_id . '/' . $file);
+                                @endphp
+
+                                <div class="col-md-3">
+                                    <a href="{{ $imgPath }}" data-lightbox="docs" data-title="Photograph">
+                                        <img src="{{ $imgPath }}" class="doc-thumb">
                                     </a>
                                 </div>
                             @endforeach
                         @endif
                     @endforeach
+
                 </div>
+
             @endif
+
+
+
 
             {{-- BACK BUTTON --}}
             <div class="mt-4 text-center">
-                <a href="{{ route('user.dashboard') }}" class="btn btn-danger px-4">
-                    ← Back to Dashboard
-                </a>
+                <a href="{{ route('user.dashboard') }}" class="btn btn-danger px-4">← Back to Dashboard</a>
             </div>
 
         </div>
     </div>
 
+@endsection
+
+
+
+{{-- ===================== LIGHTBOX SCRIPTS ====================== --}}
+@section('scripts')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
+    <script>
+        lightbox.option({
+            'resizeDuration': 200,
+            'fadeDuration': 200,
+            'wrapAround': true,
+            'alwaysShowNavOnTouchDevices': true
+        })
+    </script>
 @endsection

@@ -308,6 +308,170 @@ class ComplainantController extends Controller
     //     ], 200);
     // }
 
+    // public function submitComplaint(Request $request)
+    // {
+    //     $files = $request->file('gstProof');
+
+    //     $request->merge([
+    //         'taxType' => 'gst',
+    //     ]);
+
+    //     $validator = Validator::make($request->all(), [
+    //         'taxType' => 'required|in:gst,vat,excise',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $validator->errors()->first(),
+    //         ], 422);
+    //     }
+
+    //     $type = strtolower($request->taxType);
+    //     $mobile = Auth::user()->mobile;
+
+    //     $rules = match ($type) {
+    //         'gst' => [
+    //             'complaintType' => [
+    //                 'required',
+    //                 'string',
+    //                 'in:wrong_rate_of_tax,bill/invoice_not_issued,under_reporting,fake_itc,not_obtained_gstin,any_other',
+    //             ],
+    //             'gstDescription' => 'required|string|max:150',
+    //             'location' => 'required|max:150',
+    //             'district' => ['required', 'numeric', 'digits_between:1,2'],
+    //             'pincode' => 'required|numeric:6',
+    //             'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
+    //             'involvedType' => ['nullable', 'string', 'in:firm,vehicle'],
+    //             'gstFirmName' => 'nullable|string',
+    //             'gstGstin' => 'nullable|size:15',
+    //             'gstFirmAddress' => 'nullable|string',
+    //             'gstVehicleNumber' => 'nullable|string|max:10',
+    //             'gstPersonName' => 'nullable|string|max:50',
+    //             'declaration' => 'required|in:1',
+    //         ],
+    //         default => [],
+    //     };
+
+    //     // *************** SAME VALIDATION ***************
+    //     $firmGroup = [
+    //         $request->gstFirmName,
+    //         $request->gstGstin,
+    //         $request->gstFirmAddress,
+    //     ];
+
+    //     $vehicleGroup = [
+    //         $request->gstVehicleNumber,
+    //         $request->gstPersonName,
+    //     ];
+
+    //     $firmFilled = collect($firmGroup)->filter()->isNotEmpty();
+    //     $vehicleFilled = collect($vehicleGroup)->filter()->isNotEmpty();
+
+    //     if ($firmFilled && $vehicleFilled) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'You cannot fill both Firm and Vehicle details together.',
+    //         ], 422);
+    //     }
+
+    //     $validator = Validator::make($request->all(), $rules);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $validator->errors()->first(),
+    //         ], 422);
+    //     }
+
+    //     // *************** SAME LOGIC ***************
+    //     $complaint = Complainant::where('complainant_phone', $mobile)
+    //         ->where('is_completed', 0)
+    //         ->first();
+
+    //     if (! $complaint) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'No pending complaint found for update.',
+    //         ], 404);
+    //     }
+
+    //     //  dd('pppppppppppppttttttttttttttttt');
+
+    //     if (empty($complaint->application_id)) {
+
+    //         $yearSuffix = now()->format('y');
+    //         $prefix = strtoupper($type);
+
+    //         do {
+    //             $applicationId = $prefix.$yearSuffix.'-'.mt_rand(100000, 999999);
+    //         } while (Complainant::where('application_id', $applicationId)->exists());
+
+    //         $complaint->application_id = $applicationId;
+    //     }
+
+    //     $complaint->complaint_type = $type;
+
+    //     $districtInfo = DB::table('districts')
+    //         ->where('id', $request->district)
+    //         ->first();
+
+    //     if (! $districtInfo) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Invalid district.',
+    //         ], 400);
+    //     }
+
+    //     if ($type === 'gst') {
+    //         $complaint->type_of_complaint = $request->complaintType;
+    //         $complaint->gst_description = $request->gstDescription;
+    //         $complaint->location = $request->location;
+    //         $complaint->pincode = $request->pincode;
+    //         $complaint->gst_firm_name = $request->gstFirmName;
+    //         $complaint->gst_gstin = strtoupper($request->gstGstin);
+    //         $complaint->gst_firm_address = $request->gstFirmAddress;
+    //         $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
+    //         $complaint->gst_person_name = $request->gstPersonName ?? '';
+    //         $complaint->involved_type = $request->involvedType ?? '';
+    //         $complaint->district_id = $request->district;
+    //         $complaint->district_name = $districtInfo->name;
+    //         $complaint->declaration = '1';
+
+    //         if ($request->hasFile('gstProof')) {
+    //             $uploadedFiles = [];
+    //             $files = $request->file('gstProof');
+
+    //             $files = is_array($files) ? $files : [$files];
+
+    //             if (count($files) > 5) {
+    //                 return response()->json([
+    //                     'success' => false,
+    //                     'message' => 'Max 5 files allowed.',
+    //                 ], 400);
+    //             }
+
+    //             foreach ($files as $file) {
+    //                 $fileName = time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+    //                 $file->storeAs("complaints/{$complaint->application_id}", $fileName, 'public');
+    //                 $uploadedFiles[] = $fileName;
+    //             }
+
+    //             $complaint->gst_proof = json_encode($uploadedFiles);
+    //         }
+
+    //     }
+
+    //     $complaint->is_completed = 1;
+    //     $complaint->save();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Complaint Updated. Your Application ID: '.$complaint->application_id,
+    //         'application_id' => $complaint->application_id,
+    //     ]);
+    // }
+     
     public function submitComplaint(Request $request)
     {
         $files = $request->file('gstProof');
@@ -337,10 +501,10 @@ class ComplainantController extends Controller
                     'string',
                     'in:wrong_rate_of_tax,bill/invoice_not_issued,under_reporting,fake_itc,not_obtained_gstin,any_other',
                 ],
-                'gstDescription' => 'required|string|max:150',
+                'gstDescription' => 'required|string|max:200',
                 'location' => 'required|max:150',
                 'district' => ['required', 'numeric', 'digits_between:1,2'],
-                'pincode' => 'required|numeric:6',
+                'pincode' => 'nullable|numeric:6',
                 'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
                 'involvedType' => ['nullable', 'string', 'in:firm,vehicle'],
                 'gstFirmName' => 'nullable|string',
@@ -353,7 +517,6 @@ class ComplainantController extends Controller
             default => [],
         };
 
-        // *************** SAME VALIDATION ***************
         $firmGroup = [
             $request->gstFirmName,
             $request->gstGstin,
@@ -384,7 +547,6 @@ class ComplainantController extends Controller
             ], 422);
         }
 
-        // *************** SAME LOGIC ***************
         $complaint = Complainant::where('complainant_phone', $mobile)
             ->where('is_completed', 0)
             ->first();
@@ -396,87 +558,105 @@ class ComplainantController extends Controller
             ], 404);
         }
 
-        //  dd('pppppppppppppttttttttttttttttt');
+        // ============================================================
+        //              START DB TRANSACTION
+        // ============================================================
+        DB::beginTransaction();
 
-        if (empty($complaint->application_id)) {
+        try {
 
-            $yearSuffix = now()->format('y');
-            $prefix = strtoupper($type);
+            if (empty($complaint->application_id)) {
+                $yearSuffix = now()->format('y');
+                $prefix = strtoupper($type);
 
-            do {
-                $applicationId = $prefix.$yearSuffix.'-'.mt_rand(100000, 999999);
-            } while (Complainant::where('application_id', $applicationId)->exists());
+                do {
+                    $applicationId = $prefix.$yearSuffix.'-'.mt_rand(100000, 999999);
+                } while (Complainant::where('application_id', $applicationId)->exists());
 
-            $complaint->application_id = $applicationId;
-        }
-
-        $complaint->complaint_type = $type;
-
-        $districtInfo = DB::table('districts')
-            ->where('id', $request->district)
-            ->first();
-
-        if (! $districtInfo) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid district.',
-            ], 400);
-        }
-
-        if ($type === 'gst') {
-            $complaint->type_of_complaint = $request->complaintType;
-            $complaint->gst_description = $request->gstDescription;
-            $complaint->location = $request->location;
-            $complaint->pincode = $request->pincode;
-            $complaint->gst_firm_name = $request->gstFirmName;
-            $complaint->gst_gstin = strtoupper($request->gstGstin);
-            $complaint->gst_firm_address = $request->gstFirmAddress;
-            $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
-            $complaint->gst_person_name = $request->gstPersonName ?? '';
-            $complaint->involved_type = $request->involvedType ?? '';
-            $complaint->district_id = $request->district;
-            $complaint->district_name = $districtInfo->name;
-            $complaint->declaration = '1';
-
-            if ($request->hasFile('gstProof')) {
-                $uploadedFiles = [];
-                $files = $request->file('gstProof');
-
-                $files = is_array($files) ? $files : [$files];
-
-                if (count($files) > 5) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Max 5 files allowed.',
-                    ], 400);
-                }
-
-                foreach ($files as $file) {
-                    $fileName = time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
-                    $file->storeAs("complaints/{$complaint->application_id}", $fileName, 'public');
-                    $uploadedFiles[] = $fileName;
-                }
-
-                $complaint->gst_proof = json_encode($uploadedFiles);
+                $complaint->application_id = $applicationId;
             }
 
+            $complaint->complaint_type = $type;
+
+            $districtInfo = DB::table('districts')
+                ->where('id', $request->district)
+                ->first();
+
+            if (! $districtInfo) {
+                DB::rollBack();
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid district.',
+                ], 400);
+            }
+
+            if ($type === 'gst') {
+                $complaint->type_of_complaint = $request->complaintType;
+                $complaint->gst_description = $request->gstDescription;
+                $complaint->location = $request->location;
+                $complaint->pincode = $request->pincode;
+                $complaint->gst_firm_name = $request->gstFirmName;
+                $complaint->gst_gstin = strtoupper($request->gstGstin);
+                $complaint->gst_firm_address = $request->gstFirmAddress;
+                $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
+                $complaint->gst_person_name = $request->gstPersonName ?? '';
+                $complaint->involved_type = $request->involvedType ?? '';
+                $complaint->district_id = $request->district;
+                $complaint->district_name = $districtInfo->name;
+                $complaint->declaration = '1';
+
+                if ($request->hasFile('gstProof')) {
+                    $uploadedFiles = [];
+                    $files = $request->file('gstProof');
+                    $files = is_array($files) ? $files : [$files];
+
+                    if (count($files) > 5) {
+                        DB::rollBack();
+
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Max 5 files allowed.',
+                        ], 400);
+                    }
+
+                    foreach ($files as $file) {
+                        $fileName = time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+                        $file->storeAs("complaints/{$complaint->application_id}", $fileName, 'public');
+                        $uploadedFiles[] = $fileName;
+                    }
+
+                    $complaint->gst_proof = json_encode($uploadedFiles);
+                }
+            }
+
+            $complaint->is_completed = 1;
+            $complaint->save();
+
+            // ============================================================
+            //              COMMIT TRANSACTION
+            // ============================================================
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Complaint Updated. Your Application ID: '.$complaint->application_id,
+                'application_id' => $complaint->application_id,
+            ]);
+
+        } catch (\Exception $e) {
+
+            // ============================================================
+            //              ROLLBACK ON ERROR
+            // ============================================================
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong: '.$e->getMessage(),
+            ], 500);
         }
-
-        $complaint->is_completed = 1;
-        $complaint->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Complaint Updated. Your Application ID: '.$complaint->application_id,
-            'application_id' => $complaint->application_id,
-        ]);
     }
-
-
-
-
-
-    
 
     // ===========================================================   End ============================================================= //
 

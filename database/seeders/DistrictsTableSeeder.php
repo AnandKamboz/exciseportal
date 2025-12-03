@@ -104,7 +104,7 @@ class DistrictsTableSeeder extends Seeder
             11 => 
             array (
                 'id' => 12,
-                'name' => 'CHARKHI-DADRI',
+                'name' => 'Charkhi-Dadri',
                 'code' => 'HRBHA',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -161,7 +161,7 @@ class DistrictsTableSeeder extends Seeder
             array (
                 'id' => 19,
                 // 'name' => 'Mahendragarh',
-                 'name' => 'MAHENDERGARH',
+                'name' => 'Mahendergarh',
                 'code' => 'HRNR',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -185,19 +185,10 @@ class DistrictsTableSeeder extends Seeder
             21 => 
             array (
                 'id' => 22,
-                'name' => 'NUH',
+                'name' => 'Nuh',
                 'code' => 'HRME',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ), 
-            // Mewat
-            22 => 
-            array (
-                'id' => 23,
-                'name' => 'Chandigarh',
-                'code' => 'CHD',
-                'created_at' => '2023-10-31 15:54:53',
-                'updated_at' => '2023-10-31 15:54:53',
             ),
         ));
     }
