@@ -36,9 +36,13 @@ class AuthController extends Controller
 
         $request->session()->put('mobile', $request->mobile);
 
+
+        $userMobile = $request->mobile;
+        $maskedMobile = '******' . substr($userMobile, -4);
+
         return response()->json([
             'success' => true,
-            'message' => 'OTP sent successfully to '.$request->mobile,
+            'message' => 'OTP sent successfully to '.$maskedMobile,
         ]);
     }
 

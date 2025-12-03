@@ -526,6 +526,7 @@
                     if (res.data.success) {
                         $('#loader').addClass('d-none');
                         successMsg.innerText = res.data.message || 'OTP sent successfully!';
+                        
                         successMsg.classList.remove('hidden');
                         otpSection.classList.remove('hidden');
                         mobileSection.classList.add('hidden');
