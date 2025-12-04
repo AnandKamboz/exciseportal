@@ -474,6 +474,7 @@ class ComplainantController extends Controller
      
     public function submitComplaint(Request $request)
     {
+       
         $files = $request->file('gstProof');
 
         $request->merge([
@@ -496,12 +497,12 @@ class ComplainantController extends Controller
 
         $rules = match ($type) {
             'gst' => [
-                'informer_name' => 'required|string|max:100',
-                Rule::unique('complainants', 'informer_email')->ignore(auth()->id(), 'user_id'),
-                'informer_state' => ['required', 'digits_between:1,2', 'numeric'],
-                'informer_district' => ['required', 'digits_between:1,3', 'numeric'],
-                'informer_address1' => 'required|string|max:255',
-                'informer_address2' => 'required|string|max:255',
+            //    'informerName' => 'required|string|max:100',
+            //     Rule::unique('complainants', 'informerEmail')->ignore(auth()->id(), 'user_id'),
+            //     'my_state' => ['required', 'digits_between:1,2', 'numeric'],
+            //     'di' => ['required', 'digits_between:1,3', 'numeric'],
+            //     'address1' => 'required|string|max:255',
+            //     'address2' => 'required|string|max:255',
 
                 'complaintType' => [
                     'required',
@@ -511,7 +512,7 @@ class ComplainantController extends Controller
                 'gstDescription' => 'required|string|max:200',
                 'location' => 'required|max:150',
                 'district' => ['required', 'numeric', 'digits_between:1,2'],
-                'pincode' => 'nullable|numeric:6',
+                'pincode' => 'nullable|digits:6',
                 'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
                 'gstFirmName' => 'nullable|string',
                 'gstGstin' => 'nullable|size:15',
@@ -546,14 +547,14 @@ class ComplainantController extends Controller
         //     ], 422);
         // }
 
-        // $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => $validator->errors()->first(),
-        //     ], 422);
-        // }
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 422);
+        }
 
         $complaint = Complainant::where('complainant_phone', $mobile)
             ->where('is_completed', 0)

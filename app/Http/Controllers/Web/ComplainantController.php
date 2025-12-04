@@ -411,6 +411,7 @@ class ComplainantController extends Controller
 
     public function submitComplaint(Request $request)
     {
+        //  dd($request->toArray());
         // Force GST for now
         $request->merge([
             'taxType' => 'gst',
@@ -433,15 +434,12 @@ class ComplainantController extends Controller
         // Validation rules
         $rules = match ($type) {
             'gst' => [
-
-                'informer_name' => 'required|string|max:100',
-                Rule::unique('complainants', 'informer_email')->ignore(auth()->id(), 'user_id'),
-                'informer_state' => ['required', 'digits_between:1,2', 'numeric'],
-                'informer_district' => ['required', 'digits_between:1,3', 'numeric'],
-                'informer_address1' => 'required|string|max:255',
-                'informer_address2' => 'required|string|max:255',
-
-
+                'informerName' => 'required|string|max:100',
+                Rule::unique('complainants', 'informerEmail')->ignore(auth()->id(), 'user_id'),
+                'my_state' => ['required', 'digits_between:1,2', 'numeric'],
+                'di' => ['required', 'digits_between:1,3', 'numeric'],
+                'address1' => 'required|string|max:255',
+                'address2' => 'required|string|max:255',
                 'complaintType' => [
                     'required',
                     'string',
@@ -450,17 +448,12 @@ class ComplainantController extends Controller
                 'gstDescription' => 'required|string|max:200',
                 'location' => 'required|max:150',
                 'district' => ['required', 'numeric', 'digits_between:1,2'],
-                'pincode' => 'nullable|numeric',
+                // 'pincode' => 'nullable|numeric:6',
+                'pincode' => 'nullable|digits:6',
                 'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
-                // 'involvedType' => ['nullable', 'string', 'in:firm,vehicle'],
-
                 'gstFirmName' => 'nullable|string',
                 'gstGstin' => 'nullable|size:15',
                 'gstFirmAddress' => 'nullable|string',
-
-                // 'gstVehicleNumber' => 'nullable|string|max:10',
-                // 'gstPersonName' => 'nullable|string|max:50',
-
                 'declaration' => 'required|in:1',
             ],
             default => [],
@@ -487,14 +480,14 @@ class ComplainantController extends Controller
         //     ])->withInput();
         // }
 
-        // $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => $validator->errors()->first(),
-        //     ]);
-        // }
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
 
         // FIND PENDING COMPLAINT
         $complaint = Complainant::where('complainant_phone', $mobile)
