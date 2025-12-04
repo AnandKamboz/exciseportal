@@ -26,25 +26,26 @@ return new class extends Migration
             $table->text('complainant_address');
             $table->string('complainant_state');  
             $table->string('complainant_district');
-            $table->string('involved_type')->nullable();
+            
             $table->enum('complaint_type', ['gst', 'excise', 'vat']);
             // 🔹 Step 3 — GST-related Fields
-            $table->string('type_of_complaint')->nullable();
+            
             $table->text('gst_description')->nullable();
             $table->string('location')->nullable();
             // $table->string('gst_address2')->nullable();
-
             $table->string('pincode', 6)->nullable();
 
-          
-
-            
             $table->string('gst_firm_name')->nullable();
             $table->string('gst_gstin', 15)->nullable();
             $table->text('gst_firm_address')->nullable();
             $table->string('gst_proof')->nullable();
-            $table->string('gst_vehicle_number', 15)->nullable(); 
-            $table->string('gst_person_name')->nullable();  
+            $table->string('type_of_complaint')->nullable();
+            
+            // $table->string('involved_type')->nullable();
+            // $table->string('gst_vehicle_number', 15)->nullable(); 
+            // $table->string('gst_person_name')->nullable();
+            
+            
             // 🔹 Step 3 — Excise-related Fields
             $table->string('excise_name')->nullable();
             $table->string('excise_city')->nullable();

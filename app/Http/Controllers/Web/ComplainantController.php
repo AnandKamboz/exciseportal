@@ -444,14 +444,14 @@ class ComplainantController extends Controller
                 'district' => ['required', 'numeric', 'digits_between:1,2'],
                 'pincode' => 'nullable|numeric',
                 'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
-                'involvedType' => ['nullable', 'string', 'in:firm,vehicle'],
+                // 'involvedType' => ['nullable', 'string', 'in:firm,vehicle'],
 
                 'gstFirmName' => 'nullable|string',
                 'gstGstin' => 'nullable|size:15',
                 'gstFirmAddress' => 'nullable|string',
 
-                'gstVehicleNumber' => 'nullable|string|max:10',
-                'gstPersonName' => 'nullable|string|max:50',
+                // 'gstVehicleNumber' => 'nullable|string|max:10',
+                // 'gstPersonName' => 'nullable|string|max:50',
 
                 'declaration' => 'required|in:1',
             ],
@@ -459,34 +459,34 @@ class ComplainantController extends Controller
         };
 
         // FIRM / VEHICLE CHECK
-        $firmGroup = [
-            $request->gstFirmName,
-            $request->gstGstin,
-            $request->gstFirmAddress,
-        ];
+        // $firmGroup = [
+        //     $request->gstFirmName,
+        //     $request->gstGstin,
+        //     $request->gstFirmAddress,
+        // ];
 
-        $vehicleGroup = [
-            $request->gstVehicleNumber,
-            $request->gstPersonName,
-        ];
+        // $vehicleGroup = [
+        //     $request->gstVehicleNumber,
+        //     $request->gstPersonName,
+        // ];
 
-        $firmFilled = collect($firmGroup)->filter()->isNotEmpty();
-        $vehicleFilled = collect($vehicleGroup)->filter()->isNotEmpty();
+        // $firmFilled = collect($firmGroup)->filter()->isNotEmpty();
+        // $vehicleFilled = collect($vehicleGroup)->filter()->isNotEmpty();
 
-        if ($firmFilled && $vehicleFilled) {
-            return back()->withErrors([
-                'error' => 'You cannot fill both Firm and Vehicle details together.',
-            ])->withInput();
-        }
+        // if ($firmFilled && $vehicleFilled) {
+        //     return back()->withErrors([
+        //         'error' => 'You cannot fill both Firm and Vehicle details together.',
+        //     ])->withInput();
+        // }
 
-        $validator = Validator::make($request->all(), $rules);
+        // $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-            ]);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => $validator->errors()->first(),
+        //     ]);
+        // }
 
         // FIND PENDING COMPLAINT
         $complaint = Complainant::where('complainant_phone', $mobile)
@@ -537,10 +537,9 @@ class ComplainantController extends Controller
                 $complaint->gst_gstin = strtoupper($request->gstGstin);
                 $complaint->gst_firm_address = $request->gstFirmAddress;
 
-                $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
-                $complaint->gst_person_name = $request->gstPersonName ?? '';
-
-                $complaint->involved_type = $request->involvedType ?? '';
+                // $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
+                // $complaint->gst_person_name = $request->gstPersonName ?? '';
+                // $complaint->involved_type = $request->involvedType ?? '';
                 $complaint->district_id = $request->district;
                 $complaint->district_name = $districtInfo->name;
                 $complaint->declaration = '1';

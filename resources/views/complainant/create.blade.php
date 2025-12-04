@@ -399,7 +399,7 @@
                                     <option value="fake_itc">Availing fake ITC</option>
                                     <option value="not_obtained_gstin">Not obtained GSTIN despite being eligible
                                     </option>
-                                    <option value="any_other">Any Other</option>
+                                    <option value="any_other">Any Other (Related to Firm)</option>
                                 </select>
                             </div>
 
@@ -511,7 +511,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Who is involved? (Please provide relevant details, if available)</label>
+                                <label class="form-label">Please provide relevant details, if available</label>
                                 <select class="form-select" id="vatInvolvedType" name="vatInvolvedType">
                                     <option value="">-- Select --</option>
                                     <option value="firm">Firm</option>
@@ -638,22 +638,23 @@
                     <div class="involved-section p-3 mt-4 mb-3" style="background:#f8f9fa; border-left:4px solid #0d6efd; border-radius:8px;">
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Who is involved?
+                            <label class="form-label fw-bold">
+                                {{-- Who is involved? --}}
                                 <span class="text-muted">
                                     {{-- (Please provide details , if available and relevant) --}}
-                                    (Please provide relevant details, if available)
+                                    Please provide relevant details, if available
                                 </span>
                             </label>
-                            <select class="form-select" name="involvedType" id="involvedType">
+                            {{-- <select class="form-select" name="involvedType" id="involvedType">
                                 <option value="">-- Select --</option>
                                 <option value="firm">Firm</option>
                                 <option value="vehicle">Vehicle</option>
-                            </select>
+                            </select> --}}
                         </div>
 
                         <div class="row">
-                            <div id="firmFields" style="display:none;" class="mt-4">
-                                <h6 class="fw-bold mb-3 text-primary">Firm Details</h6>
+                            <div id="firmFields" class="mt-4">
+                                {{-- <h6 class="fw-bold mb-3 text-primary">Firm Details</h6> --}}
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Firm Name</label>
