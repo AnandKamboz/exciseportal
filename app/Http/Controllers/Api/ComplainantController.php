@@ -496,6 +496,13 @@ class ComplainantController extends Controller
 
         $rules = match ($type) {
             'gst' => [
+                'informer_name' => 'required|string|max:100',
+                Rule::unique('complainants', 'informer_email')->ignore(auth()->id(), 'user_id'),
+                'informer_state' => ['required', 'digits_between:1,2', 'numeric'],
+                'informer_district' => ['required', 'digits_between:1,3', 'numeric'],
+                'informer_address1' => 'required|string|max:255',
+                'informer_address2' => 'required|string|max:255',
+
                 'complaintType' => [
                     'required',
                     'string',

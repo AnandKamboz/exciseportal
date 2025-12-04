@@ -46,7 +46,6 @@ class ComplainantController extends Controller
         $request->validate([
             'informer_name' => 'required|string|max:100',
             Rule::unique('complainants', 'informer_email')->ignore(auth()->id(), 'user_id'),
-            // 'informer_aadhar' => 'required|digits:12',
             'informer_state' => ['required', 'digits_between:1,2', 'numeric'],
             'informer_district' => ['required', 'digits_between:1,3', 'numeric'],
             'informer_address1' => 'required|string|max:255',
@@ -434,6 +433,15 @@ class ComplainantController extends Controller
         // Validation rules
         $rules = match ($type) {
             'gst' => [
+
+                'informer_name' => 'required|string|max:100',
+                Rule::unique('complainants', 'informer_email')->ignore(auth()->id(), 'user_id'),
+                'informer_state' => ['required', 'digits_between:1,2', 'numeric'],
+                'informer_district' => ['required', 'digits_between:1,3', 'numeric'],
+                'informer_address1' => 'required|string|max:255',
+                'informer_address2' => 'required|string|max:255',
+
+
                 'complaintType' => [
                     'required',
                     'string',
