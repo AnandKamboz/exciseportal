@@ -45,7 +45,10 @@ class ComplainantController extends Controller
         // ---------------- VALIDATION ----------------
         $request->validate([
             'informer_name' => 'required|string|max:100',
-            Rule::unique('complainants', 'informer_email')->ignore(auth()->id(), 'user_id'),
+            'informer_email' => [
+                'nullable',
+                Rule::unique('complainants', 'complainant_email')->ignore(auth()->id(), 'user_id'),
+            ],
             'informer_state' => ['required', 'digits_between:1,2', 'numeric'],
             'informer_district' => ['required', 'digits_between:1,3', 'numeric'],
             'informer_address1' => 'required|string|max:255',
@@ -53,8 +56,6 @@ class ComplainantController extends Controller
         ]);
 
         $mobile = auth()->user()->mobile;
-
-        // Combine address
         $fullAddress = $request->informer_address1.', '.$request->informer_address2;
 
         // ---------------- CHECK COMPLETED RECORD ----------------
@@ -63,8 +64,6 @@ class ComplainantController extends Controller
             ->first();
 
         if ($completedRecord) {
-
-            // If incomplete exists → update
             $existingIncomplete = Complainant::where('complainant_phone', $mobile)
                 ->where('is_completed', 0)
                 ->first();
@@ -72,7 +71,6 @@ class ComplainantController extends Controller
             if ($existingIncomplete) {
                 $existingIncomplete->update([
                     'complainant_name' => $completedRecord->complainant_name,
-                    // 'complainant_aadhar' => $completedRecord->complainant_aadhar,
                     'complainant_aadhar' => '',
                     'complainant_address1' => $completedRecord->complainant_address1,
                     'complainant_address2' => $completedRecord->complainant_address2,
@@ -81,6 +79,8 @@ class ComplainantController extends Controller
                     'complainant_district' => $completedRecord->complainant_district,
                     'complainant_email' => $completedRecord->complainant_email,
                     'complaint_type' => 'gst',
+                    'current_step' => ($existingIncomplete->current_step == 1) ? 2 : $existingIncomplete->current_step,
+
                 ]);
 
                 return response()->json([
@@ -102,8 +102,9 @@ class ComplainantController extends Controller
             $complaint->complainant_email = $completedRecord->complainant_email;
             $complaint->complainant_phone = $mobile;
             $complaint->user_id = auth()->id();
-            $complaint->complaint_type = 'gst'; // ★ default value
+            $complaint->complaint_type = 'gst';
             $complaint->is_completed = 0;
+            $complaint->current_step = 2;
             $complaint->save();
 
             return response()->json([
@@ -127,7 +128,8 @@ class ComplainantController extends Controller
                 'complainant_state' => $request->informer_state,
                 'complainant_district' => $request->informer_district,
                 'complainant_email' => $request->informer_email,
-                'complaint_type' => 'gst', // ★ ensure default
+                'complaint_type' => 'gst',
+                'current_step' => ($existingComplaint->current_step == 1) ? 2 : $existingComplaint->current_step,
             ]);
 
             return response()->json([
@@ -149,9 +151,9 @@ class ComplainantController extends Controller
         $complaint->complainant_email = $request->informer_email ?? null;
         $complaint->complainant_phone = $mobile;
         $complaint->user_id = auth()->id();
-        $complaint->complaint_type = 'gst'; // ★ default value
+        $complaint->complaint_type = 'gst';
         $complaint->is_completed = 0;
-
+        $complaint->current_step = 2;
         $complaint->save();
 
         return response()->json([
@@ -411,8 +413,6 @@ class ComplainantController extends Controller
 
     public function submitComplaint(Request $request)
     {
-        //  dd($request->toArray());
-        // Force GST for now
         $request->merge([
             'taxType' => 'gst',
         ]);
@@ -431,7 +431,6 @@ class ComplainantController extends Controller
         $type = strtolower($request->taxType);
         $mobile = Auth::user()->mobile;
 
-        // Validation rules
         $rules = match ($type) {
             'gst' => [
                 'informerName' => 'required|string|max:100',
@@ -448,7 +447,6 @@ class ComplainantController extends Controller
                 'gstDescription' => 'required|string|max:200',
                 'location' => 'required|max:150',
                 'district' => ['required', 'numeric', 'digits_between:1,2'],
-                // 'pincode' => 'nullable|numeric:6',
                 'pincode' => 'nullable|digits:6',
                 'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
                 'gstFirmName' => 'nullable|string',
@@ -459,26 +457,6 @@ class ComplainantController extends Controller
             default => [],
         };
 
-        // FIRM / VEHICLE CHECK
-        // $firmGroup = [
-        //     $request->gstFirmName,
-        //     $request->gstGstin,
-        //     $request->gstFirmAddress,
-        // ];
-
-        // $vehicleGroup = [
-        //     $request->gstVehicleNumber,
-        //     $request->gstPersonName,
-        // ];
-
-        // $firmFilled = collect($firmGroup)->filter()->isNotEmpty();
-        // $vehicleFilled = collect($vehicleGroup)->filter()->isNotEmpty();
-
-        // if ($firmFilled && $vehicleFilled) {
-        //     return back()->withErrors([
-        //         'error' => 'You cannot fill both Firm and Vehicle details together.',
-        //     ])->withInput();
-        // }
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -489,14 +467,22 @@ class ComplainantController extends Controller
             ]);
         }
 
-        // FIND PENDING COMPLAINT
         $complaint = Complainant::where('complainant_phone', $mobile)
             ->where('is_completed', 0)->first();
+
+            // STEP VALIDATION
 
         if (! $complaint) {
             return response()->json([
                 'success' => false,
                 'message' => 'No pending complaint found for update.',
+            ]);
+        }
+
+        if (!isset($complaint->current_step) || $complaint->current_step < 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please complete Step 1 first.',
             ]);
         }
 
@@ -506,8 +492,6 @@ class ComplainantController extends Controller
         DB::beginTransaction();
 
         try {
-
-            // Generate application ID
             if (empty($complaint->application_id)) {
 
                 $yearSuffix = now()->format('y');
@@ -522,7 +506,6 @@ class ComplainantController extends Controller
 
             $complaint->complaint_type = $type;
 
-            // District
             $districtInfo = DB::table('districts')
                 ->where('id', $request->district)
                 ->first();
@@ -533,17 +516,13 @@ class ComplainantController extends Controller
                 $complaint->gst_description = $request->gstDescription;
                 $complaint->location = $request->location;
                 $complaint->pincode = $request->pincode;
-
                 $complaint->gst_firm_name = $request->gstFirmName;
                 $complaint->gst_gstin = strtoupper($request->gstGstin);
                 $complaint->gst_firm_address = $request->gstFirmAddress;
-
-                // $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
-                // $complaint->gst_person_name = $request->gstPersonName ?? '';
-                // $complaint->involved_type = $request->involvedType ?? '';
                 $complaint->district_id = $request->district;
                 $complaint->district_name = $districtInfo->name;
                 $complaint->declaration = '1';
+
 
                 // FILE UPLOAD
                 $files = [];
@@ -570,7 +549,6 @@ class ComplainantController extends Controller
             $complaint->is_completed = 1;
             $complaint->save();
 
-            // UPDATE USER DATA
             $information = Complainant::where('complainant_phone', auth()->user()->mobile)
                 ->orderByDesc('is_completed')
                 ->first();

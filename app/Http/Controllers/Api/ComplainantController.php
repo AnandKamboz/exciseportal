@@ -79,10 +79,8 @@ class ComplainantController extends Controller
                     ->first();
 
                 if ($existingIncomplete) {
-
                     $existingIncomplete->update([
                         'complainant_name' => $completedRecord->complainant_name,
-                        // 'complainant_aadhar' => $completedRecord->complainant_aadhar,
                         'complainant_address1' => $completedRecord->complainant_address1,
                         'complainant_address2' => $completedRecord->complainant_address2,
                         'complainant_address' => $completedRecord->complainant_address,
@@ -90,6 +88,7 @@ class ComplainantController extends Controller
                         'complainant_district' => $completedRecord->complainant_district,
                         'complainant_email' => $completedRecord->complainant_email,
                         'complaint_type' => 'gst',
+                        'current_step' => ($existingIncomplete->current_step == 1) ? 2 : $existingIncomplete->current_step,
                     ]);
 
                     return response()->json([
@@ -112,6 +111,7 @@ class ComplainantController extends Controller
                     'user_id' => auth()->id(),
                     'complaint_type' => 'gst',
                     'is_completed' => 0,
+                    'current_step' => 2,
                 ]);
 
                 return response()->json([
@@ -126,7 +126,6 @@ class ComplainantController extends Controller
                 ->first();
 
             if ($existingComplaint) {
-
                 $existingComplaint->update([
                     'complainant_name' => $request->informer_name,
                     'complainant_aadhar' => $request->informer_aadhar,
@@ -137,6 +136,8 @@ class ComplainantController extends Controller
                     'complainant_district' => $request->informer_district,
                     'complainant_email' => $request->informer_email,
                     'complaint_type' => 'gst',
+                    'current_step' => ($existingComplaint->current_step == 1) ? 2 : $existingComplaint->current_step,
+
                 ]);
 
                 return response()->json([
@@ -160,6 +161,7 @@ class ComplainantController extends Controller
                 'user_id' => auth()->id(),
                 'complaint_type' => 'gst',
                 'is_completed' => 0,
+                'current_step' => 2,
             ]);
 
             return response()->json([
@@ -565,6 +567,13 @@ class ComplainantController extends Controller
                 'success' => false,
                 'message' => 'No pending complaint found for update.',
             ], 404);
+        }
+
+        if (!isset($complaint->current_step) || $complaint->current_step < 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please complete Step 1 first.',
+            ]);
         }
 
         // ============================================================

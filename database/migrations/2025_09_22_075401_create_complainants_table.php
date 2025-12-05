@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('complainants', function (Blueprint $table) {
             $table->id();
             $table->string('secure_id', 64)->unique();
-            $table->string('application_id', 50)->unique()->nullable(); 
+            $table->string('application_id', 50)->unique()->nullable();
+            $table->integer('current_step')->default(1); 
             $table->string('district_id')->nullable();
             $table->string('district_name')->nullable();
             $table->string('complainant_name');
