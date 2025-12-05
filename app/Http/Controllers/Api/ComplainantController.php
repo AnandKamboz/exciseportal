@@ -49,9 +49,10 @@ class ComplainantController extends Controller
             // VALIDATION
             $validator = Validator::make($request->all(), [
                 'informer_name' => 'required|string|max:100',
-                Rule::unique('complainants', 'complainant_email')
-                    ->ignore(auth()->id(), 'user_id'),
+                // Rule::unique('complainants', 'complainant_email')
+                //     ->ignore(auth()->id(), 'user_id'),
                 // 'informer_aadhar' => 'required|digits:12',
+                'informer_email' => 'nullable|email',
                 'informer_state' => ['required', 'numeric'],
                 'informer_district' => ['required', 'numeric'],
                 'informer_address1' => 'required|string|max:255',
@@ -499,13 +500,6 @@ class ComplainantController extends Controller
 
         $rules = match ($type) {
             'gst' => [
-            //    'informerName' => 'required|string|max:100',
-            //     Rule::unique('complainants', 'informerEmail')->ignore(auth()->id(), 'user_id'),
-            //     'my_state' => ['required', 'digits_between:1,2', 'numeric'],
-            //     'di' => ['required', 'digits_between:1,3', 'numeric'],
-            //     'address1' => 'required|string|max:255',
-            //     'address2' => 'required|string|max:255',
-
                 'complaintType' => [
                     'required',
                     'string',
@@ -520,10 +514,6 @@ class ComplainantController extends Controller
                 'gstGstin' => 'nullable|size:15',
                 'gstFirmAddress' => 'nullable|string',
                 'declaration' => 'required|in:1',
-                //  'involvedType' => ['nullable', 'string', 'in:firm,vehicle'],
-                // 'gstVehicleNumber' => 'nullable|string|max:10',
-                // 'gstPersonName' => 'nullable|string|max:50',
-              
             ],
             default => [],
         };
@@ -569,7 +559,7 @@ class ComplainantController extends Controller
             ], 404);
         }
 
-        if (!isset($complaint->current_step) || $complaint->current_step < 1) {
+        if (!isset($complaint->current_step) || $complaint->current_step <= 1) {
             return response()->json([
                 'success' => false,
                 'message' => 'Please complete Step 1 first.',
@@ -610,18 +600,15 @@ class ComplainantController extends Controller
             }
 
             if ($type === 'gst') {
-                $complaint->type_of_complaint = $request->complaintType;
-                $complaint->gst_description = $request->gstDescription;
-                $complaint->location = $request->location;
-                $complaint->pincode = $request->pincode;
-                $complaint->gst_firm_name = $request->gstFirmName;
-                $complaint->gst_gstin = strtoupper($request->gstGstin);
-                $complaint->gst_firm_address = $request->gstFirmAddress;
-                // $complaint->gst_vehicle_number = $request->gstVehicleNumber ?? '';
-                // $complaint->gst_person_name = $request->gstPersonName ?? '';
-                // $complaint->involved_type = $request->involvedType ?? '';
-                $complaint->district_id = $request->district;
-                $complaint->district_name = $districtInfo->name;
+                $complaint->type_of_complaint = $request->complaintType ?? "";
+                $complaint->gst_description = $request->gstDescription ?? "";
+                $complaint->location = $request->location ?? "";
+                $complaint->pincode = $request->pincode ?? "";
+                $complaint->gst_firm_name = $request->gstFirmName ?? "";
+                $complaint->gst_gstin = strtoupper($request->gstGstin) ?? "";
+                $complaint->gst_firm_address = $request->gstFirmAddress ?? "";
+                $complaint->district_id = $request->district ?? "";
+                $complaint->district_name = $districtInfo->name ?? "";
                 $complaint->declaration = '1';
 
                 if ($request->hasFile('gstProof')) {
