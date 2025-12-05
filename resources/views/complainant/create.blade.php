@@ -823,7 +823,7 @@
 
             if (!name) {
                 $('#loader').addClass('d-none');
-                return Swal.fire('Error', 'Please enter informer name.', 'error');
+                return Swal.fire('Error', 'Please enter your name.', 'error');
             }
 
             if (!/^\d{10}$/.test(phone)) {
@@ -972,11 +972,12 @@
             $('#loader').removeClass('d-none');
             const tax = taxType.value;
 
-            if (tax == 'gst') {
+            // if (tax == 'gst') {
                 const complaintType = document.getElementById('complaintType').value.trim();
                 const gstDescription = document.getElementById('gstDescription').value.trim();
                 const location = document.getElementById('location').value.trim();
                 const pincode = document.getElementById('pincode').value.trim();
+                const dist = document.getElementById('district').value.trim();
                 let files = document.getElementById('gstProof').files;
 
                 // ---------------------- VALIDATION ----------------------
@@ -999,6 +1000,12 @@
                     return false;
                 }
 
+                 if (!dist) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire('Error', 'Please select district.', 'error');
+                    return false;
+                }
+
 
                 if (pincode) {
                     if (!/^[0-9]{6}$/.test(pincode)) {
@@ -1007,6 +1014,7 @@
                         return false;
                     }
                 }
+                
 
                 // ---------------------- FILE VALIDATION ----------------------
                 if (files.length > 0) {
@@ -1031,7 +1039,7 @@
                         }
                     }
                 }
-            }
+            // }
 
             if (tax == 'vat') {
                 const firmName = vatFirmName.value.trim();
