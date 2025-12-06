@@ -419,7 +419,7 @@
                                 @csrf
                                 <div id="mobileSection" class="mb-3">
                                     <input type="text" name="mobile" id="mobile" class="form-control"
-                                        placeholder="Enter 10 digit mobile" />
+                                        placeholder="Enter 10 digit mobile number" />
                                     <button type="button" id="sendOtpBtn"
                                         class="btn btn-primary btn-block w-100 mt-3">Send OTP</button>
                                 </div>
@@ -446,7 +446,7 @@
                                 </div>
 
                                 <div id="otpSection" class="hidden mt-3">
-                                    <input type="text" name="otp" id="otp" class="form-control otp-input"
+                                    <input type="password" name="otp" id="otp" class="form-control otp-input"
                                         maxlength="6" placeholder="Enter 6 digit OTP" />
                                     <button type="button" id="loginBtn"
                                         class="btn btn-primary btn-block w-100 mt-3">Login</button>

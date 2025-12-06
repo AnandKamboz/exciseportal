@@ -38,7 +38,19 @@ class DetcController extends Controller
             DB::table('districts')->where('id', $complain->against_district_id)->first()
         )->name ?? 'Not Found';
 
-        return view('detc.show', compact('complain', 'complainantDistrictName', 'againstDistrictId', 'actionExists', 'detcAction'));
+        $wards = DB::table('district_wards')
+        ->where('district_id', auth()->user()->district)
+        ->first();
+
+        $wardCount = $wards->ward_count ?? 0;
+
+        $wardList = [];
+
+        for ($i = 1; $i <= $wardCount; $i++) {
+            $wardList[$i] = "Ward No " . $i;
+        }
+
+        return view('detc.show', compact('complain', 'complainantDistrictName', 'againstDistrictId', 'actionExists', 'detcAction','wardList'));
     }
 
     public function updateComplaintStatus(Request $request, $secure_id)
@@ -47,6 +59,7 @@ class DetcController extends Controller
         $request->validate([
             'status' => 'required|string|in:forward_to_inspector,rejected',
             'remarks' => 'required|string|max:1000',
+            'upload_file' => 'nullable|file|mimes:jpg,jpeg,png|max:1024',
         ]);
 
         $complaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
@@ -180,9 +193,9 @@ class DetcController extends Controller
         // dd($request->toArray());
         $request->validate([
             'proposed_action' => 'required',
-            'action_taken' => 'required_if:proposed_action,actionable',
+            // 'action_taken' => 'required_if:proposed_action,actionable',
             'reason' => 'required_if:proposed_action,non_actionable',
-            'upload_file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:1024',
+            'upload_file' => 'nullable|file|mimes:jpg,jpeg,png|max:1024',
         ]);
 
         // dd('sdsd');
@@ -238,7 +251,8 @@ class DetcController extends Controller
             'user_application_id' => $complaint->application_id,
             'detc_district' => Auth::user()->district,
             'proposed_action' => $request->proposed_action,
-            'action_taken' => $request->action_taken,
+            'ward_no' => $request->ward_no,
+            // 'action_taken' => $request->action_taken,
             'reason' => $request->reason,
             'remarks' => $request->remarks ?? null,
             'detc_user_id' => auth()->id(),

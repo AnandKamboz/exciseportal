@@ -18,14 +18,12 @@ return new class extends Migration
             $table->string('detc_district');
             $table->string('user_application_id');
             $table->enum('proposed_action', ['actionable', 'non_actionable']);
-            $table->string('action_taken')->nullable();
+            $table->integer('ward_no')->nullable();
             $table->string('reason')->nullable();
             $table->text('remarks')->nullable();
             $table->string('file_name')->nullable();
             $table->unsignedBigInteger('detc_user_id');
             $table->timestamps();
-            // OPTIONAL: foreign key relation
-            // $table->foreign('complaint_id')->references('id')->on('complaints')->onDelete('cascade');
         });
               
     }

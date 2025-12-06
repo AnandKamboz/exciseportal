@@ -1,0 +1,114 @@
+<?php
+
+namespace App\Http\Controllers\Web;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Complainant;
+
+
+class JcController extends Controller
+{
+    public function dashboard()
+    {
+        $informations = Complainant::where('district_id', Auth::user()->district)->get();
+        return view('jc.dashboard', compact('informations'));
+    }
+
+    public function details($secure_id)
+    {
+        // Complain record fetch karo
+        $information = DB::table('complainants')
+            ->where('secure_id', $secure_id)
+            ->first();
+
+        if (!$information) {
+            return redirect()->back()->with('error', 'Record not found!');
+        }
+
+        if($information->district_id == 4){
+            $inspectors = DB::table('users')
+            ->whereIn('district', [27, 28, 29, 30])
+            ->get();
+        }elseif($information->district_id == 1){
+            $inspectors = DB::table('users')
+            ->whereIn('district', [23])
+            ->get();
+        }else{
+
+        }
+
+        return view('jc.show', compact('information','inspectors'));
+    }
+
+
+//     public function assign(Request $request, $secure_id)
+//    {
+
+//         DB::table('complainants')
+//             ->where('secure_id', $secure_id)
+//             ->update([
+//                 'district_id' => $request->detc_id,
+//                 'updated_at' => now(),
+//             ]);
+
+//         return redirect()->route('jc.dashboard')->with('success', 'Assigned successfully!');
+//     }
+
+public function assign(Request $request, $secure_id)
+{
+    $complaint = DB::table('complainants')
+        ->where('secure_id', $secure_id)
+        ->first();
+
+    // dd( $complaint);
+
+    // $alreadyAssigned = $complaint->application_id;
+
+    $alreadyAssigned = DB::table('jc_action_logs')
+        ->where('complaint_id', $complaint->application_id)
+        ->exists();
+
+    // dd($alreadyAssigned);
+
+    if ($alreadyAssigned) {
+        return redirect()
+            ->back()
+            ->with('error', 'Action already taken! You cannot assign again.');
+    }
+
+    DB::table('jc_action_logs')->insert([
+    'complaint_id'       => $complaint->id,
+    'application_id'     => $complaint->application_id,
+
+    // JC DETAILS
+    'jc_id'              => Auth::user()->id,
+    'jc_name'            => Auth::user()->name,
+    'jc_mobile'          => Auth::user()->mobile,
+    'jc_district'        => Auth::user()->district,
+
+    // ACTION DETAILS
+    'action_type'        => 'assigned_to_detc',
+
+    'assigned_detc_id'   => 1,     
+    'assigned_detc_name' => 'sss',    // ✔ REAL DETC NAME
+
+    'remarks'            => $request->remarks ?? null,
+    'created_at'         => now(),
+    'updated_at'         => now(),
+]);
+
+    DB::table('complainants')
+        ->where('secure_id', $secure_id)
+        ->update([
+            'district_id' => $request->detc_id,
+            'updated_at' => now(),
+        ]);
+
+
+    return redirect()->route('jc.dashboard')->with('success', 'Assigned successfully!');
+}
+
+}

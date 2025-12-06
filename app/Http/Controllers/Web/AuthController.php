@@ -283,7 +283,9 @@ class AuthController extends Controller
                 $redirectUrl = route('detc.dashboard');
             } elseif ($role === 'excise inspector') {
                 $redirectUrl = route('inspector.dashboard');
-            } else {
+            }elseif($role === 'jc'){
+                 $redirectUrl = route('jc.dashboard');
+            }else{
                 $mobile = Auth::user()->mobile;
                 $complaintExists = DB::table('complainants')
                     ->where('complainant_phone', $mobile)

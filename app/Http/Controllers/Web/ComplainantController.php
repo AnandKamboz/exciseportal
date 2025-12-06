@@ -27,9 +27,14 @@ class ComplainantController extends Controller
         $userMobile = Auth::user()->mobile;
         $userDataForNewApplication = Complainant::where('complainant_phone', $userMobile)->where('is_completed', 1)->first();
         $userData = Complainant::where('complainant_phone', $userMobile)->where('is_completed', 0)->first();
+        // $districts = DB::table('districts')
+        //     ->orderBy('name', 'asc')
+        //     ->get();
+
         $districts = DB::table('districts')
-            ->orderBy('name', 'asc')
-            ->get();
+        ->where('id', '<=', 22)
+        ->orderBy('name', 'asc')
+        ->get();
 
         $indiaStates = State::all();
         $haryanaDistrictsList = DB::table('india_districts')

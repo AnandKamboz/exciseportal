@@ -277,13 +277,12 @@
                                 placeholder="Enter your name" required
                                 value="{{ $userDataForNewApplication->complainant_name ?? ($userData->complainant_name ?? '') }}"
                                 @if (!empty($userDataForNewApplication->complainant_name)) readonly style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;" @endif>
-
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Phone Number</label>
                             <input id="informerPhone" name="informerPhone" type="tel" class="form-control"
-                                value="{{ Auth::user()->mobile ?? '' }}" placeholder="10 digit mobile" required
-                                readonly style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;">
+                                value="{{ Auth::user()->mobile ?? '' }}" placeholder="10 digit mobile" required readonly
+                                style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;">
                         </div>
                     </div>
 
@@ -340,18 +339,20 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label class="form-label required">Address 1</label>
+                            <label class="form-label required">House/Building No., Street/Locality, Landmark</label>
                             <textarea name="address1" id="address1" class="form-control" rows="3"
-                                placeholder="House/Building No., Street/Locality, Landmark" @if (!empty($userDataForNewApplication->complainant_address1)) readonly style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;" @endif
+                                placeholder="House/Building No., Street/Locality, Landmark"
+                                @if (!empty($userDataForNewApplication->complainant_address1)) readonly style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;" @endif
                                 required>{{ $userDataForNewApplication->complainant_address1 ?? ($userData->complainant_address1 ?? '') }}</textarea>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label required">Address 2</label>
+                            <label class="form-label required">Village/Town, Pincode</label>
                             <textarea name="address2" id="address2" class="form-control" rows="3" placeholder="Village/Town, Pincode"
-                                @if (!empty($userDataForNewApplication->complainant_address2)) readonly style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;" @endif required>{{ $userDataForNewApplication->complainant_address2 ?? ($userData->complainant_address2 ?? '') }}</textarea>
+                                @if (!empty($userDataForNewApplication->complainant_address2)) readonly style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;" @endif
+                                required>{{ $userDataForNewApplication->complainant_address2 ?? ($userData->complainant_address2 ?? '') }}</textarea>
                         </div>
 
                         <div class="col-md-6 mb-3 d-none">
@@ -434,7 +435,7 @@
                                     <small class="text-muted">(Max 150 words)</small>
                                 </label>
                                 <textarea id="gstDescription" name="gstDescription" class="form-control" rows="3"
-                                    placeholder="Provide details about the activity"></textarea>
+                                    placeholder="Enter details of tax evasion"></textarea>
                                 {{-- <small class="text-muted" id="descCount">0 / 150 words</small> --}}
                             </div>
                         </div>
@@ -461,7 +462,7 @@
                                 <small class="text-muted"></small>
                             </label>
                             <textarea name="location" cols="2" id="location"
-                                placeholder="Example: Near Matka Chowk, opposite Kali Mata Mandir"></textarea>
+                                placeholder="Complete address to be filled"></textarea>
                         </div>
 
                         <div class="row mb-3">
@@ -973,72 +974,72 @@
             const tax = taxType.value;
 
             // if (tax == 'gst') {
-                const complaintType = document.getElementById('complaintType').value.trim();
-                const gstDescription = document.getElementById('gstDescription').value.trim();
-                const location = document.getElementById('location').value.trim();
-                const pincode = document.getElementById('pincode').value.trim();
-                const dist = document.getElementById('district').value.trim();
-                let files = document.getElementById('gstProof').files;
+            const complaintType = document.getElementById('complaintType').value.trim();
+            const gstDescription = document.getElementById('gstDescription').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const pincode = document.getElementById('pincode').value.trim();
+            const dist = document.getElementById('district').value.trim();
+            let files = document.getElementById('gstProof').files;
 
-                // ---------------------- VALIDATION ----------------------
+            // ---------------------- VALIDATION ----------------------
 
-                if (!complaintType) {
+            if (!complaintType) {
+                $('#loader').addClass('d-none');
+                Swal.fire('Error', 'Please select Type of Information.', 'error');
+                return false;
+            }
+
+            if (!gstDescription) {
+                $('#loader').addClass('d-none');
+                Swal.fire('Error', 'Please enter Brief Information/Details.', 'error');
+                return false;
+            }
+
+            if (!location) {
+                $('#loader').addClass('d-none');
+                Swal.fire('Error', 'Please enter location.', 'error');
+                return false;
+            }
+
+            if (!dist) {
+                $('#loader').addClass('d-none');
+                Swal.fire('Error', 'Please select district.', 'error');
+                return false;
+            }
+
+
+            if (pincode) {
+                if (!/^[0-9]{6}$/.test(pincode)) {
                     $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please select Type of Information.', 'error');
+                    Swal.fire('Error', 'Pincode must be exactly 6 digits.', 'error');
                     return false;
                 }
-
-                if (!gstDescription) {
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter Brief Information/Details.', 'error');
-                    return false;
-                }
-
-                if (!location) {
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please enter location.', 'error');
-                    return false;
-                }
-
-                 if (!dist) {
-                    $('#loader').addClass('d-none');
-                    Swal.fire('Error', 'Please select district.', 'error');
-                    return false;
-                }
+            }
 
 
-                if (pincode) {
-                    if (!/^[0-9]{6}$/.test(pincode)) {
+            // ---------------------- FILE VALIDATION ----------------------
+            if (files.length > 0) {
+                let allowedExtensions = ['jpg', 'jpeg', 'png'];
+                for (let i = 0; i < files.length; i++) {
+                    let file = files[i];
+
+                    let fileExtension = file.name.split('.').pop().toLowerCase();
+                    if (!allowedExtensions.includes(fileExtension)) {
                         $('#loader').addClass('d-none');
-                        Swal.fire('Error', 'Pincode must be exactly 6 digits.', 'error');
+                        Swal.fire('Error', 'Invalid file type. Only JPG, JPEG, or PNG are allowed.',
+                            'error');
+                        document.getElementById('gstProof').value = "";
+                        return false;
+                    }
+
+                    if (file.size > 1024 * 1024) {
+                        $('#loader').addClass('d-none');
+                        Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
+                        document.getElementById('gstProof').value = "";
                         return false;
                     }
                 }
-                
-
-                // ---------------------- FILE VALIDATION ----------------------
-                if (files.length > 0) {
-                    let allowedExtensions = ['jpg', 'jpeg', 'png'];
-                    for (let i = 0; i < files.length; i++) {
-                        let file = files[i];
-
-                        let fileExtension = file.name.split('.').pop().toLowerCase();
-                        if (!allowedExtensions.includes(fileExtension)) {
-                            $('#loader').addClass('d-none');
-                            Swal.fire('Error', 'Invalid file type. Only JPG, JPEG, or PNG are allowed.',
-                                'error');
-                            document.getElementById('gstProof').value = "";
-                            return false;
-                        }
-
-                        if (file.size > 1024 * 1024) {
-                            $('#loader').addClass('d-none');
-                            Swal.fire('Error', 'File size must not exceed 1 MB.', 'error');
-                            document.getElementById('gstProof').value = "";
-                            return false;
-                        }
-                    }
-                }
+            }
             // }
 
             if (tax == 'vat') {

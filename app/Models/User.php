@@ -48,4 +48,9 @@ class User extends Authenticatable
        return $this->belongsToMany(RoleGroup::class, 'role_types', 'user_id', 'role_id');
     }
 
+    public function wards()
+    {
+        return $this->hasMany(DistrictWard::class, 'district_id', 'id');
+    }
+
 }

@@ -4,6 +4,11 @@
 @section('page_title', 'Complaint Details')
 
 @section('content')
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+
     @php
         $entityState = 'Haryana';
         $entityDistrict = null;
@@ -35,19 +40,14 @@
 
         .label-text {
             font-size: 14px;
-            color: #374151;
             font-weight: 600;
+            color: #374151;
         }
 
         .value-text {
             font-size: 15px;
             font-weight: 500;
             color: #111;
-        }
-
-        .btn-primary {
-            background: #0a3d62;
-            border: none;
         }
 
         .btn-back {
@@ -68,11 +68,9 @@
         .radio-wrap {
             display: flex;
             gap: 15px;
-            margin-top: 6px;
-            padding: 8px 10px;
+            padding: 10px;
             background: #f3f7ff;
             border-radius: 6px;
-            border: 1px solid #d7dff8;
         }
     </style>
 
@@ -80,166 +78,320 @@
 
         <div class="card p-4 mb-4 shadow-sm border-0" style="background:#fafafa;">
 
+
             <div class="section-head text-center">Information Details</div>
 
-            {{-- INFORMER DETAILS --}}
+            {{-- ========== INFORMER DETAILS ========== --}}
             <div class="section-head mt-3">Informer Details</div>
 
             <div class="row g-3">
-                @php $info=['application_id'=>'Application ID']; @endphp
 
-                @foreach ($info as $col => $label)
-                    @if ($complain->$col)
-                        <div class="col-md-4">
-                            <div class="info-card">
-                                <div class="label-text">{{ $label }}</div>
-                                <div class="value-text">{{ $complain->$col }}</div>
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
+                {{-- Application ID --}}
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="label-text">Application ID</div>
+                        <div class="value-text">{{ $complain->application_id }}</div>
+                    </div>
+                </div>
 
+                {{-- Date of Information --}}
                 <div class="col-md-4">
                     <div class="info-card">
                         <div class="label-text">Date of Information</div>
                         <div class="value-text">{{ $complain->created_at->format('d-m-Y') }}</div>
                     </div>
                 </div>
+
             </div>
 
             <hr>
 
-            {{-- ENTITY DETAILS --}}
+            {{-- ========== ENTITY DETAILS ========== --}}
             <div class="section-head">Entity Details</div>
 
             <div class="row g-3">
 
-                @php
-                    $fields = [
-                        'type_of_complaint' => 'Type of Information',
-                        'gst_description' => 'GST Description',
-                        'complainant_district' => 'District',
-                        'pincode' => 'Pincode',
-                        'involved_type' => 'Involved Type',
-                        'gst_firm_name' => 'Firm Name',
-                        'gst_gstin' => 'Gstin',
-                        'gst_firm_address' => 'Firm Address',
-                        'location' => 'Location',
-                        'gst_address2' => 'Address Line 2',
-                        'gst_locality' => 'Locality',
-                        'gst_city' => 'City',
-                        'gst_vehicle_number' => 'Vehicle Number',
-                        'vat_firm_name' => 'VAT Firm Name',
-                        'vat_tin' => 'VAT TIN',
-                        'vat_firm_address' => 'VAT Firm Address',
-                        'vat_person_name' => 'VAT Person Name',
-                        'vat_vehicle_number' => 'VAT Vehicle Number',
-                        'vat_description' => 'VAT Description',
-                        'excise_name' => 'Excise Name',
-                        'excise_place' => 'Excise Place',
-                        'excise_time' => 'Excise Time',
-                        'excise_vehicle_number' => 'Excise Vehicle Number',
-                        'excise_desc' => 'Excise Description',
-                        'excise_details' => 'Excise Details',
-                    ];
-                @endphp
-
-                @foreach ($fields as $col => $label)
-                    @if ($col == 'complainant_district')
-                        <div class="col-md-4">
-                            <div class="info-card">
-                                <div class="label-text">{{ $label }}</div>
-                                <div class="value-text">{{ $entityDistrict ?? 'N/A' }}</div>
+                {{-- Type of Complaint --}}
+                @if ($complain->type_of_complaint)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Type of Information</div>
+                            <div class="value-text">
+                                {{ ucwords(str_replace('_', ' ', $complain->type_of_complaint)) }}
                             </div>
-                        </div>
-                        @continue
-                    @endif
 
-                    @if ($complain->$col)
-                        <div class="col-md-4">
-                            <div class="info-card">
-                                <div class="label-text">{{ $label }}</div>
-                                <div class="value-text">
-                                    {{ ucwords(str_replace('_', ' ', $complain->$col)) }}
-                                </div>
-                            </div>
                         </div>
-                    @endif
-                @endforeach
+                    </div>
+                @endif
+
+                {{-- GST Description --}}
+                @if ($complain->gst_description)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Brief Information / Details</div>
+                            <div class="value-text">{{ $complain->gst_description }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- District --}}
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="label-text">District</div>
+                        <div class="value-text">{{ $entityDistrict }}</div>
+                    </div>
+                </div>
+
+                {{-- Pincode --}}
+                @if ($complain->pincode)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Pincode</div>
+                            <div class="value-text">{{ $complain->pincode }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Involved Type --}}
+                @if ($complain->involved_type)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Involved Type</div>
+                            <div class="value-text">{{ $complain->involved_type }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Firm Name --}}
+                @if ($complain->gst_firm_name)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Firm Name</div>
+                            <div class="value-text">{{ $complain->gst_firm_name }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- GSTIN --}}
+                @if ($complain->gst_gstin)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">GSTIN</div>
+                            <div class="value-text">{{ $complain->gst_gstin }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Firm Address --}}
+                @if ($complain->gst_firm_address)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Firm Address</div>
+                            <div class="value-text">{{ $complain->gst_firm_address }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Location --}}
+                @if ($complain->location)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Location</div>
+                            <div class="value-text">{{ $complain->location }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Address Line 2 --}}
+                @if ($complain->gst_address2)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Address Line 2</div>
+                            <div class="value-text">{{ $complain->gst_address2 }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Locality --}}
+                @if ($complain->gst_locality)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Locality</div>
+                            <div class="value-text">{{ $complain->gst_locality }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- City --}}
+                @if ($complain->gst_city)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">City</div>
+                            <div class="value-text">{{ $complain->gst_city }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Vehicle Number --}}
+                @if ($complain->gst_vehicle_number)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Vehicle Number</div>
+                            <div class="value-text">{{ $complain->gst_vehicle_number }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- VAT Firm Name --}}
+                @if ($complain->vat_firm_name)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">VAT Firm Name</div>
+                            <div class="value-text">{{ $complain->vat_firm_name }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- VAT TIN --}}
+                @if ($complain->vat_tin)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">VAT TIN</div>
+                            <div class="value-text">{{ $complain->vat_tin }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- VAT Person --}}
+                @if ($complain->vat_person_name)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">VAT Person Name</div>
+                            <div class="value-text">{{ $complain->vat_person_name }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- VAT Description --}}
+                @if ($complain->vat_description)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">VAT Description</div>
+                            <div class="value-text">{{ $complain->vat_description }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Excise Details --}}
+                @if ($complain->excise_desc)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Excise Description</div>
+                            <div class="value-text">{{ $complain->excise_desc }}</div>
+                        </div>
+                    </div>
+                @endif
+
             </div>
 
-            {{-- DOCUMENTS --}}
+            {{-- ========== DOCUMENTS WITH LIGHTBOX ========== --}}
             @if ($complain->gst_proof || $complain->vat_proof || $complain->excise_proof)
                 <hr>
                 <div class="section-head">Attached Documents</div>
 
                 <div class="row g-3">
+
+                    {{-- GST, VAT, EXCISE LOOP --}}
                     @foreach (['gst_proof' => 'GST', 'vat_proof' => 'VAT', 'excise_proof' => 'Excise'] as $key => $label)
                         @if ($complain->$key)
-                            @foreach (json_decode($complain->$key, true) as $file)
-                                <div class="col-md-4">
-                                    <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $file) }}"
-                                        target="_blank" class="btn btn-outline-secondary w-100">View {{ $label }}</a>
-                                </div>
+                            @php $docs = json_decode($complain->$key, true); @endphp
+
+                            @foreach ($docs as $file)
+                                @php
+                                    $path = asset('storage/complaints/' . $complain->application_id . '/' . $file);
+                                    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                                @endphp
+
+                                {{-- If image → lightbox --}}
+                                @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                    <div class="col-md-4">
+                                        <a href="{{ $path }}" data-lightbox="{{ $label }}-docs"
+                                            data-title="{{ $label }} Document">
+                                            <img src="{{ $path }}" class="img-fluid rounded"
+                                                style="max-height:150px;object-fit:cover;">
+                                        </a>
+                                    </div>
+
+                                    {{-- If PDF → open normally --}}
+                                @elseif($ext === 'pdf')
+                                    <div class="col-md-4">
+                                        <a href="{{ $path }}" target="_blank"
+                                            class="btn btn-outline-primary w-100">
+                                            View {{ $label }} PDF
+                                        </a>
+                                    </div>
+                                @endif
                             @endforeach
                         @endif
                     @endforeach
+
                 </div>
             @endif
 
+
+
+
             <hr>
 
-            {{-- ************* UPDATED FORM AREA START ************** --}}
+            {{-- ================================================= --}}
+            {{-- ===================== DETC FORM =================== --}}
+            {{-- ================================================= --}}
+
             @if (!$detcAction)
 
-                <div class="card shadow-lg border-0 mt-5"
-                    style="background:#ffffff;border-radius:12px;border-left:5px solid #0a3d62;">
+                <div class="card shadow-lg border-0 mt-5" style="border-left:5px solid #0a3d62;">
 
-                    <div class="p-3" style="background:#0a3d62;border-radius:12px 12px 0 0;color:white;font-weight:600;">
-                        {{-- DETC Action Form --}}
-                        Upload Report
-                    </div>
+                    <div class="p-3" style="background:#0a3d62;color:white;font-weight:600;">Upload Report</div>
 
                     <div class="p-4">
 
-                        {{-- PROCEED BUTTON --}}
+                        {{-- Proceed Button --}}
                         <div id="proceedSection" class="text-center my-4">
-                            <button class="btn btn-primary btn-lg px-4" id="proceedBtn"
-                                style="font-size:18px;">Proceed</button>
+                            <button class="btn btn-primary btn-lg px-4" id="proceedBtn">Proceed</button>
                         </div>
 
                         {{-- FORM --}}
                         <form id="detcForm" action="{{ route('detc.action.store', [$complain->secure_id]) }}"
-                            method="POST" style="display:none;" enctype="multipart/form-data">
+                            method="POST" enctype="multipart/form-data" style="display:none;">
 
                             @csrf
 
                             <div class="row g-4">
 
+                                {{-- Proposed Action --}}
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold required">Proposed Action</label>
-
-                                    <div class="radio-wrap"
-                                        style="background:#eff4ff;border:1px solid #c7d6ff;border-radius:8px;padding:12px;">
+                                    <div class="radio-wrap">
                                         <label><input type="radio" name="proposed_action" value="actionable">
                                             Actionable</label>
-                                        <label class="ms-4"><input type="radio" name="proposed_action"
-                                                value="non_actionable"> Non Actionable</label>
+                                        <label><input type="radio" name="proposed_action" value="non_actionable"> Non
+                                            Actionable</label>
                                     </div>
                                 </div>
 
-
-
+                                {{-- Ward No (ACTIONABLE ONLY) --}}
                                 <div class="col-md-6" id="actionableBox" style="display:none;">
-                                    <label class="form-label fw-semibold required mt-2">Select Action</label>
-                                    <select class="form-select" id="actionSelect" name="action_taken">
-                                        <option value="">Select</option>
-                                        <option value="action_taken">Action Taken</option>
-                                        <option value="tax_evasion">Tax Evasion</option>
-                                        <option value="any_other">Any Other</option>
+                                    <label class="form-label fw-semibold required mt-2"> Issue letter to ETO of Ward No.
+                                        (Select ward dropdown)</label>
+                                    <select class="form-select" id="wardSelect" name="ward_no">
+                                        <option value="">Select Ward</option>
+                                        @foreach ($wardList as $key => $val)
+                                            <option value="{{ $key }}">{{ $val }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
+                                {{-- Reason (NON ACTIONABLE ONLY) --}}
                                 <div class="col-md-6" id="nonActionableBox" style="display:none;">
                                     <label class="form-label fw-semibold required mt-2">Reason</label>
                                     <select class="form-select" id="reasonSelect" name="reason">
@@ -249,152 +401,114 @@
                                         <option value="any_other">Any Other</option>
                                     </select>
                                 </div>
+
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+
+                                {{-- Remarks (always after selecting) --}}
+                                <div class="col-md-6" id="remarksBox" style="display:none;">
                                     <div class="mt-3">
                                         <label class="form-label fw-semibold required">Remarks</label>
-                                        <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Add remarks..."></textarea>
+                                        <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
                                     </div>
                                 </div>
 
-                                {{-- <div class="col-md-6">
+                                {{-- FILE (ONLY ACTIONABLE) --}}
+                                <div class="col-md-6" id="fileBox" style="display:none;">
                                     <div class="mt-3">
-                                        <label class="form-label fw-semibold required">Remarks</label>
-                                        <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Add remarks..." required></textarea>
-                                    </div>
-                                </div> --}}
-
-                                <div class="col-md-6">
-                                    <div class="mt-3">
-                                        <label class="form-label fw-semibold">Upload File</label>
-                                        <input type="file" class="form-control" name="upload_file" id="upload_file">
+                                        <label class="form-label fw-semibold required">Upload copy of order issued to
+                                            concerned ETO</label>
+                                        <input type="file" class="form-control" name="upload_file" id="upload_file"
+                                            accept=".jpg,.jpeg,.png">
                                     </div>
                                 </div>
 
                             </div>
-
-
 
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary mt-4 px-5 py-2"
-                                    style="font-size:17px;border-radius:6px;">
-                                    Submit
-                                </button>
+                                <button type="submit" class="btn btn-primary mt-4 px-5 py-2">Submit</button>
                             </div>
+
                         </form>
+
                     </div>
                 </div>
-
-                {{-- *************** FORM END **************** --}}
             @else
-                {{-- SAME CODE --}}
-                <div class="card shadow-lg border-0 mt-4" style="border-radius:12px;">
-                    <div class="card-header"
-                        style="background:linear-gradient(45deg,#0a3d62,#1e5f9d);color:white;border-radius:12px 12px 0 0;">
-                        <h5 class="mb-0 fw-bold text-white">Uploaded Report Details</h5>
+                {{-- ================= SHOW UPLOADED REPORT ================= --}}
+                <div class="card shadow-lg border-0 mt-4">
+                    <div class="card-header" style="background:#0a3d62;color:white;">
+                        <h5 class="fw-bold text-white">Uploaded Report Details</h5>
                     </div>
 
-                    <div class="card-body" style="background:#ffffff;">
+                    <div class="card-body">
                         <div class="row g-3">
+
                             <div class="col-md-6">
-                                <div class="p-3 shadow-sm rounded"
-                                    style="background:#f8f9fa;border-left:4px solid #0a3d62;">
-                                    <small class="text-secondary d-block">Proposed Action</small>
-                                    <span class="fw-bold text-dark fs-6">
+                                <div class="p-3 shadow-sm rounded" style="border-left:4px solid #0a3d62;">
+                                    <small class="text-secondary">Proposed Action</small>
+                                    <div class="fw-bold">
                                         {{ ucwords(str_replace('_', ' ', $detcAction->proposed_action)) }}
-                                    </span>
-                                </div>
-                            </div>
-                            @if ($detcAction->action_taken)
-                                <div class="col-md-6">
-                                    <div class="p-3 shadow-sm rounded"
-                                        style="background:#f8f9fa;border-left:4px solid #28a745;">
-                                        <small class="text-secondary d-block">Action Taken</small>
-                                        <span class="fw-bold text-dark fs-6">
-                                            {{ ucwords(str_replace('_', ' ', $detcAction->action_taken)) }}
-                                        </span>
                                     </div>
-                                </div>
-                            @endif
-
-                            @if ($detcAction->reason)
-                                <div class="col-md-6">
-                                    <div class="p-3 shadow-sm rounded"
-                                        style="background:#f8f9fa;border-left:4px solid #ffc107;">
-                                        <small class="text-secondary d-block">Reason</small>
-                                        <span class="fw-bold text-dark fs-6">
-                                            {{ ucwords(str_replace('_', ' ', $detcAction->reason)) }}
-                                        </span>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <div class="col-md-6">
-                                <div class="p-3 shadow-sm rounded"
-                                    style="background:#f8f9fa;border-left:4px solid #6c757d;">
-                                    <small class="text-secondary d-block">Remarks</small>
-                                    <span class="fw-bold text-dark fs-6">
-                                        {{ $detcAction->remarks }}
-                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div class="p-3 shadow-sm rounded"
-                                    style="background:#f8f9fa;border-left:4px solid #17a2b8;">
-                                    <small class="text-secondary d-block">Date</small>
-                                    <span class="fw-bold text-dark fs-6">
-                                        <p><strong>Date:</strong> {{ $detcAction->created_at->format('d-m-Y') }}</p>
-                                    </span>
+                                <div class="p-3 shadow-sm rounded" style="border-left:4px solid #6c757d;">
+                                    <small class="text-secondary">Remarks</small>
+                                    <div class="fw-bold">{{ $detcAction->remarks }}</div>
                                 </div>
                             </div>
 
+                            {{-- SHOW UPLOADED FILE --}}
+                            @if ($detcAction->file_name)
+                                <div class="col-md-6">
+                                    <div class="p-3 shadow-sm rounded" style="border-left:4px solid #007bff;">
+                                        <small class="text-secondary">Uploaded Document</small>
+                                        <a href="{{ asset('storage/complaints/' . $complain->application_id . '/' . $detcAction->file_name) }}"
+                                            target="_blank" class="btn btn-primary btn-sm mt-2">View Document</a>
+                                    </div>
+                                </div>
+                            @endif
+
+
+                            @if (!empty($detcAction->ward_no))
+                                <div class="col-md-6">
+                                    <div class="p-3 shadow-sm rounded" style="border-left:4px solid #6c757d;">
+                                        <small class="text-secondary">Ward No</small>
+                                        <div class="fw-bold">Ward no {{ $detcAction->ward_no }}</div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if (!empty($detcAction->reason))
+                                <div class="col-md-6">
+                                    <div class="p-3 shadow-sm rounded" style="border-left:4px solid #6c757d;">
+                                        <small class="text-secondary">Reason</small>
+                                          <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $detcAction->reason)) }}</div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
+
             @endif
 
             <div class="text-center mt-4">
-                <a href="{{ route('detc.dashboard') }}" class="btn btn-back px-4">
-                    ← Back to Dashboard
-                </a>
+                <a href="{{ route('detc.dashboard') }}" class="btn btn-back px-4">← Back to Dashboard</a>
             </div>
+
         </div>
     </div>
 
-    {{-- JS --}}
+    {{-- ================= JS ================= --}}
+
     <script>
         document.getElementById('proceedBtn').onclick = () => {
             document.getElementById('proceedSection').style.display = 'none';
             document.getElementById('detcForm').style.display = 'block';
         };
-
-        document.querySelectorAll('input[name="proposed_action"]').forEach((el) => {
-            el.addEventListener('change', function() {
-                let act = document.getElementById('actionableBox');
-                let non = document.getElementById('nonActionableBox');
-
-                let actionSel = document.getElementById('actionSelect');
-                let reasonSel = document.getElementById('reasonSelect');
-
-                if (this.value === "actionable") {
-                    act.style.display = "block";
-                    non.style.display = "none";
-                    reasonSel.value = "";
-                } else if (this.value === "non_actionable") {
-                    act.style.display = "none";
-                    non.style.display = "block";
-                    actionSel.value = "";
-                } else {
-                    act.style.display = "none";
-                    non.style.display = "none";
-                    actionSel.value = "";
-                    reasonSel.value = "";
-                }
-            });
-        });
     </script>
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -402,9 +516,9 @@
     @if (session('success'))
         <script>
             Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: '{{ session('success') }}'
+                icon: "success",
+                title: "Success",
+                text: "{{ session('success') }}"
             });
         </script>
     @endif
@@ -412,124 +526,94 @@
     @if (session('error'))
         <script>
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '{{ session('error') }}'
+                icon: "error",
+                title: "Error",
+                text: "{{ session('error') }}"
             });
         </script>
     @endif
 
-    {{-- <script>
-        document.getElementById("detcForm").addEventListener("submit", function(e) {
-
-            let proposed = document.querySelector('input[name="proposed_action"]:checked');
-            let actionable = document.getElementById('actionSelect').value;
-            let nonActionable = document.getElementById('reasonSelect').value;
-            let fileInput = document.getElementById('upload_file');
-            let file = fileInput.files[0];
-
-            // 1. Proposed Action Required
-            if (!proposed) {
-                e.preventDefault();
-                Swal.fire("Required!", "Please select Proposed Action", "warning");
-                return false;
-            }
-
-            // 2. If actionable selected then Action Taken required
-            if (proposed.value === "actionable" && actionable === "") {
-                e.preventDefault();
-                Swal.fire("Required!", "Please select Action Taken", "warning");
-                return false;
-            }
-
-            // 3. If non-actionable selected then Reason required
-            if (proposed.value === "non_actionable" && nonActionable === "") {
-                e.preventDefault();
-                Swal.fire("Required!", "Please select Reason", "warning");
-                return false;
-            }
-
-            // 4. File Validation (optional but if exists then check)
-            if (file) {
-
-                let allowed = ["pdf", "jpg", "jpeg"];
-                let ext = file.name.split('.').pop().toLowerCase();
-
-                if (!allowed.includes(ext)) {
-                    e.preventDefault();
-                    Swal.fire("Invalid File!", "Only pdf, jpg, jpeg allowed!", "error");
-                    return false;
-                }
-
-                if (file.size > 1024 * 1024) {
-                    e.preventDefault();
-                    Swal.fire("Too Large!", "File must be less than 1MB!", "error");
-                    return false;
-                }
-            }
-
-        });
-    </script> --}}
-
+    {{-- VALIDATION --}}
     <script>
         document.getElementById("detcForm").addEventListener("submit", function(e) {
 
             let proposed = document.querySelector('input[name="proposed_action"]:checked');
-            let actionable = document.getElementById('actionSelect').value;
-            let nonActionable = document.getElementById('reasonSelect').value;
+            let wardNo = document.getElementById('wardSelect').value;
+            let reason = document.getElementById('reasonSelect').value;
             let remarks = document.getElementById('remarks').value.trim();
-            let fileInput = document.getElementById('upload_file');
-            let file = fileInput.files[0];
+            let file = document.getElementById('upload_file').files[0];
 
-            // 1. Proposed Action Required
             if (!proposed) {
                 e.preventDefault();
                 Swal.fire("Required!", "Please select Proposed Action", "warning");
-                return false;
+                return;
             }
 
-            // 2. If actionable selected then Action Taken required
-            if (proposed.value === "actionable" && actionable === "") {
+            if (proposed.value === "actionable" && wardNo === "") {
                 e.preventDefault();
-                Swal.fire("Required!", "Please select Action Taken", "warning");
-                return false;
+                Swal.fire("Required!", "Please select Ward No", "warning");
+                return;
             }
 
-            // 3. If non-actionable selected then Reason required
-            if (proposed.value === "non_actionable" && nonActionable === "") {
+            if (proposed.value === "non_actionable" && reason === "") {
                 e.preventDefault();
                 Swal.fire("Required!", "Please select Reason", "warning");
-                return false;
+                return;
             }
 
-            // 4. Remarks Required
             if (remarks === "") {
                 e.preventDefault();
                 Swal.fire("Required!", "Please enter Remarks", "warning");
-                return false;
+                return;
             }
 
-            // 5. File Validation (optional)
-            if (file) {
+            if (proposed.value === "actionable") {
 
-                let allowed = ["pdf", "jpg", "jpeg"];
-                let ext = file.name.split('.').pop().toLowerCase();
-
-                if (!allowed.includes(ext)) {
+                if (!file) {
                     e.preventDefault();
-                    Swal.fire("Invalid File!", "Only pdf, jpg, jpeg allowed!", "error");
-                    return false;
+                    Swal.fire("Required!", "File is required for actionable!", "warning");
+                    return;
+                }
+
+                let ext = file.name.split('.').pop().toLowerCase();
+                if (!["jpg", "jpeg", "png"].includes(ext)) {
+                    e.preventDefault();
+                    Swal.fire("Invalid File!", "Only JPG, JPEG, PNG allowed!", "error");
+                    return;
                 }
 
                 if (file.size > 1024 * 1024) {
                     e.preventDefault();
                     Swal.fire("Too Large!", "File must be less than 1MB!", "error");
-                    return false;
+                    return;
                 }
             }
         });
     </script>
 
+    {{-- SHOW/HIDE FIELDS --}}
+    <script>
+        document.querySelectorAll('input[name="proposed_action"]').forEach((el) => {
+            el.addEventListener('change', function() {
 
+                let act = document.getElementById('actionableBox');
+                let non = document.getElementById('nonActionableBox');
+                let fileBox = document.getElementById('fileBox');
+                let remarksBox = document.getElementById('remarksBox');
+
+                if (this.value === "actionable") {
+                    act.style.display = "block";
+                    non.style.display = "none";
+                    fileBox.style.display = "block";
+                    remarksBox.style.display = "block";
+                } else if (this.value === "non_actionable") {
+                    act.style.display = "none";
+                    non.style.display = "block";
+                    fileBox.style.display = "none";
+                    remarksBox.style.display = "block";
+                }
+            });
+        });
+    </script>
 
 @endsection

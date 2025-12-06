@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\LogoutController;
 use App\Http\Controllers\Web\UserComplaintController;
 use App\Http\Controllers\Web\HqController;
 use App\Http\Controllers\Web\UserDashboard;
+use App\Http\Controllers\Web\JcController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Mews\Captcha\Facades\Captcha;
@@ -59,3 +60,12 @@ Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::get('dashboard', [HqController::class, 'dashboard'])->name('dashboard');
     Route::get('/information/{secure_id}', [HqController::class, 'show'])->name('details');
 });
+
+Route::get('jc/dashboard', [JcController::class, 'dashboard'])->name('jc.dashboard');
+Route::get('jc/details/{secure_id}', [JcController::class, 'details'])
+    ->name('jc.details');
+Route::post('/jc/assign/{secure_id}', [JcController::class, 'assign'])
+    ->name('jc.assign');
+
+
+
