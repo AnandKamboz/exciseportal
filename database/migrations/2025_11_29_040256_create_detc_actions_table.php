@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->string('file_name')->nullable();
             $table->unsignedBigInteger('detc_user_id');
+            $table->boolean('is_approved')->default(true)->comment('1 = Approved, 0 = Rejected');
             $table->timestamps();
         });
               

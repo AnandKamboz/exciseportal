@@ -15,8 +15,11 @@ class DetcController extends Controller
     public function dashboard()
     {
         $allComplain = Complainant::where('district_id', Auth::user()->district)->where('is_completed', 1)->orderBy('created_at', 'desc')->get();
-
-        return view('detc.dashboard', compact('allComplain', 'allComplain'));
+        $totalInformation =   Complainant::where('district_id', Auth::user()->district)->where('is_completed', 1)->count();
+        $forwardedForAction = DB::table('detc_actions')->where('detc_district', Auth::user()->district)->where('is_approved',1)->count();
+        $notActionable = DB::table('detc_actions')->where('detc_district', Auth::user()->district)->where('is_approved', 0)->count();
+        $pendingInformation = $totalInformation - ($forwardedForAction + $notActionable);
+        return view('detc.dashboard', compact('forwardedForAction','allComplain', 'pendingInformation', 'totalInformation','notActionable'));
     }
 
     public function show($secure_id)
@@ -251,6 +254,7 @@ class DetcController extends Controller
             'user_application_id' => $complaint->application_id,
             'detc_district' => Auth::user()->district,
             'proposed_action' => $request->proposed_action,
+            'is_approved'     => $request->proposed_action === 'actionable' ? 1 : 0,
             'ward_no' => $request->ward_no,
             // 'action_taken' => $request->action_taken,
             'reason' => $request->reason,

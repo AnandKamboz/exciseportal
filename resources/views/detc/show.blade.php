@@ -1,7 +1,7 @@
-@extends('users.layouts.dashboard')
+@extends('detc.layouts.dashboard')
 
-@section('title', 'Complaint Details')
-@section('page_title', 'Complaint Details')
+@section('title', 'Information Details')
+@section('page_title', 'Information Details')
 
 @section('content')
 
@@ -492,13 +492,10 @@
                         </div>
                     </div>
                 </div>
-
             @endif
-
             <div class="text-center mt-4">
                 <a href="{{ route('detc.dashboard') }}" class="btn btn-back px-4">← Back to Dashboard</a>
             </div>
-
         </div>
     </div>
 

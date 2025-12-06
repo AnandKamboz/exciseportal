@@ -8,33 +8,34 @@
         <div class="row g-4 mb-4">
             <div class="col-md-3">
                 <div class="card text-center p-3">
-                    <h5>Total</h5>
-                    <h2>1</h2>
+                    <h5>Total Information</h5>
+                    <h2>{{ $totalInformation }}</h2>
                     <a href="#" class="new-butt"> View All</a>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="card text-center p-3">
-                    <h5>Pending</h5>
-                    <h2>1</h2>
-                    <a href="#" class="new-butt"> View All</a>
-                </div>
-            </div>
 
             <div class="col-md-3">
                 <div class="card text-center p-3">
                     <h5>Forwarded for Action</h5>
-                    <h2>0</h2>
+                    <h2>{{ $forwardedForAction }}</h2>
                     <a href="#" class="new-butt"> View All</a>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="card text-center p-3">
-                    <h5>Rejected</h5>
-                    <h2>0</h2>
+                    <h5>Not Actionable</h5>
+                    <h2>{{ $notActionable }}</h2>
                     <a href="#" class="new-butt"> View All</a>
+                </div>
+            </div>
+        
+            <div class="col-md-3">
+                <div class="card text-center p-3">
+                    <h5>Pending Information</h5>
+                    <h2>{{ $pendingInformation }}</h2>
+                    <a href="" class="new-butt"> View All</a>
                 </div>
             </div>
         </div>
@@ -51,7 +52,7 @@
                             <th>Application Id</th>
                             <th>Category</th>
                             <th>Type of Information</th>
-                            <th>Status</th>
+                            {{-- <th>Status</th> --}}
                             <th>View</th>
                         </tr>
                     </thead>
@@ -63,7 +64,7 @@
                                 <td>{{ $complain->application_id }}</td>
                                 <td>{{ ucfirst($complain->complaint_type) }}</td>
                                 <td>{{ ucwords(str_replace('_', ' ', $complain->type_of_complaint)) }}</td>
-                                <td>{{ 'Pending' }}</td>
+                                {{-- <td>{{ 'Pending' }}</td> --}}
                                 <td>
                                     <a href="{{ route('detc.details', [$complain->secure_id]) }}"
                                         class="btn btn-sm btn-primary">View</a>
