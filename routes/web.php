@@ -61,11 +61,18 @@ Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::get('/information/{secure_id}', [HqController::class, 'show'])->name('details');
 });
 
-Route::get('jc/dashboard', [JcController::class, 'dashboard'])->name('jc.dashboard');
-Route::get('jc/details/{secure_id}', [JcController::class, 'details'])
-    ->name('jc.details');
-Route::post('/jc/assign/{secure_id}', [JcController::class, 'assign'])
-    ->name('jc.assign');
+// Route::get('jc/dashboard', [JcController::class, 'dashboard'])->name('jc.dashboard');
+// Route::get('jc/details/{secure_id}', [JcController::class, 'details'])
+//     ->name('jc.details');
+// Route::post('/jc/assign/{secure_id}', [JcController::class, 'assign'])
+//     ->name('jc.assign');
+
+Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () {
+    Route::get('dashboard', [JcController::class, 'dashboard'])->name('dashboard');
+    Route::get('details/{secure_id}', [JcController::class, 'details'])->name('details');
+    Route::post('assign/{secure_id}', [JcController::class, 'assign'])->name('assign');
+});
+
 
 
 

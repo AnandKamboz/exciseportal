@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
            'userrole' => \App\Http\Middleware\UserMiddleware::class,
            'detcrole' => \App\Http\Middleware\DetcMiddleware::class,
            'hq' => \App\Http\Middleware\HqMiddleware::class,
+           'jc' => \App\Http\Middleware\JcMiddleware::class,
         ]);
 
         //
