@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Complainant;
+use App\Models\User;
 
 
 class JcController extends Controller
@@ -40,6 +41,8 @@ class JcController extends Controller
 
         }
 
+        // dd($inspectors);
+
         return view('jc.show', compact('information','inspectors'));
     }
 
@@ -59,19 +62,21 @@ class JcController extends Controller
 
 public function assign(Request $request, $secure_id)
 {
+    $request->validate([
+        'detc_id' => 'required|integer',
+    ]);
+
+    $detcName = User::where('district', $request->detc_id)->value('name');
+    $detcId = User::where('district', $request->detc_id)->value('id');
+    
+    
     $complaint = DB::table('complainants')
         ->where('secure_id', $secure_id)
         ->first();
 
-    // dd( $complaint);
-
-    // $alreadyAssigned = $complaint->application_id;
-
     $alreadyAssigned = DB::table('jc_action_logs')
         ->where('complaint_id', $complaint->application_id)
         ->exists();
-
-    // dd($alreadyAssigned);
 
     if ($alreadyAssigned) {
         return redirect()
@@ -83,17 +88,16 @@ public function assign(Request $request, $secure_id)
     'complaint_id'       => $complaint->id,
     'application_id'     => $complaint->application_id,
 
-    // JC DETAILS
     'jc_id'              => Auth::user()->id,
     'jc_name'            => Auth::user()->name,
     'jc_mobile'          => Auth::user()->mobile,
     'jc_district'        => Auth::user()->district,
 
-    // ACTION DETAILS
+
     'action_type'        => 'assigned_to_detc',
 
-    'assigned_detc_id'   => 1,     
-    'assigned_detc_name' => 'sss',    // ✔ REAL DETC NAME
+    'assigned_detc_id'   => $detcId,
+    'assigned_detc_name' => $detcName,
 
     'remarks'            => $request->remarks ?? null,
     'created_at'         => now(),
