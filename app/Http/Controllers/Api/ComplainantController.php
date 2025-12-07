@@ -183,11 +183,11 @@ class ComplainantController extends Controller
 
     public function getHaryanaDistrict()
     {
-        $districts = District::all();
-        // $districts = DB::table('districts')
-        // ->where('id', '<=', 22)
-        // ->orderBy('name', 'asc')
-        // ->get();
+        // $districts = District::all();
+        $districts = DB::table('districts')
+        ->where('id', '<=', 22)
+        ->orderBy('name', 'asc')
+        ->get();
 
         return response()->json([
             'status' => true,
