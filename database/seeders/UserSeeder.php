@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'Sarthak Kohli', 'SEEMA BIDLAN B', 'Abhishek Batra',
             'Jagbir Jakhar', 'Vijay Kumar', 'Priyanka Yadav', 'Vijay Kumar',
             'Harveer Singh Chauhan', 'Gaurav Chahal', 'Preeti Choudhary',
-            'AMITA TANWAR', 'Anju Singh', 'Neel Ratan', 'Sneh Lata' , 'Aruna Singh'
+            'AMITA TANWAR', 'Anju Singh', 'Neel Ratan', 'Sneh Lata' , 'Aruna Singh' , 'Carkhi',
         ];
 
         $emails = [
@@ -31,11 +31,11 @@ class UserSeeder extends Seeder
             'sarthak.kohli@detc.in', 'seema.bidlan@detc.in', 'abhishek.batra@detc.in',
             'jagbir.jakhar@detc.in', 'vijay.kumar1@detc.in', 'priyanka.yadav@detc.in', 'vijay.kumar2@detc.in',
             'harveer.chauhan@detc.in', 'gaurav.chahal@detc.in', 'preeti.choudhary@detc.in',
-            'amita.tanwar@detc.in', 'anju.singh@detc.in','neel@gmail.com' ,'s@gmail.com' , 'a@gmail.com'
+            'amita.tanwar@detc.in', 'anju.singh@detc.in','neel@gmail.com' ,'s@gmail.com' , 'a@gmail.com' , 'c@gmail.com'
         ];
 
         $mobiles = [
-            '7777777777',
+            '9720866645',
             '9814649092', '9996780009', '8289009223', '7042576767',
             '9871128848', '9971304777', '9253000368', '9871439529',
             '8800217875', '9582739627', '9988882669', '9468090618',
@@ -44,24 +44,20 @@ class UserSeeder extends Seeder
             '8607371000', '9996062283', '9988063434',
             '8901274148', '7988243732',
             '7988243730',  '9466788666',
-            '9250902999' , '9311737801',
+            '9250902999' , '9311737801','1212121212'
         ];
 
-        // DISTRICT IDs (from districts table)
         $districtIds = [
             null,
-            11, 3, 23, 18,
+            11, 3, 23, 24, 25, 26, 18,
             27, 28, 29, 30,
             2, 9, 17, 7,
             13, 5, 16, 22,
             19, 15, 21,
             10, 20, 14,
-            8, 6,
-            null, null,
-            null , 4,1
+            8, 6, 4,1,12
         ];
 
-        // WARD IDs → from district_wards table
         $wardIds = [
             null,
             1, 2, 3, 7,
@@ -72,7 +68,7 @@ class UserSeeder extends Seeder
             23, 24, 25,
             26, 27,
             null, null,
-            null,null,null
+            null,null,null,null
         ];
 
         $userData = [];

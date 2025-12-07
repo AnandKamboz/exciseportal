@@ -867,13 +867,13 @@
 
             if (!address1) {
                 $('#loader').addClass('d-none');
-                return Swal.fire('Error', 'Please enter Address 1.', 'error');
+                return Swal.fire('Error', 'Please enter House/Building No., Street/Locality, Landmark.', 'error');
             }
 
             // Address 2 Blank Check
             if (!address2) {
                 $('#loader').addClass('d-none');
-                return Swal.fire('Error', 'Please enter Address 2.', 'error');
+                return Swal.fire('Error', 'Please enter Village/Town, Pincode.', 'error');
             }
 
             const formData = {
@@ -980,6 +980,7 @@
             const pincode = document.getElementById('pincode').value.trim();
             const dist = document.getElementById('district').value.trim();
             let files = document.getElementById('gstProof').files;
+            const gstGstin = document.getElementById('gstGstin').value.trim();
 
             // ---------------------- VALIDATION ----------------------
 
@@ -1015,6 +1016,19 @@
                     return false;
                 }
             }
+
+            if (gstGstin !== "") {  
+                if (gstGstin.length !== 15) {
+                    $('#loader').addClass('d-none');
+                    Swal.fire({
+                        icon: "error",
+                        title: "Invalid GSTIN",
+                        text: "GSTIN must be exactly 15 characters!",
+                    });
+                    return false;
+                }
+            }
+
 
 
             // ---------------------- FILE VALIDATION ----------------------

@@ -215,6 +215,12 @@ class RoleTypesSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'user_id' => 31,
+                'role_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
             // [
             //     'user_id' => 31,
             //     'role_id' => 3,
