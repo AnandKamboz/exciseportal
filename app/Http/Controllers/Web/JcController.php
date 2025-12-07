@@ -34,7 +34,7 @@ class JcController extends Controller
             ->get();
         }elseif($information->district_id == 1){
             $inspectors = DB::table('users')
-            ->whereIn('district', [23])
+            ->whereIn('district', [23,24,25,26])
             ->get();
         }else{
 
