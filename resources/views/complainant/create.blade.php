@@ -339,7 +339,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label class="form-label required">House/Building No., Street/Locality, Landmark</label>
+                            <label class="form-label required">House/Building No., Street</label>
                             <textarea name="address1" id="address1" class="form-control" rows="3"
                                 placeholder="House/Building No., Street/Locality, Landmark"
                                 @if (!empty($userDataForNewApplication->complainant_address1)) readonly style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;" @endif
@@ -349,7 +349,7 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label required">Village/Town, Pincode</label>
+                            <label class="form-label required">Village/ City/ Town</label>
                             <textarea name="address2" id="address2" class="form-control" rows="3" placeholder="Village/Town, Pincode"
                                 @if (!empty($userDataForNewApplication->complainant_address2)) readonly style="background-color:#f1f1f1; color:#6c757d; cursor:not-allowed;" @endif
                                 required>{{ $userDataForNewApplication->complainant_address2 ?? ($userData->complainant_address2 ?? '') }}</textarea>
