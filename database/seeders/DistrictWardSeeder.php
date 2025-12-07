@@ -140,7 +140,7 @@ class DistrictWardSeeder extends Seeder
             'Karnal' => 5,
             'Kurukshetra' => 16,
             'Mewat' => 22,      // Mewat old name → Nuh (ID 22)
-            'Narnaul' => 19,    // Narnaul = Mahendergarh (ID 19)
+            'Mahendergarh' => 19,    // Narnaul = Mahendergarh (ID 19)
             'Palwal' => 15,
             'Panchkula' => 21,
             'Panipat' => 10,

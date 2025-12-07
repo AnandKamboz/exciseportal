@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('aadhaar', 12)->nullable();
             $table->string('address')->nullable();
             $table->string('district')->nullable();
-            $table->unsignedBigInteger('ward_id')->nullable();
+            // $table->unsignedBigInteger('ward_id')->nullable();
             $table->timestamps();
         });
 

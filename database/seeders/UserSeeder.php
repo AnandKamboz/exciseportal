@@ -52,24 +52,23 @@ class UserSeeder extends Seeder
             11, 3, 23, 24, 25, 26, 18,
             27, 28, 29, 30,
             2, 9, 17, 7,
-            13, 5, 16, 22,
-            19, 15, 21,
+            13, 5, 16, 22,19, 15, 21,
             10, 20, 14,
             8, 6, 4,1,12
         ];
 
-        $wardIds = [
-            null,
-            1, 2, 3, 7,
-            8, 9, 10, 11,
-            12, 13, 14, 15,
-            16, 17, 18, 19,
-            20, 21, 22,
-            23, 24, 25,
-            26, 27,
-            null, null,
-            null,null,null,null
-        ];
+        // $wardIds = [
+        //     null,
+        //     1, 2, 3, 7,
+        //     8, 9, 10, 11,
+        //     12, 13, 14, 15,
+        //     16, 17, 18, 19,
+        //     20, 21, 22,
+        //     23, 24, 25,
+        //     26, 27,
+        //     null, null,
+        //     null,null,null,null
+        // ];
 
         $userData = [];
 
@@ -80,7 +79,7 @@ class UserSeeder extends Seeder
                 'email'     => $emails[$i],
                 'mobile'    => $mobiles[$i],
                 'district'  => $districtIds[$i],
-                'ward_id'   => $wardIds[$i],
+                // 'ward_id'   => $wardIds[$i],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
