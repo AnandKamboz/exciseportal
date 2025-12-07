@@ -22,7 +22,15 @@ class AuthController extends Controller
             'mobile' => 'required|numeric|digits:10',
         ]);
 
-        if (env('APP_ENV') === 'local') {
+        //    dd(config('app.env'));
+
+        // if (env('APP_ENV') === 'local') {
+        //     $otp = '111111';
+        // } else {
+        //     $otp = rand(100000, 999999);
+        // }
+
+        if (config('app.env') === 'local') {
             $otp = '111111';
         } else {
             $otp = rand(100000, 999999);
@@ -36,9 +44,8 @@ class AuthController extends Controller
 
         $request->session()->put('mobile', $request->mobile);
 
-
         $userMobile = $request->mobile;
-        $maskedMobile = '******' . substr($userMobile, -4);
+        $maskedMobile = '******'.substr($userMobile, -4);
 
         return response()->json([
             'success' => true,
@@ -268,7 +275,6 @@ class AuthController extends Controller
         // ✅ Get role name
         $role = $user->roles()->pluck('role_name')->first();
 
-      
         // if ($role === 'detc') {
         //     $redirectUrl = route('detc.dashboard');
         // } elseif ($role === 'excise inspector') {
@@ -280,26 +286,25 @@ class AuthController extends Controller
         // }
 
         if ($role === 'detc') {
-                $redirectUrl = route('detc.dashboard');
-            } elseif ($role === 'excise inspector') {
-                $redirectUrl = route('inspector.dashboard');
-            }elseif($role === 'jc'){
-                 $redirectUrl = route('jc.dashboard');
-            }else{
-                $mobile = Auth::user()->mobile;
-                $complaintExists = DB::table('complainants')
-                    ->where('complainant_phone', $mobile)
-                    ->where('is_completed', 1)
-                    ->exists();
+            $redirectUrl = route('detc.dashboard');
+        } elseif ($role === 'excise inspector') {
+            $redirectUrl = route('inspector.dashboard');
+        } elseif ($role === 'jc') {
+            $redirectUrl = route('jc.dashboard');
+        } else {
+            $mobile = Auth::user()->mobile;
+            $complaintExists = DB::table('complainants')
+                ->where('complainant_phone', $mobile)
+                ->where('is_completed', 1)
+                ->exists();
 
-                if ($complaintExists) {
-                    $redirectUrl = route('user.dashboard');
-                }
-                elseif ($role === 'hq') {
-                    $redirectUrl = route('hq.dashboard');
-                } else {
-                    $redirectUrl = route('complainant');
-                }
+            if ($complaintExists) {
+                $redirectUrl = route('user.dashboard');
+            } elseif ($role === 'hq') {
+                $redirectUrl = route('hq.dashboard');
+            } else {
+                $redirectUrl = route('complainant');
+            }
         }
 
         return response()->json([
