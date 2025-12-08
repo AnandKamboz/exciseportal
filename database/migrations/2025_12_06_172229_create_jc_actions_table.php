@@ -11,7 +11,7 @@ return new class extends Migration
      */
    public function up()
 {
-    Schema::create('jc_action_logs', function (Blueprint $table) {
+    Schema::create('jc_action', function (Blueprint $table) {
         $table->id();
         // COMPLAINT info
         $table->unsignedBigInteger('complaint_id');
