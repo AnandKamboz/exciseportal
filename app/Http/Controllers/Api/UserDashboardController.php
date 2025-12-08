@@ -17,7 +17,7 @@ class UserDashboardController extends Controller
                 'message' => 'Unauthenticated',
             ], 401);
         }
-
+        
         $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
             ->where('is_completed', 1)
             ->orderBy('created_at', 'desc')

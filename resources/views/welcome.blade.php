@@ -414,7 +414,7 @@
                 <div class="col-lg-5 mb-5 mb-lg-0 position-relative">
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
-                            <h4 class="text-center mb-4 fw-bold">Login/Register</h4>
+                            <h4 class="text-center mb-4 fw-bold">Administrator Login</h4>
                             <form id="loginForm">
                                 @csrf
                                 <div id="mobileSection" class="mb-3">

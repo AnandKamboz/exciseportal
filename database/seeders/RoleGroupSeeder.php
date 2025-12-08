@@ -40,6 +40,11 @@ class RoleGroupSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'role_name' => 'eto',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

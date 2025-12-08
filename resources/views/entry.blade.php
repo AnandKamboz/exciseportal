@@ -274,7 +274,7 @@
 
                             <hr style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 10px;">
 
-                            <h5 class="fw-semibold text-warning mb-2">अस्वीकरण</h5>
+                            <h5 class="fw-semibold text-warning mb-2">औपचारिक बयान</h5>
                             <ul style="list-style-type: square; padding-left: 1.5rem; line-height: 1.7;">
                                 <li>यह ऐप केवल जीएसटी उत्पाद शुल्क की चोरी से संबंधित जानकारी प्रदान करने के
                                     लिए है।</li>

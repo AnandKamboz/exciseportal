@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'Sarthak Kohli', 'SEEMA BIDLAN B', 'Abhishek Batra',
             'Jagbir Jakhar', 'Vijay Kumar', 'Priyanka Yadav', 'Vijay Kumar',
             'Harveer Singh Chauhan', 'Gaurav Chahal', 'Preeti Choudhary',
-            'AMITA TANWAR', 'Anju Singh', 'Neel Ratan', 'Sneh Lata' , 'Aruna Singh' , 'Carkhi',
+            'AMITA TANWAR', 'Anju Singh', 'Neel Ratan', 'Sneh Lata' , 'Aruna Singh' , 'Carkhi',"ETO"
         ];
 
         $emails = [
@@ -31,7 +31,8 @@ class UserSeeder extends Seeder
             'sarthak.kohli@detc.in', 'seema.bidlan@detc.in', 'abhishek.batra@detc.in',
             'jagbir.jakhar@detc.in', 'vijay.kumar1@detc.in', 'priyanka.yadav@detc.in', 'vijay.kumar2@detc.in',
             'harveer.chauhan@detc.in', 'gaurav.chahal@detc.in', 'preeti.choudhary@detc.in',
-            'amita.tanwar@detc.in', 'anju.singh@detc.in','neel@gmail.com' ,'s@gmail.com' , 'a@gmail.com' , 'c@gmail.com'
+            'amita.tanwar@detc.in', 'anju.singh@detc.in','neel@gmail.com' ,'s@gmail.com' , 'a@gmail.com' , 'c@gmail.com',
+            'eto@gmail.com',
         ];
 
         $mobiles = [
@@ -44,7 +45,7 @@ class UserSeeder extends Seeder
             '8607371000', '9996062283', '9988063434',
             '8901274148', '7988243732',
             '7988243730',  '9466788666',
-            '9250902999' , '9311737801','1212121212'
+            '9250902999' , '9311737801','1212121212','9999999999',
         ];
 
         $districtIds = [
@@ -54,8 +55,16 @@ class UserSeeder extends Seeder
             2, 9, 17, 7,
             13, 5, 16, 22,19, 15, 21,
             10, 20, 14,
-            8, 6, 4,1,12
+            8, 6, 4,1,12,11,
         ];
+
+        $ward = [
+            null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null, null,
+            null, 8,
+        ];
+
 
         // $wardIds = [
         //     null,
@@ -79,7 +88,7 @@ class UserSeeder extends Seeder
                 'email'     => $emails[$i],
                 'mobile'    => $mobiles[$i],
                 'district'  => $districtIds[$i],
-                // 'ward_id'   => $wardIds[$i],
+                'ward_no'   => $ward[$i],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

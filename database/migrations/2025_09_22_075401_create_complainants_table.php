@@ -46,6 +46,14 @@ return new class extends Migration
             // $table->string('gst_vehicle_number', 15)->nullable(); 
             // $table->string('gst_person_name')->nullable();
             
+            // Missing Field 
+            $table->string('missing_gst_number')->nullable();
+            $table->string('missing_firm_location')->nullable();
+            $table->string('missing_address')->nullable();
+            
+            $table->boolean('detc_rise_issue')->default(0);
+            $table->string('detc_issue')->nullable();
+
             
             // 🔹 Step 3 — Excise-related Fields
             $table->string('excise_name')->nullable();

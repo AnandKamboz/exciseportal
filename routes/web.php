@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\UserComplaintController;
 use App\Http\Controllers\Web\HqController;
 use App\Http\Controllers\Web\UserDashboard;
 use App\Http\Controllers\Web\JcController;
+use App\Http\Controllers\Web\EtoController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Mews\Captcha\Facades\Captcha;
@@ -72,6 +73,13 @@ Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () 
     Route::get('details/{secure_id}', [JcController::class, 'details'])->name('details');
     Route::post('assign/{secure_id}', [JcController::class, 'assign'])->name('assign');
 });
+
+
+Route::prefix('eto')->name('eto.')->group(function () {
+    Route::get('dashboard', [EtoController::class, 'dashboard'])->name('dashboard');
+     
+});
+
 
 
 

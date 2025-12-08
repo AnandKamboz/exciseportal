@@ -32,9 +32,9 @@ class ComplainantController extends Controller
         //     ->get();
 
         $districts = DB::table('districts')
-        ->where('id', '<=', 22)
-        ->orderBy('name', 'asc')
-        ->get();
+            ->where('id', '<=', 22)
+            ->orderBy('name', 'asc')
+            ->get();
 
         $indiaStates = State::all();
         $haryanaDistrictsList = DB::table('india_districts')
@@ -462,7 +462,6 @@ class ComplainantController extends Controller
             default => [],
         };
 
-
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
@@ -475,7 +474,7 @@ class ComplainantController extends Controller
         $complaint = Complainant::where('complainant_phone', $mobile)
             ->where('is_completed', 0)->first();
 
-            // STEP VALIDATION
+        // STEP VALIDATION
 
         if (! $complaint) {
             return response()->json([
@@ -484,7 +483,7 @@ class ComplainantController extends Controller
             ]);
         }
 
-        if (!isset($complaint->current_step) || $complaint->current_step < 1) {
+        if (! isset($complaint->current_step) || $complaint->current_step < 1) {
             return response()->json([
                 'success' => false,
                 'message' => 'Please complete Step 1 first.',
@@ -527,7 +526,6 @@ class ComplainantController extends Controller
                 $complaint->district_id = $request->district;
                 $complaint->district_name = $districtInfo->name;
                 $complaint->declaration = '1';
-
 
                 // FILE UPLOAD
                 $files = [];
@@ -618,5 +616,62 @@ class ComplainantController extends Controller
             'selectedDistrict' => $userData->complainant_district ?? '',
             'selectedState' => $stateId ?? '',
         ]);
+    }
+
+    public function updateMissingInfoApi(Request $request, $secure_id)
+    {
+        $complainant = Complainant::where('secure_id', $secure_id)->first();
+
+        if (! $complainant) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Complaint not found.',
+            ], 404);
+        }
+
+        $action = DetcAction::where('complaint_id', $complainant->id)->first();
+
+        if (! $action) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No DETC action found for this complaint.',
+            ], 404);
+        }
+
+        // Validation + Save based on missing_info
+        if ($action->missing_info == 'gst_number') {
+
+            $request->validate([
+                'missing_gst_number' => 'required|string|max:255',
+            ]);
+
+            $complainant->missing_gst_number = $request->missing_gst_number;
+        }
+
+        if ($action->missing_info == 'firm_location') {
+
+            $request->validate([
+                'missing_firm_location' => 'required|string|max:255',
+            ]);
+
+            $complainant->missing_firm_location = $request->missing_firm_location;
+        }
+
+        if ($action->missing_info == 'address') {
+
+            $request->validate([
+                'missing_address' => 'required|string|max:255',
+            ]);
+
+            $complainant->missing_address = $request->missing_address;
+        }
+
+        $complainant->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Missing information updated successfully.',
+            'data' => $complainant,
+        ], 200);
     }
 }

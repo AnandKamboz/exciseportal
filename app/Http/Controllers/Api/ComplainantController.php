@@ -49,14 +49,11 @@ class ComplainantController extends Controller
             // VALIDATION
             $validator = Validator::make($request->all(), [
                 'informer_name' => 'required|string|max:100',
-                // Rule::unique('complainants', 'complainant_email')
-                //     ->ignore(auth()->id(), 'user_id'),
-                // 'informer_aadhar' => 'required|digits:12',
                 'informer_email' => 'nullable|email',
-                'informer_state' => ['required', 'numeric'],
-                'informer_district' => ['required', 'numeric'],
-                'informer_address1' => 'required|string|max:255',
-                'informer_address2' => 'required|string|max:255',
+                'informer_state' => ['nullable', 'numeric'],
+                'informer_district' => ['nullable', 'numeric'],
+                'informer_address1' => 'nullable|string|max:255',
+                'informer_address2' => 'nullable|string|max:255',
             ]);
 
             if ($validator->fails()) {
@@ -67,7 +64,7 @@ class ComplainantController extends Controller
             }
 
             $mobile = auth()->user()->mobile;
-            $fullAddress = $request->informer_address1.', '.$request->informer_address2;
+            $fullAddress = $request->informer_address1.', '.$request->informer_address2 ?? "";
 
             $completedRecord = Complainant::where('complainant_phone', $mobile)
                 ->where('is_completed', 1)
@@ -82,12 +79,12 @@ class ComplainantController extends Controller
                 if ($existingIncomplete) {
                     $existingIncomplete->update([
                         'complainant_name' => $completedRecord->complainant_name,
-                        'complainant_address1' => $completedRecord->complainant_address1,
-                        'complainant_address2' => $completedRecord->complainant_address2,
-                        'complainant_address' => $completedRecord->complainant_address,
-                        'complainant_state' => $completedRecord->complainant_state,
-                        'complainant_district' => $completedRecord->complainant_district,
-                        'complainant_email' => $completedRecord->complainant_email,
+                        // 'complainant_address1' => $completedRecord->complainant_address1,
+                        // 'complainant_address2' => $completedRecord->complainant_address2,
+                        // 'complainant_address' => $completedRecord->complainant_address,
+                        // 'complainant_state' => $completedRecord->complainant_state,
+                        // 'complainant_district' => $completedRecord->complainant_district,
+                        'complainant_email' => $completedRecord->complainant_email ?? "",
                         'complaint_type' => 'gst',
                         'current_step' => ($existingIncomplete->current_step == 1) ? 2 : $existingIncomplete->current_step,
                     ]);
@@ -101,12 +98,12 @@ class ComplainantController extends Controller
                 Complainant::create([
                     'secure_id' => Str::random(32),
                     'complainant_name' => $completedRecord->complainant_name,
-                    'complainant_aadhar' => $completedRecord->complainant_aadhar,
-                    'complainant_address1' => $completedRecord->complainant_address1,
-                    'complainant_address2' => $completedRecord->complainant_address2,
-                    'complainant_address' => $completedRecord->complainant_address,
-                    'complainant_state' => $completedRecord->complainant_state,
-                    'complainant_district' => $completedRecord->complainant_district,
+                    // 'complainant_aadhar' => $completedRecord->complainant_aadhar,
+                    // 'complainant_address1' => $completedRecord->complainant_address1,
+                    // 'complainant_address2' => $completedRecord->complainant_address2,
+                    // 'complainant_address' => $completedRecord->complainant_address,
+                    // 'complainant_state' => $completedRecord->complainant_state,
+                    // 'complainant_district' => $completedRecord->complainant_district,
                     'complainant_email' => $completedRecord->complainant_email,
                     'complainant_phone' => $mobile,
                     'user_id' => auth()->id(),
@@ -129,12 +126,12 @@ class ComplainantController extends Controller
             if ($existingComplaint) {
                 $existingComplaint->update([
                     'complainant_name' => $request->informer_name,
-                    'complainant_aadhar' => $request->informer_aadhar,
-                    'complainant_address1' => $request->informer_address1,
-                    'complainant_address2' => $request->informer_address2,
-                    'complainant_address' => $fullAddress,
-                    'complainant_state' => $request->informer_state,
-                    'complainant_district' => $request->informer_district,
+                    // 'complainant_aadhar' => $request->informer_aadhar,
+                    // 'complainant_address1' => $request->informer_address1,
+                    // 'complainant_address2' => $request->informer_address2,
+                    // 'complainant_address' => $fullAddress,
+                    // 'complainant_state' => $request->informer_state,
+                    // 'complainant_district' => $request->informer_district,
                     'complainant_email' => $request->informer_email,
                     'complaint_type' => 'gst',
                     'current_step' => ($existingComplaint->current_step == 1) ? 2 : $existingComplaint->current_step,
@@ -151,12 +148,12 @@ class ComplainantController extends Controller
             Complainant::create([
                 'secure_id' => Str::random(32),
                 'complainant_name' => $request->informer_name,
-                'complainant_aadhar' => $request->informer_aadhar,
-                'complainant_address1' => $request->informer_address1,
-                'complainant_address2' => $request->informer_address2,
-                'complainant_address' => $fullAddress,
-                'complainant_state' => $request->informer_state,
-                'complainant_district' => $request->informer_district,
+                // 'complainant_aadhar' => $request->informer_aadhar,
+                // 'complainant_address1' => $request->informer_address1,
+                // 'complainant_address2' => $request->informer_address2,
+                // 'complainant_address' => $fullAddress,
+                // 'complainant_state' => $request->informer_state,
+                // 'complainant_district' => $request->informer_district,
                 'complainant_email' => $request->informer_email,
                 'complainant_phone' => $mobile,
                 'user_id' => auth()->id(),
@@ -185,9 +182,9 @@ class ComplainantController extends Controller
     {
         // $districts = District::all();
         $districts = DB::table('districts')
-        ->where('id', '<=', 22)
-        ->orderBy('name', 'asc')
-        ->get();
+            ->where('id', '<=', 22)
+            ->orderBy('name', 'asc')
+            ->get();
 
         return response()->json([
             'status' => true,
@@ -478,10 +475,10 @@ class ComplainantController extends Controller
     //         'application_id' => $complaint->application_id,
     //     ]);
     // }
-     
+
     public function submitComplaint(Request $request)
     {
-       
+
         $files = $request->file('gstProof');
 
         $request->merge([
@@ -513,7 +510,7 @@ class ComplainantController extends Controller
                 'location' => 'required|max:150',
                 'district' => ['required', 'numeric', 'digits_between:1,2'],
                 'pincode' => 'nullable|digits:6',
-                'gstProof.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:1024',
+                'gstProof.*' => 'nullable|mimes:jpg,jpeg,png|max:10240',
                 'gstFirmName' => 'nullable|string',
                 'gstGstin' => 'nullable|size:15',
                 'gstFirmAddress' => 'nullable|string',
@@ -563,7 +560,7 @@ class ComplainantController extends Controller
             ], 404);
         }
 
-        if (!isset($complaint->current_step) || $complaint->current_step <= 1) {
+        if (! isset($complaint->current_step) || $complaint->current_step <= 1) {
             return response()->json([
                 'success' => false,
                 'message' => 'Please complete Step 1 first.',
@@ -604,15 +601,15 @@ class ComplainantController extends Controller
             }
 
             if ($type === 'gst') {
-                $complaint->type_of_complaint = $request->complaintType ?? "";
-                $complaint->gst_description = $request->gstDescription ?? "";
-                $complaint->location = $request->location ?? "";
-                $complaint->pincode = $request->pincode ?? "";
-                $complaint->gst_firm_name = $request->gstFirmName ?? "";
-                $complaint->gst_gstin = strtoupper($request->gstGstin) ?? "";
-                $complaint->gst_firm_address = $request->gstFirmAddress ?? "";
-                $complaint->district_id = $request->district ?? "";
-                $complaint->district_name = $districtInfo->name ?? "";
+                $complaint->type_of_complaint = $request->complaintType ?? '';
+                $complaint->gst_description = $request->gstDescription ?? '';
+                $complaint->location = $request->location ?? '';
+                $complaint->pincode = $request->pincode ?? '';
+                $complaint->gst_firm_name = $request->gstFirmName ?? '';
+                $complaint->gst_gstin = strtoupper($request->gstGstin) ?? '';
+                $complaint->gst_firm_address = $request->gstFirmAddress ?? '';
+                $complaint->district_id = $request->district ?? '';
+                $complaint->district_name = $districtInfo->name ?? '';
                 $complaint->declaration = '1';
 
                 if ($request->hasFile('gstProof')) {
@@ -984,5 +981,312 @@ class ComplainantController extends Controller
             'message' => 'Complaint fetched successfully',
             'data' => $data,
         ], 200);
+    }
+
+    // Missing
+    // public function submitMissingInfoApi(Request $request, $secure_id)
+    // {
+    //     $complain = Complainant::where('secure_id', $secure_id)->first();
+
+    //     if (!$complain) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Complaint not found'
+    //         ], 404);
+    //     }
+
+    //     $missingKey = null;
+
+    //     if ($request->has('missing_gst_number')) {
+
+    //         $request->validate([
+    //             'missing_gst_number' => 'required|string|max:255'
+    //         ]);
+
+    //         $complain->missing_gst_number = $request->missing_gst_number;
+    //         $missingKey = 'gst_number';
+    //     }
+
+    //     if ($request->has('missing_firm_location')) {
+
+    //         $request->validate([
+    //             'missing_firm_location' => 'required|string|max:255'
+    //         ]);
+
+    //         $complain->missing_firm_location = $request->missing_firm_location;
+    //         $missingKey = 'firm_location';
+    //     }
+
+    //     if ($request->has('missing_address')) {
+
+    //         $request->validate([
+    //             'missing_address' => 'required|string|max:1000'
+    //         ]);
+
+    //         $complain->missing_address = $request->missing_address;
+    //         $missingKey = 'address';
+    //     }
+
+    //     if (!$missingKey) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'No valid missing-info field submitted'
+    //         ], 400);
+    //     }
+
+    //     $complain->save();
+
+    //     $detcAction = DetcAction::where('user_application_id', $complain->application_id)
+    //         ->where('send_to', 'applicant')
+    //         ->where('missing_info', $missingKey)
+    //         ->latest('id')
+    //         ->first();
+
+    //     if ($detcAction) {
+    //         $detcAction->returned_to_detc_at = now();
+    //         $detcAction->applicant_submitted_at = now();
+    //         $detcAction->button_action = 'applicant_submitted';
+    //         $detcAction->save();
+    //     }
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Missing information submitted successfully',
+    //         'submitted_field' => $missingKey,
+    //         'complaint_id' => $complain->application_id
+    //     ]);
+    // }
+
+    // public function submitMissingInfoApi(Request $request, $secure_id)
+    // {
+    //     $complain = Complainant::where('secure_id', $secure_id)->first();
+
+    //     if (! $complain) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Complaint not found',
+    //         ], 404);
+    //     }
+
+    //     $missingKey = null;
+
+    //     if ($request->has('missing_gst_number')) {
+
+    //         $request->validate([
+    //             'missing_gst_number' => 'required|string|max:255',
+    //         ]);
+
+    //         $complain->missing_gst_number = $request->missing_gst_number;
+    //         $missingKey = 'gst_number';
+    //     }
+
+    //     if ($request->has('missing_firm_location')) {
+
+    //         $request->validate([
+    //             'missing_firm_location' => 'required|string|max:255',
+    //         ]);
+
+    //         $complain->missing_firm_location = $request->missing_firm_location;
+    //         $missingKey = 'firm_location';
+    //     }
+
+    //     if ($request->has('missing_address')) {
+
+    //         $request->validate([
+    //             'missing_address' => 'required|string|max:1000',
+    //         ]);
+
+    //         $complain->missing_address = $request->missing_address;
+    //         $missingKey = 'address';
+    //     }
+
+    //     if (! $missingKey) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'No valid missing-info field submitted',
+    //         ], 400);
+    //     }
+
+    //     // -------------------------
+    //     // SAVE UPDATED COMPLAINT
+    //     // -------------------------
+    //     $complain->detc_rise_issue = 0;   // ⬅️ यहाँ required field को reset कर दिया
+    //     $complain->save();
+
+    //     // -------------------------
+    //     // UPDATE LAST DETC ACTION ENTRY
+    //     // -------------------------
+    //     $detcAction = DetcAction::where('user_application_id', $complain->application_id)
+    //         ->where('send_to', 'applicant')
+    //         ->where('missing_info', $missingKey)
+    //         ->latest('id')
+    //         ->first();
+
+    //     if ($detcAction) {
+    //         $detcAction->returned_to_detc_at = now();
+    //         $detcAction->applicant_submitted_at = now();
+    //         $detcAction->button_action = 'applicant_submitted';
+    //         $detcAction->save();
+    //     }
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Missing information submitted successfully',
+    //         'submitted_field' => $missingKey,
+    //         'complaint_id' => $complain->application_id,
+    //     ]);
+    // }
+
+    // public function submitMissingInfoApi(Request $request, $secure_id)
+    // {
+    //     $complain = Complainant::where('secure_id', $secure_id)->first();
+
+    //     if (! $complain) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Complaint not found',
+    //         ], 404);
+    //     }
+
+    //     $missingKey = null;
+
+    //     // RESET ALL TO NULL IF special flag is sent
+    //     if ($request->reset_all == 1) {
+
+    //         $complain->missing_gst_number = null;
+    //         $complain->missing_firm_location = null;
+    //         $complain->missing_address = null;
+    //         $complain->save();
+
+    //         return response()->json([
+    //             'status' => true,
+    //             'message' => 'All missing info fields reset successfully',
+    //         ]);
+    //     }
+
+    //     // NOW UPDATE FIELDS
+    //     if ($request->has('missing_gst_number')) {
+    //         $request->validate(['missing_gst_number' => 'required|string|max:255']);
+    //         $complain->missing_gst_number = $request->missing_gst_number;
+    //         $missingKey = 'gst_number';
+    //     }
+
+    //     if ($request->has('missing_firm_location')) {
+    //         $request->validate(['missing_firm_location' => 'required|string|max:255']);
+    //         $complain->missing_firm_location = $request->missing_firm_location;
+    //         $missingKey = 'firm_location';
+    //     }
+
+    //     if ($request->has('missing_address')) {
+    //         $request->validate(['missing_address' => 'required|string|max:1000']);
+    //         $complain->missing_address = $request->missing_address;
+    //         $missingKey = 'address';
+    //     }
+
+    //     if (! $missingKey) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'No valid missing-info field submitted',
+    //         ], 400);
+    //     }
+
+    //     $complain->save();
+
+    //     // UPDATE detc action record
+    //     $detcAction = DetcAction::where('user_application_id', $complain->application_id)
+    //         ->where('send_to', 'applicant')
+    //         ->where('missing_info', $missingKey)
+    //         ->latest('id')
+    //         ->first();
+
+    //     if ($detcAction) {
+    //         $detcAction->returned_to_detc_at = now();
+    //         $detcAction->applicant_submitted_at = now();
+    //         $detcAction->button_action = 'applicant_submitted';
+    //         $detcAction->save();
+    //     }
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Missing information submitted successfully',
+    //         'submitted_field' => $missingKey,
+    //         'complaint_id' => $complain->application_id,
+    //     ]);
+    // }
+     
+    
+    public function submitMissingInfoApi(Request $request, $secure_id)
+    {
+        $complain = Complainant::where('secure_id', $secure_id)->first();
+
+        if (! $complain) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Complaint not found',
+            ], 404);
+        }
+
+        $missingKey = null;
+
+        // GST
+        if ($request->has('missing_gst_number')) {
+            $request->validate([
+                'missing_gst_number' => 'required|string|max:255',
+            ]);
+            $complain->missing_gst_number = $request->missing_gst_number;
+            $missingKey = 'gst_number';
+        }
+
+        // FIRM LOCATION
+        if ($request->has('missing_firm_location')) {
+            $request->validate([
+                'missing_firm_location' => 'required|string|max:255',
+            ]);
+            $complain->missing_firm_location = $request->missing_firm_location;
+            $missingKey = 'firm_location';
+        }
+
+        // ADDRESS
+        if ($request->has('missing_address')) {
+            $request->validate([
+                'missing_address' => 'required|string|max:1000',
+            ]);
+            $complain->missing_address = $request->missing_address;
+            $missingKey = 'address';
+        }
+
+        if (! $missingKey) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No valid missing-info field submitted',
+            ], 400);
+        }
+
+        // 🟩 RESET DETC ISSUE FLAGS
+        $complain->detc_rise_issue = 0;
+        $complain->detc_issue = null;
+
+        $complain->save();
+
+        // Update DETC Action
+        $detcAction = DetcAction::where('user_application_id', $complain->application_id)
+            ->where('send_to', 'applicant')
+            ->where('missing_info', $missingKey)
+            ->latest('id')
+            ->first();
+
+        if ($detcAction) {
+            $detcAction->returned_to_detc_at = now();
+            $detcAction->applicant_submitted_at = now();
+            $detcAction->button_action = 'applicant_submitted';
+            $detcAction->save();
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Missing information submitted successfully',
+            'submitted_field' => $missingKey,
+            'complaint_id' => $complain->application_id,
+        ]);
     }
 }

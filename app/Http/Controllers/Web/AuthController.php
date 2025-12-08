@@ -302,8 +302,11 @@ class AuthController extends Controller
                 $redirectUrl = route('user.dashboard');
             } elseif ($role === 'hq') {
                 $redirectUrl = route('hq.dashboard');
-            } else {
+            }else if($role === 'eto'){
+                $redirectUrl = route('eto.dashboard');
+            }else {
                 $redirectUrl = route('complainant');
+                // abort(403, 'User Not Found.');
             }
         }
 
