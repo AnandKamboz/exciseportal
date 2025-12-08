@@ -29,3 +29,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/dashboard', [UserDashboardController::class, 'userDashboard']);
     Route::get('/user/complaint/{secure_id}', [UserDashboardController::class, 'show']);
 });
+
+// Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
+    
+// });
+
+// userrole    , middelware
+// ✔ 2. Response हमेशा JSON में (Force JSON)
+
+// users table me , is_active
+// ForceJsonResponse  60 request per minute

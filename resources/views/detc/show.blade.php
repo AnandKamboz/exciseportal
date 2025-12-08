@@ -381,8 +381,11 @@
 
                                 {{-- Ward No (ACTIONABLE ONLY) --}}
                                 <div class="col-md-6" id="actionableBox" style="display:none;">
-                                    <label class="form-label fw-semibold required mt-2"> Issue letter to ETO of Ward No.
-                                        (Select ward dropdown)</label>
+                                    <label class="form-label fw-semibold required mt-2">
+                                         {{-- Issue letter to ETO of Ward No.
+                                        (Select ward dropdown) --}}
+                                        Issue letter to ETO (select ward from dropdown)
+                                    </label>
                                     <select class="form-select" id="wardSelect" name="ward_no">
                                         <option value="">Select Ward</option>
                                         @foreach ($wardList as $key => $val)
