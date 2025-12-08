@@ -75,7 +75,7 @@ class UserDashboardController extends Controller
         if (! empty($complain->complainant_state)) {
             $user_state = DB::table('states')
                 ->where('id', $complain->complainant_state)
-                ->value('state_name');
+                ->value('name');
         }
 
         // ============================
@@ -86,7 +86,7 @@ class UserDashboardController extends Controller
         if (! empty($complain->complainant_district)) {
             $user_dist = DB::table('india_districts')
                 ->where('id', $complain->complainant_district)
-                ->value('district_name'); // ← your district name column
+                ->value('name'); // ← your district name column
         }
 
         // ============================
