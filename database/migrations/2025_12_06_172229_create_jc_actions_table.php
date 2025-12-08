@@ -9,9 +9,8 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up()
-{
-    Schema::create('jc_action', function (Blueprint $table) {
+   public function up(){
+    Schema::create('jc_actions', function (Blueprint $table) {
         $table->id();
         // COMPLAINT info
         $table->unsignedBigInteger('complaint_id');
