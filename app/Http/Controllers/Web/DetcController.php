@@ -12,15 +12,49 @@ use Illuminate\Support\Str;
 
 class DetcController extends Controller
 {
+    // public function dashboard()
+    // {
+    //     $allComplain = Complainant::where('district_id', Auth::user()->district)->where('is_completed', 1)->orderBy('created_at', 'desc')->get();
+    //     $totalInformation = Complainant::where('district_id', Auth::user()->district)->where('is_completed', 1)->count();
+    //     $forwardedForAction = DB::table('detc_actions')->where('detc_district', Auth::user()->district)->where('is_approved', 1)->count();
+    //     $notActionable = DB::table('detc_actions')->where('detc_district', Auth::user()->district)->where('is_approved', 0)->count();
+    //     $pendingInformation = $totalInformation - ($forwardedForAction + $notActionable);
+
+    //     return view('detc.dashboard', compact('forwardedForAction', 'allComplain', 'pendingInformation', 'totalInformation', 'notActionable'));
+    // }
+
     public function dashboard()
     {
-        $allComplain = Complainant::where('district_id', Auth::user()->district)->where('is_completed', 1)->orderBy('created_at', 'desc')->get();
-        $totalInformation = Complainant::where('district_id', Auth::user()->district)->where('is_completed', 1)->count();
-        $forwardedForAction = DB::table('detc_actions')->where('detc_district', Auth::user()->district)->where('is_approved', 1)->count();
-        $notActionable = DB::table('detc_actions')->where('detc_district', Auth::user()->district)->where('is_approved', 0)->count();
+        $district = Auth::user()->district;
+
+        // All complaints of this DETC district
+        $allComplain = Complainant::where('district_id', $district)
+            ->where('is_completed', 1)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Dashboard counters
+        $totalInformation = $allComplain->count();
+
+        $forwardedForAction = DB::table('detc_actions')
+            ->where('detc_district', $district)
+            ->where('is_approved', 1)
+            ->count();
+
+        $notActionable = DB::table('detc_actions')
+            ->where('detc_district', $district)
+            ->where('is_approved', 0)
+            ->count();
+
         $pendingInformation = $totalInformation - ($forwardedForAction + $notActionable);
 
-        return view('detc.dashboard', compact('forwardedForAction', 'allComplain', 'pendingInformation', 'totalInformation', 'notActionable'));
+        return view('detc.dashboard', compact(
+            'forwardedForAction',
+            'allComplain',
+            'pendingInformation',
+            'totalInformation',
+            'notActionable'
+        ));
     }
 
     // public function show($secure_id)
@@ -60,21 +94,173 @@ class DetcController extends Controller
     //     return view('detc.show', compact('actionExists','complaintIdCount','complain', 'complainantDistrictName', 'againstDistrictId', 'actionExists', 'detcAction', 'wardList'));
     // }
 
+    // public function show($secure_id)
+    // {
+    //     $complain = Complainant::where('secure_id', $secure_id)->firstOrFail();
+    //     $applicationId = $complain->application_id;
+
+    //     // Get all actions
+    //     $detcActions = DetcAction::where('user_application_id', $applicationId)
+    //         ->orderBy('id', 'asc')
+    //         ->get();
+
+    //     // Check if any action exists
+    //     $actionExists = $detcActions->count() > 0;
+
+    //     // Last action for logic
+    //     $lastAction = $detcActions->last();
+
+    //     // Fetch district names
+    //     $complainantDistrictName = optional(
+    //         DB::table('districts')->where('id', $complain->complainant_dist_id)->first()
+    //     )->name ?? 'Not Found';
+
+    //     $againstDistrictId = optional(
+    //         DB::table('districts')->where('id', $complain->against_district_id)->first()
+    //     )->name ?? 'Not Found';
+
+    //     // Wards
+    //     $wards = DB::table('district_wards')
+    //         ->where('district_id', auth()->user()->district)
+    //         ->first();
+
+    //     $wardCount = $wards->ward_count ?? 0;
+
+    //     $wardList = [];
+    //     for ($i = 1; $i <= $wardCount; $i++) {
+    //         $wardList[$i] = 'Ward No '.$i;
+    //     }
+    //     $nonActionableTaken = DetcAction::where('user_application_id', $applicationId)
+    //         ->where('proposed_action', 'non_actionable')
+    //         ->exists();
+
+    //     return view('detc.show', compact(
+    //         'complain',
+    //         'detcActions',
+    //         'lastAction',
+    //         'actionExists',
+    //         'wardList',
+    //         'complainantDistrictName',
+    //         'againstDistrictId',
+    //         'nonActionableTaken',
+    //     ));
+    // }
+
+    // public function show($secure_id)
+    // {
+    //     $complain = Complainant::where('secure_id', $secure_id)->firstOrFail();
+    //     $applicationId = $complain->application_id;
+
+    //     // All DETC actions
+    //     $detcActions = DetcAction::where('user_application_id', $applicationId)
+    //         ->orderBy('id', 'asc')
+    //         ->get();
+
+    //     $actionExists = $detcActions->count() > 0;
+    //     $lastAction = $detcActions->last();
+
+    //     // District names
+    //     $complainantDistrictName = optional(
+    //         DB::table('districts')->where('id', $complain->complainant_dist_id)->first()
+    //     )->name ?? 'Not Found';
+
+    //     $againstDistrictId = optional(
+    //         DB::table('districts')->where('id', $complain->against_district_id)->first()
+    //     )->name ?? 'Not Found';
+
+    //     // Ward list
+    //     $wards = DB::table('district_wards')
+    //         ->where('district_id', auth()->user()->district)
+    //         ->first();
+
+    //     $wardCount = $wards->ward_count ?? 0;
+    //     $wardList = [];
+    //     for ($i = 1; $i <= $wardCount; $i++) {
+    //         $wardList[$i] = 'Ward No '.$i;
+    //     }
+
+    //     // Check if Non-actionable already taken
+    //     $nonActionableTaken = DetcAction::where('user_application_id', $applicationId)
+    //         ->where('proposed_action', 'non_actionable')
+    //         ->exists();
+
+    //     // ------------------------------------
+    //     //  🔥 New Condition: Form should appear only:
+    //     //    1️⃣ If NO action taken at all
+    //     //    2️⃣ If last action = information_incomplete AND applicant has submitted back
+    //     // ------------------------------------
+
+    //     $showForm = false;
+
+    //     if (! $actionExists) {
+    //         // First time show form
+    //         $showForm = true;
+    //     } else {
+
+    //         // If last action was send back to applicant
+    //         if ($lastAction->reason == 'information_incomplete'
+    //             && $lastAction->send_to == 'applicant'
+    //             && $lastAction->applicant_submitted_at != null   // applicant submitted
+    //         ) {
+    //             $showForm = true;
+    //         } else {
+    //             $showForm = false; // default block opening
+    //         }
+    //     }
+
+    //     // Applicant has already corrected 1 time — now form must never show
+    //     if ($detcActions->count() >= 2) {
+    //         $showForm = false;
+    //     }
+
+    //     return view('detc.show', compact(
+    //         'complain',
+    //         'detcActions',
+    //         'lastAction',
+    //         'actionExists',
+    //         'wardList',
+    //         'complainantDistrictName',
+    //         'againstDistrictId',
+    //         'nonActionableTaken',
+    //         'showForm'
+    //     ));
+    // }
+
     public function show($secure_id)
     {
         $complain = Complainant::where('secure_id', $secure_id)->firstOrFail();
         $applicationId = $complain->application_id;
 
-        // Get all actions
+        // All actions
         $detcActions = DetcAction::where('user_application_id', $applicationId)
             ->orderBy('id', 'asc')
             ->get();
 
-        // Check if any action exists
-        $actionExists = $detcActions->count() > 0;
+        $actionCount = $detcActions->count();             // Number of times DETC took action
+        $lastAction = $detcActions->last();               // Last/Latest action
 
-        // Last action for logic
-        $lastAction = $detcActions->last();
+        // ------------------------------
+        // FORM SHOWING LOGIC
+        // ------------------------------
+        $showForm = false;
+
+        if ($actionCount == 0) {
+            // First time → always show form
+            $showForm = true;
+
+        } elseif ($actionCount == 1) {
+            // Only one record exists → Check if incomplete
+            if ($lastAction && $lastAction->reason == 'information_incomplete') {
+                // Applicant has submitted data? If not → DETC cannot take action yet
+                if ($lastAction->applicant_submitted_at !== null) {
+                    $showForm = true; // DETC can now take 2nd & last final action
+                }
+            }
+
+        } elseif ($actionCount >= 2) {
+            // 2 बार Action हो चुका → अब form कभी नहीं दिखेगा
+            $showForm = false;
+        }
 
         // Fetch district names
         $complainantDistrictName = optional(
@@ -85,7 +271,7 @@ class DetcController extends Controller
             DB::table('districts')->where('id', $complain->against_district_id)->first()
         )->name ?? 'Not Found';
 
-        // Wards
+        // Ward List
         $wards = DB::table('district_wards')
             ->where('district_id', auth()->user()->district)
             ->first();
@@ -94,21 +280,17 @@ class DetcController extends Controller
 
         $wardList = [];
         for ($i = 1; $i <= $wardCount; $i++) {
-            $wardList[$i] = 'Ward No '.$i;
+            $wardList[$i] = "Ward No $i";
         }
-        $nonActionableTaken = DetcAction::where('user_application_id', $applicationId)
-            ->where('proposed_action', 'non_actionable')
-            ->exists();
 
         return view('detc.show', compact(
             'complain',
             'detcActions',
             'lastAction',
-            'actionExists',
             'wardList',
             'complainantDistrictName',
             'againstDistrictId',
-            'nonActionableTaken',
+            'showForm'
         ));
     }
 
@@ -391,6 +573,8 @@ class DetcController extends Controller
             $sendTo = 'eto';
         } elseif ($request->proposed_action == 'uploaded_report' && $buttonAction == 'send_to_hq') {
             $sendTo = 'hq';
+        } elseif ($request->proposed_action == 'non_actionable' && $buttonAction == 'send_back_to_applicant') {
+            $sendTo = 'applicant';
         } else {
             $sendTo = 'none';
         }
@@ -400,9 +584,7 @@ class DetcController extends Controller
             'complaint_id' => $complaint->id,
             'user_application_id' => $complaint->application_id,
             'detc_district' => Auth::user()->district,
-
             'proposed_action' => $request->proposed_action,
-
             // Forward to ETO
             'ward_no' => $request->ward_no,
 

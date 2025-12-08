@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use App\Models\DetcAction;
 
 class ComplainantController extends Controller
 {
@@ -1219,6 +1220,8 @@ class ComplainantController extends Controller
     {
         $complain = Complainant::where('secure_id', $secure_id)->first();
 
+        // dd($complain);
+
         if (! $complain) {
             return response()->json([
                 'status' => false,
@@ -1262,6 +1265,7 @@ class ComplainantController extends Controller
             ], 400);
         }
 
+
         // 🟩 RESET DETC ISSUE FLAGS
         $complain->detc_rise_issue = 0;
         $complain->detc_issue = null;
@@ -1270,10 +1274,14 @@ class ComplainantController extends Controller
 
         // Update DETC Action
         $detcAction = DetcAction::where('user_application_id', $complain->application_id)
-            ->where('send_to', 'applicant')
+            // ->where('send_to', 'applicant')
             ->where('missing_info', $missingKey)
             ->latest('id')
             ->first();
+
+        // dd($detcAction);
+
+            // dd('Done');
 
         if ($detcAction) {
             $detcAction->returned_to_detc_at = now();

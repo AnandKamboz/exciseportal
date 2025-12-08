@@ -348,8 +348,8 @@
             {{-- ===================== DETC FORM =================== --}}
             {{-- ================================================= --}}
 
-
-            @if ($detcActions->count() == 0 || $detcActions[0]->reason == 'information_incomplete' )
+             @if ($showForm)
+            {{-- @if ($detcActions->count() == 0 || $detcActions[0]->reason == 'information_incomplete' ) --}}
             {{-- @if ($detcActions->count() == 0 || ($detcActions->count() > 0 && $detcActions->last()->reason == 'information_incomplete') || (is_null($complain->missing_gst_number) && is_null($complain->missing_firm_location) && is_null($complain->missing_address))) --}}
                 <div class="card shadow-lg border-0 mt-5" style="border-left:5px solid #0a3d62;">
                     <div class="p-3" style="background:#0a3d62;color:white;font-weight:600;">Upload Report</div>
