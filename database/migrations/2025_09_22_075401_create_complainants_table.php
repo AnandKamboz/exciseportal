@@ -55,8 +55,8 @@ return new class extends Migration
             
             $table->boolean('detc_rise_issue')->default(0);
             $table->string('detc_issue')->nullable();
+            $table->timestamp('missing_info_submitted_at')->nullable();
 
-            
             // 🔹 Step 3 — Excise-related Fields
             $table->string('excise_name')->nullable();
             $table->string('excise_city')->nullable();
