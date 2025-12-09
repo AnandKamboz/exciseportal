@@ -188,12 +188,6 @@ class UserDashboardController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Profile updated successfully',
-            // 'data' => [
-            //     'secure_id' => $user->secure_id,
-            //     'name' => $user->name,
-            //     'mobile' => $user->mobile,
-            // ],
-            
         ]);
     }
 }
