@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // For user profile
     Route::get('user/profile', [UserDashboardController::class, 'profile']);
-    Route::put('user/update-profile', [UserDashboardController::class, 'update']);
+    Route::post('user/update-profile', [UserDashboardController::class, 'update']);
 });
 
 
