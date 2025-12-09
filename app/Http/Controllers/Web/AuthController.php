@@ -305,8 +305,8 @@ class AuthController extends Controller
             }else if($role === 'eto'){
                 $redirectUrl = route('eto.dashboard');
             }else {
-                $redirectUrl = route('complainant');
-                // abort(403, 'User Not Found.');
+                // $redirectUrl = route('complainant');
+                abort(403, 'User Not Found.');
             }
         }
 
