@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Complainant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
 
 class UserDashboardController extends Controller
 {
