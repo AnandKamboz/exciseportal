@@ -88,7 +88,7 @@ class UserDashboardController extends Controller
         if (! empty($complain->complainant_district)) {
             $user_dist = DB::table('india_districts')
                 ->where('id', $complain->complainant_district)
-                ->value('name'); // ← your district name column
+                ->value('name');
         }
 
         // ============================
@@ -116,7 +116,6 @@ class UserDashboardController extends Controller
 
     public function update(Request $request)
     {
-        // Logged-in user
         $user = auth()->user();
 
         if (! $user) {
@@ -126,15 +125,13 @@ class UserDashboardController extends Controller
             ], 401);
         }
 
-        // Validation (unique mobile but ignore same user)
         $request->validate([
             'name' => 'required|string|max:255',
             'mobile' => 'required|digits:10|unique:users,mobile,'.$user->id,
         ]);
 
-        // Update user
         $user->name = $request->name;
-        $user->mobile = $request->mobile;
+        // $user->mobile = $request->mobile;
         $user->save();
 
         return response()->json([
