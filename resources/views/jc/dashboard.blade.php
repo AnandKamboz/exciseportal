@@ -14,7 +14,7 @@
                             <th>#</th>
                             <th>Date of Receiving</th>
                             <th>Application Id</th>
-                            <th>Category</th>
+                            {{-- <th>Category</th> --}}
                             <th>Type of Information</th>
                             <th>View</th>
                         </tr>
@@ -25,7 +25,7 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $information->created_at->format('d-m-Y') }}</td>
                                 <td>{{ $information->application_id }}</td>
-                                <td>{{ ucfirst($information->complaint_type) }}</td>
+                                {{-- <td>{{ ucfirst($information->complaint_type) }}</td> --}}
                                 <td>{{ ucwords(str_replace('_', ' ', $information->type_of_complaint)) }}</td>
                                 <td>
                                     <a href="{{ route('jc.details', [$information->secure_id]) }}"

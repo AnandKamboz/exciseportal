@@ -344,6 +344,79 @@
 
             <hr>
 
+             @if ($detcActions->count() > 0)
+                @foreach ($detcActions as $action)
+                    <div class="card shadow-lg border-0 mt-5">
+                        <div class="p-3" style="background:#0a3d62;color:white;font-weight:600;">
+                            Action Taken by DETC  ({{ $action->created_at->format('d-m-Y') }})
+                        </div>
+
+                        <div class="p-4">
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+                                    <div class="p-3 shadow-sm rounded" style="border-left:4px solid #0a3d62;">
+                                        <small class="text-secondary">Proposed Action</small>
+                                        <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->proposed_action)) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if ($action->ward_no)
+                                    <div class="col-md-6">
+                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #007bff;">
+                                            <small class="text-secondary">Ward No</small>
+                                            <div class="fw-bold">Ward No {{ $action->ward_no }}</div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($action->reason)
+                                    <div class="col-md-6">
+                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #6c757d;">
+                                            <small class="text-secondary">Reason</small>
+                                            <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->reason)) }}</div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($action->missing_info)
+                                    <div class="col-md-6">
+                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #20c997;">
+                                            <small class="text-secondary">Missing Info</small>
+                                            <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->missing_info)) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($action->remarks)
+                                    <div class="col-md-6">
+                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #6f42c1;">
+                                            <small class="text-secondary">Remarks</small>
+                                            <div class="fw-bold">{{ $action->remarks }}</div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($action->file_name)
+                                    <div class="col-md-6">
+                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #ffc107;">
+                                            <small>Uploaded File</small><br>
+                                            <a href="{{ asset('storage/complaints/' . $action->user_application_id . '/' . $action->file_name) }}"
+                                                target="_blank" class="btn btn-primary btn-sm mt-2">
+                                                View Document
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endif
+
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+
             {{-- ================================================= --}}
             {{-- ===================== DETC FORM =================== --}}
             {{-- ================================================= --}}
@@ -371,7 +444,7 @@
                                         <label><input type="radio" name="proposed_action" value="forward_to_eto">
                                             Forward to ETO</label>
                                         <label class="ms-3"><input type="radio" name="proposed_action"
-                                                value="uploaded_report"> Uploaded Report</label>
+                                                value="uploaded_report"> Upload Report</label>
 
                                            
 
@@ -451,7 +524,7 @@
                                         <select name="missing_info" id="missingInfo" class="form-select">
                                             <option value="">Select field</option>
                                             <option value="gst_number">GST Number</option>
-                                            <option value="firm_location">Firm Location</option>
+                                            <option value="firm_location">Firm  Name</option>
                                             <option value="address">Firm Address</option>
                                         </select>
                                     </div>
@@ -483,78 +556,7 @@
 
 
             {{-- ======================= SHOW ALL SAVED REPORTS ======================= --}}
-            @if ($detcActions->count() > 0)
-                @foreach ($detcActions as $action)
-                    <div class="card shadow-lg border-0 mt-5">
-                        <div class="p-3" style="background:#0a3d62;color:white;font-weight:600;">
-                            Saved Report Details
-                        </div>
-
-                        <div class="p-4">
-                            <div class="row g-4">
-
-                                <div class="col-md-6">
-                                    <div class="p-3 shadow-sm rounded" style="border-left:4px solid #0a3d62;">
-                                        <small class="text-secondary">Proposed Action</small>
-                                        <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->proposed_action)) }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                @if ($action->ward_no)
-                                    <div class="col-md-6">
-                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #007bff;">
-                                            <small class="text-secondary">Ward No</small>
-                                            <div class="fw-bold">Ward No {{ $action->ward_no }}</div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if ($action->reason)
-                                    <div class="col-md-6">
-                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #6c757d;">
-                                            <small class="text-secondary">Reason</small>
-                                            <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->reason)) }}</div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if ($action->missing_info)
-                                    <div class="col-md-6">
-                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #20c997;">
-                                            <small class="text-secondary">Missing Info</small>
-                                            <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->missing_info)) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if ($action->remarks)
-                                    <div class="col-md-6">
-                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #6f42c1;">
-                                            <small class="text-secondary">Remarks</small>
-                                            <div class="fw-bold">{{ $action->remarks }}</div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if ($action->file_name)
-                                    <div class="col-md-6">
-                                        <div class="p-3 shadow-sm rounded" style="border-left:4px solid #ffc107;">
-                                            <small>Uploaded File</small><br>
-                                            <a href="{{ asset('storage/complaints/' . $action->user_application_id . '/' . $action->file_name) }}"
-                                                target="_blank" class="btn btn-primary btn-sm mt-2">
-                                                View Document
-                                            </a>
-                                        </div>
-                                    </div>
-                                @endif
-
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
+           
 
 
 

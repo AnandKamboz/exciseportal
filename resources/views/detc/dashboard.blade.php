@@ -89,7 +89,7 @@
                         <th>Application Id</th>
                         {{-- <th>Category</th> --}}
                         <th>Type of Information</th>
-                        <th>Action Status</th>
+                        <th>Status</th>
                         <th>View</th>
                     </tr>
                 </thead>

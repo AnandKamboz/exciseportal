@@ -1,145 +1,3 @@
-{{-- @extends('jc.layouts.dashboard')
-
-@section('title', 'JC Complaint Details')
-@section('page_title', 'Complaint Details')
-
-@section('content')
-
-    <div class="container-fluid">
-
-        <div class="card shadow p-4">
-
-            <h4 class="mb-3">Complaint Details</h4>
-
-    
-            <div class="row g-3">
-
-                <div class="col-md-4">
-                    <strong>Application ID:</strong><br>
-                    {{ $information->application_id }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>District:</strong><br>
-                    {{ $information->district_name }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>Date of Complaint:</strong><br>
-                    {{ date('d-m-Y', strtotime($information->created_at)) }}
-                </div>
-
-            </div>
-
-            <hr>
-
-           
-            <h5 class="mt-3">Entity Details (Submitted by Informer)</h5>
-
-            <div class="row g-3">
-
-                <div class="col-md-4">
-                    <strong>Type of Complaint:</strong><br>
-                    {{ $information->type_of_complaint ?? 'N/A' }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>GST Description:</strong><br>
-                    {{ $information->gst_description ?? 'N/A' }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>GSTIN:</strong><br>
-                    {{ $information->gst_gstin ?? 'N/A' }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>Firm Name:</strong><br>
-                    {{ $information->gst_firm_name ?? 'N/A' }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>Firm Address:</strong><br>
-                    {{ $information->gst_firm_address ?? 'N/A' }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>Vehicle Number:</strong><br>
-                    {{ $information->gst_vehicle_number ?? 'N/A' }}
-                </div>
-
-            </div>
-
-          
-            @if ($information->vat_firm_name || $information->vat_tin)
-                <hr>
-                <h5>VAT Details</h5>
-                <div class="row g-3">
-                    <div class="col-md-4"><strong>Firm Name:</strong><br> {{ $information->vat_firm_name }}</div>
-                    <div class="col-md-4"><strong>TIN:</strong><br> {{ $information->vat_tin }}</div>
-                    <div class="col-md-4"><strong>Description:</strong><br> {{ $information->vat_description }}</div>
-                </div>
-            @endif
-
-         
-            @if ($information->excise_name || $information->excise_desc)
-                <hr>
-                <h5>Excise Details</h5>
-                <div class="row g-3">
-                    <div class="col-md-4"><strong>Name:</strong><br> {{ $information->excise_name }}</div>
-                    <div class="col-md-4"><strong>Place:</strong><br> {{ $information->excise_place }}</div>
-                    <div class="col-md-4"><strong>Description:</strong><br> {{ $information->excise_desc }}</div>
-                </div>
-            @endif
-
-            @if ($information->gst_proof || $information->vat_proof || $information->excise_proof)
-                <hr>
-                <h5>Attached Documents</h5>
-                <div class="row g-3">
-                    @foreach (['gst_proof' => 'GST', 'vat_proof' => 'VAT', 'excise_proof' => 'Excise'] as $key => $label)
-                        @if ($information->$key)
-                            @foreach (json_decode($information->$key, true) as $file)
-                                <div class="col-md-4">
-                                    <a href="{{ asset('storage/complaints/' . $information->application_id . '/' . $file) }}"
-                                        target="_blank" class="btn btn-outline-primary w-100">
-                                        View {{ $label }} Document
-                                    </a>
-                                </div>
-                            @endforeach
-                        @endif
-                    @endforeach
-                </div>
-            @endif
-
-            <hr>
-            
-            <h4 class="mt-4">Assign to DETC</h4>
-
-            <form action="{{ route('jc.assign', ['secure_id' => $information->secure_id]) }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold required">Select DETC</label>
-                            <select name="detc_id" class="form-select" required>
-                                <option value="">Select DETC</option>
-                                @foreach ($inspectors as $i)
-                                    <option value="{{ $i->district }}">{{ $i->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary px-4">Assign</button>
-            </form>
-
-        </div>
-    </div>
-@endsection --}}
-
-
-
 @extends('jc.layouts.dashboard')
 
 @section('title', 'JC Information Details')
@@ -342,29 +200,6 @@
             @endif
 
 
-            {{-- ================= DOCUMENTS ================= --}}
-            {{-- @if ($information->gst_proof || $information->vat_proof || $information->excise_proof)
-                <hr>
-                <div class="section-head">Attached Documents</div>
-
-                <div class="row g-3">
-
-                    @foreach (['gst_proof' => 'GST', 'vat_proof' => 'VAT', 'excise_proof' => 'Excise'] as $key => $label)
-                        @if ($information->$key)
-                            @foreach (json_decode($information->$key, true) as $file)
-                                <div class="col-md-4">
-                                    <a href="{{ asset('storage/complaints/' . $information->application_id . '/' . $file) }}"
-                                        data-lightbox="docs" data-title="{{ $label }} Document"
-                                        class="btn btn-outline-primary w-100">
-                                        View {{ $label }} Document
-                                    </a>
-                                </div>
-                            @endforeach
-                        @endif
-                    @endforeach
-
-                </div>
-            @endif --}}
 
             @if ($information->gst_proof || $information->vat_proof || $information->excise_proof)
                 <hr>
@@ -383,15 +218,12 @@
                                 <div class="col-md-4 text-center">
 
                                     @if (in_array($ext, ['jpg', 'jpeg', 'png']))
-                                        {{-- IMAGE → show as thumbnail + Lightbox --}}
                                         <a href="{{ $path }}" data-lightbox="docs"
                                             data-title="{{ $label }} Document">
                                             <img src="{{ $path }}" class="img-fluid rounded shadow-sm"
                                                 style="height:140px;object-fit:cover;border:1px solid #ccc;">
                                         </a>
-                                        {{-- <div class="mt-2 fw-bold">{{ $label }} Document</div> --}}
                                     @else
-                                        {{-- NON-IMAGE FILE (PDF etc) → Show button --}}
                                         <a href="{{ $path }}" target="_blank"
                                             class="btn btn-outline-primary w-100">
                                             View {{ $label }} Document
@@ -406,23 +238,6 @@
             @endif
             <hr>
 
-            {{-- ================= ASSIGN DETC ================= --}}
-            {{-- <h4 class="mt-4">Assign to DETC</h4>
-            <form action="{{ route('jc.assign', ['secure_id' => $information->secure_id]) }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label class="form-label fw-semibold required">Select DETC</label>
-                        <select name="detc_id" class="form-select" required>
-                            <option value="">Select DETC</option>
-                            @foreach ($inspectors as $i)
-                                <option value="{{ $i->district }}">{{ $i->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <button class="btn btn-primary mt-3 px-4">Assign</button>
-            </form> --}}
 
             <h4 class="mt-4">Assign to DETC</h4>
 
@@ -440,7 +255,7 @@
                                 <select name="detc_id" class="form-select" required>
                                     <option value="">Select DETC</option>
                                     @foreach ($inspectors as $i)
-                                        <option value="{{ $i->district }}">{{ $i->name }}</option>
+                                        <option value="{{ $i->district }}">{{ $i->district_name }}</option>
                                     @endforeach
                                 </select>
                             </div>

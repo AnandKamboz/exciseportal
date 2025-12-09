@@ -21,7 +21,6 @@ class JcController extends Controller
 
     public function details($secure_id)
     {
-        // Complain record fetch karo
         $information = DB::table('complainants')
             ->where('secure_id', $secure_id)
             ->first();
@@ -31,42 +30,34 @@ class JcController extends Controller
         }
 
         if ($information->district_id == 4) {
-            $inspectors = DB::table('users')
-                ->whereIn('district', [27, 28, 29, 30])
-                ->get();
+            $ids = [27, 28, 29, 30];
         } elseif ($information->district_id == 1) {
-            $inspectors = DB::table('users')
-                ->whereIn('district', [23, 24, 25, 26])
-                ->get();
+            $ids = [23, 24, 25, 26];
         } else {
-
+            $ids = [];
         }
 
-        // dd($inspectors);
+        if (! empty($ids)) {
+            $inspectors = DB::table('users')
+                ->join('districts', 'users.district', '=', 'districts.id')
+                ->whereIn('users.district', $ids)
+                ->select(
+                    'users.id',
+                    'users.name',
+                    'users.mobile',
+                    'users.district',
+                    'districts.name as district_name'
+                )
+                ->get();
+        } else {
+            $inspectors = collect();
+        }
 
         return view('jc.show', compact('information', 'inspectors'));
     }
 
-    //     public function assign(Request $request, $secure_id)
-    //    {
-
-    //         DB::table('complainants')
-    //             ->where('secure_id', $secure_id)
-    //             ->update([
-    //                 'district_id' => $request->detc_id,
-    //                 'updated_at' => now(),
-    //             ]);
-
-    //         return redirect()->route('jc.dashboard')->with('success', 'Assigned successfully!');
-    //     }
-
     public function assign(Request $request, $secure_id)
     {
-        // dd(Auth::user()->district == 4);
-        // $request->validate([
-        //     'detc_id' => 'required|integer',
-        // ]);
-
         $jcDistrict = Auth::user()->district;
         $allowedDetc = [];
 
@@ -78,7 +69,6 @@ class JcController extends Controller
             $allowedDetc = [];
         }
 
-        // Validate detc_id MUST be inside allowedDetc[]
         $request->validate([
             'detc_id' => [
                 'required',

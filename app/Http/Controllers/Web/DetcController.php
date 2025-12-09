@@ -480,68 +480,23 @@ class DetcController extends Controller
 
     public function store(Request $request, $secure_id)
     {
-        // dd($request->toArray());
-        // dd($secure_id);
-        // $request->validate([
-        //     'proposed_action' => 'required',
-        //     'ward_no' => 'required_if:proposed_action,forward_to_eto',
-        //     'upload_file' => 'required_if:proposed_action,uploaded_report|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        //     'reason' => 'required_if:proposed_action,non_actionable',
-        //     'missing_info' => 'required_if:reason,information_incomplete',
-        //     'remarks' => 'required',
-        // ], [
-
-        //     // CUSTOM MESSAGES
-        //     'proposed_action.required' => 'Please select Proposed Action',
-
-        //     // ETO
-        //     'ward_no.required_if' => 'Ward number is required for Forward to ETO',
-
-        //     // Upload case
-        //     'upload_file.required_if' => 'Please upload a file for Uploaded Report',
-        //     'upload_file.mimes' => 'File must be JPG, JPEG, PNG, or PDF',
-        //     'upload_file.max' => 'File size must be under 2MB',
-
-        //     // Non-actionable
-        //     'reason.required_if' => 'Please select a reason',
-
-        //     // Information incomplete
-        //     'missing_info.required_if' => 'Please select what information is missing',
-
-        //     // Remarks
-        //     'remarks.required' => 'Remarks field is required',
-        // ]);
-
-        // dd('ww');
+        $request->validate([
+            'proposed_action' => 'required',
+            'ward_no' => 'required_if:proposed_action,forward_to_eto',
+            'upload_file' => 'required_if:proposed_action,uploaded_report|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'reason' => 'required_if:proposed_action,non_actionable',
+            'missing_info' => 'required_if:reason,information_incomplete',
+            'remarks' => 'required',
+        ]);
 
         $userComplaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
 
-        // $alreadySubmitted = !is_null($userComplaint->missing_gst_number) || !is_null($userComplaint->missing_firm_location) || !is_null($userComplaint->missing_address);
-
-        // if ($alreadySubmitted) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Missing information has already been submitted. You cannot submit it again.',
-        //     ], 400);
-        // }
-
         $complaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
 
-        // Prevent duplicate entries
-        // if (DetcAction::where('complaint_id', $complaint->id)->exists()) {
-        //     return back()->with('error', 'Action already taken for this complaint');
-        // }
-
-        // ========================
-        // GENERATE UNIQUE SECURE ID
-        // ========================
         do {
             $newSecureId = Str::random(32);
         } while (DetcAction::where('secure_id', $newSecureId)->exists());
 
-        // ========================
-        // FILE UPLOAD
-        // ========================
         $fileName = null;
 
         if ($request->hasFile('upload_file')) {
@@ -555,9 +510,6 @@ class DetcController extends Controller
             $file->storeAs($path, $fileName, 'public');
         }
 
-        // ========================
-        // BUTTON ACTION
-        // ========================
         $buttonAction = $request->btn;
         // btn values:
         // submit, reject, send_to_hq, send_back_to_applicant
@@ -578,6 +530,7 @@ class DetcController extends Controller
         } else {
             $sendTo = 'none';
         }
+
 
         DetcAction::create([
             'secure_id' => $newSecureId,
@@ -609,12 +562,18 @@ class DetcController extends Controller
         ]);
 
         if ($request->reason == 'information_incomplete') {
-            // Update missing info fields in complainants table
             Complainant::where('secure_id', $secure_id)->update([
                 'detc_rise_issue' => 1,
                 'detc_issue' => $request->missing_info,
             ]);
         }
+                // dd($buttonAction); send_back_to_applicant
+
+        if($buttonAction == 'send_back_to_applicant'){
+            return back()->with('success', 'Application sent back to applicant');
+        }
+
+        
 
         return back()->with('success', 'Action saved successfully');
     }
