@@ -18,15 +18,17 @@ return new class extends Migration
             $table->integer('current_step')->default(1); 
             $table->string('district_id')->nullable();
             $table->string('district_name')->nullable();
+
+            
             $table->string('complainant_name');
             $table->string('complainant_phone', 10);
             $table->string('complainant_email')->nullable();
             $table->string('complainant_aadhar', 12)->nullable();
-            $table->string('complainant_address1');
-            $table->string('complainant_address2');
-            $table->text('complainant_address');
-            $table->string('complainant_state');  
-            $table->string('complainant_district');
+            $table->string('complainant_address1')->nullable();
+            $table->string('complainant_address2')->nullable();
+            $table->text('complainant_address')->nullable();
+            $table->string('complainant_state')->nullable();  
+            $table->string('complainant_district')->nullable();
             
             $table->enum('complaint_type', ['gst', 'excise', 'vat']);
             // 🔹 Step 3 — GST-related Fields
