@@ -24,9 +24,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/submit-complaint', [ComplainantController::class, 'submitComplaint']);
     Route::get('/user/dashboard', [UserDashboardController::class, 'userDashboard']);
     Route::get('/user/complaint/{secure_id}', [UserDashboardController::class, 'show']);
-    // Route::post('/complaint/{secure_id}/missing-info', [ComplainantController::class, 'updateMissingInfoApi']);
     Route::post('/complaint/{secure_id}/submit-missing-info', [ComplainantController::class, 'submitMissingInfoApi']);
+
+    // For user profile
+    Route::get('user/profile', [UserController::class, 'profile']);
+    Route::put('user/update-profile', [UserController::class, 'update']);
 });
+
 
 // Route::post('/complaint/{secure_id}/submit-missing-info', [ComplainantController::class, 'submitMissingInfoApi']);
 
