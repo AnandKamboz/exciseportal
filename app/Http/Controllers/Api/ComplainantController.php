@@ -848,12 +848,12 @@ class ComplainantController extends Controller
     {
         $files = $request->file('gstProof');
 
-        // Set tax type
+        // Force tax type = GST
         $request->merge([
             'taxType' => 'gst',
         ]);
 
-        // Basic validation for tax type
+        // Validate tax type
         $validator = Validator::make($request->all(), [
             'taxType' => 'required|in:gst,vat,excise',
         ]);
@@ -902,7 +902,9 @@ class ComplainantController extends Controller
 
         try {
 
-            // STEP A: Check if user already has a COMPLETED complaint
+            /**
+             * STEP A: If user already completed an older complaint → create a NEW record
+             */
             $completedComplaint = Complainant::where('complainant_phone', $mobile)
                 ->where('is_completed', 1)
                 ->orderBy('id', 'desc')
@@ -910,24 +912,29 @@ class ComplainantController extends Controller
 
             if ($completedComplaint) {
 
-                // Create a NEW complaint auto-filled
+                // Create new complaint with copied user details
                 $complaint = new Complainant;
+                $complaint->secure_id = Str::uuid();  // IMPORTANT FIX
                 $complaint->complainant_name = $completedComplaint->complainant_name;
                 $complaint->complainant_phone = $completedComplaint->complainant_phone;
                 $complaint->complainant_email = $completedComplaint->complainant_email;
                 $complaint->current_step = 2;
                 $complaint->is_completed = 0;
-                $complaint->save(); // Save to generate id
+                $complaint->save();
 
             } else {
 
-                // STEP B: Check if a pending complaint already exists
+                /**
+                 * STEP B: If no completed record → check pending record
+                 */
                 $complaint = Complainant::where('complainant_phone', $mobile)
                     ->where('is_completed', 0)
                     ->first();
             }
 
-            // Still no complaint → show error
+            /**
+             * STEP C: Still no complaint → show error
+             */
             if (! $complaint) {
                 DB::rollBack();
 
@@ -937,7 +944,9 @@ class ComplainantController extends Controller
                 ], 404);
             }
 
-            // Ensure Step 1 done
+            /**
+             * Ensure Step 1 completed
+             */
             if (! isset($complaint->current_step) || $complaint->current_step <= 1) {
                 DB::rollBack();
 
@@ -947,7 +956,9 @@ class ComplainantController extends Controller
                 ]);
             }
 
-            // Create Application ID if not exists
+            /**
+             * Generate Application ID if missing
+             */
             if (empty($complaint->application_id)) {
                 $yearSuffix = now()->format('y');
                 $prefix = strtoupper($type);
@@ -959,10 +970,9 @@ class ComplainantController extends Controller
                 $complaint->application_id = $applicationId;
             }
 
-            // Assign details
-            $complaint->complaint_type = $type;
-
-            // Validate district
+            /**
+             * Validate district
+             */
             $districtInfo = DB::table('districts')
                 ->where('id', $request->district)
                 ->first();
@@ -976,26 +986,28 @@ class ComplainantController extends Controller
                 ], 400);
             }
 
-            // GST Case
+            /**
+             * GST Complaint Data Saving
+             */
             if ($type === 'gst') {
 
-                $complaint->type_of_complaint = $request->complaintType ?? '';
-                $complaint->gst_description = $request->gstDescription ?? '';
-                $complaint->location = $request->location ?? '';
-                $complaint->pincode = $request->pincode ?? '';
-                $complaint->gst_firm_name = $request->gstFirmName ?? '';
-                $complaint->gst_gstin = strtoupper($request->gstGstin) ?? '';
-                $complaint->gst_firm_address = $request->gstFirmAddress ?? '';
-                $complaint->district_id = $request->district ?? '';
-                $complaint->district_name = $districtInfo->name ?? '';
-                $complaint->declaration = '1';
+                $complaint->complaint_type = $type;
+                $complaint->type_of_complaint = $request->complaintType;
+                $complaint->gst_description = $request->gstDescription;
+                $complaint->location = $request->location;
+                $complaint->pincode = $request->pincode;
+                $complaint->gst_firm_name = $request->gstFirmName;
+                $complaint->gst_gstin = strtoupper($request->gstGstin);
+                $complaint->gst_firm_address = $request->gstFirmAddress;
+                $complaint->district_id = $request->district;
+                $complaint->district_name = $districtInfo->name;
+                $complaint->declaration = 1;
 
                 // Upload files
                 if ($request->hasFile('gstProof')) {
 
                     $uploadedFiles = [];
                     $files = $request->file('gstProof');
-
                     $files = is_array($files) ? $files : [$files];
 
                     if (count($files) > 5) {
@@ -1017,7 +1029,9 @@ class ComplainantController extends Controller
                 }
             }
 
-            // Mark completed
+            /**
+             * Mark Step 2 Completed
+             */
             $complaint->is_completed = 1;
             $complaint->save();
 
