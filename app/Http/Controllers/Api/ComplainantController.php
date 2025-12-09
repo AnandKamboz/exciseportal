@@ -1811,6 +1811,91 @@ class ComplainantController extends Controller
     //     ]);
     // }
 
+    // public function submitMissingInfoApi(Request $request, $secure_id)
+    // {
+    //     $isLogin = auth()->user();
+
+    //     if (! $isLogin) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Unauthenticated user',
+    //         ], 401);
+    //     }
+
+    //     $complain = Complainant::where('secure_id', $secure_id)->first();
+
+    //     if (! $complain) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Complaint not found',
+    //         ], 404);
+    //     }
+
+    //     $missingKey = null;
+
+    //     if ($request->has('missing_gst_number')) {
+    //         $request->validate([
+    //             'missing_gst_number' => 'required|string|max:255',
+    //         ]);
+    //         $complain->missing_gst_number = $request->missing_gst_number;
+    //         $missingKey = 'gst_number';
+    //     }
+
+    //     if ($request->has('missing_firm_location')) {
+    //         $request->validate([
+    //             'missing_firm_location' => 'required|string|max:255',
+    //         ]);
+    //         $complain->missing_firm_location = $request->missing_firm_location;
+    //         $missingKey = 'firm_location';
+    //     }
+
+    //     if ($request->has('missing_address')) {
+    //         $request->validate([
+    //             'missing_address' => 'required|string|max:1000',
+    //         ]);
+    //         $complain->missing_address = $request->missing_address;
+    //         $missingKey = 'address';
+    //     }
+
+    //     if (! $missingKey) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'No valid missing-info field submitted',
+    //         ], 400);
+    //     }
+
+    //     // 🟩 RESET DETC ISSUE FLAGS
+    //     $complain->detc_rise_issue = 0;
+    //     $complain->detc_issue = null;
+
+    //     $complain->save();
+
+    //     // Update DETC Action
+    //     $detcAction = DetcAction::where('user_application_id', $complain->application_id)
+    //         // ->where('send_to', 'applicant')
+    //         ->where('missing_info', $missingKey)
+    //         ->latest('id')
+    //         ->first();
+
+    //     // dd($detcAction);
+
+    //     // dd('Done');
+
+    //     if ($detcAction) {
+    //         $detcAction->returned_to_detc_at = now();
+    //         $detcAction->applicant_submitted_at = now();
+    //         $detcAction->button_action = 'applicant_submitted';
+    //         $detcAction->save();
+    //     }
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Missing information submitted successfully',
+    //         'submitted_field' => $missingKey,
+    //         'complaint_id' => $complain->application_id,
+    //     ]);
+    // }
+
     public function submitMissingInfoApi(Request $request, $secure_id)
     {
         $isLogin = auth()->user();
@@ -1833,33 +1918,72 @@ class ComplainantController extends Controller
 
         $missingKey = null;
 
-        // GST
+        /**
+         * 1️⃣ missing_gst_number
+         */
         if ($request->has('missing_gst_number')) {
+
+            // CHECK: Already filled? Stop!
+            if (! empty($complain->missing_gst_number)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Missing GST Number is already submitted.',
+                ], 400);
+            }
+
             $request->validate([
                 'missing_gst_number' => 'required|string|max:255',
             ]);
+
             $complain->missing_gst_number = $request->missing_gst_number;
             $missingKey = 'gst_number';
         }
 
-        // FIRM LOCATION
+        /**
+         * 2️⃣ missing_firm_location
+         */
         if ($request->has('missing_firm_location')) {
+
+            // CHECK: Already filled? Stop!
+            if (! empty($complain->missing_firm_location)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Missing Firm Location is already submitted.',
+                ], 400);
+            }
+
             $request->validate([
                 'missing_firm_location' => 'required|string|max:255',
             ]);
+
             $complain->missing_firm_location = $request->missing_firm_location;
             $missingKey = 'firm_location';
         }
 
-        // ADDRESS
+        /**
+         * 3️⃣ missing_address
+         */
         if ($request->has('missing_address')) {
+
+            // CHECK: Already filled? Stop!
+            if (! empty($complain->missing_address)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Missing Address is already submitted.',
+                ], 400);
+            }
+
             $request->validate([
                 'missing_address' => 'required|string|max:1000',
             ]);
+
             $complain->missing_address = $request->missing_address;
             $missingKey = 'address';
         }
 
+        /**
+         * No valid submitted field
+         */
         if (! $missingKey) {
             return response()->json([
                 'status' => false,
@@ -1867,22 +1991,20 @@ class ComplainantController extends Controller
             ], 400);
         }
 
-        // 🟩 RESET DETC ISSUE FLAGS
+        /**
+         * Reset DETC issue flags
+         */
         $complain->detc_rise_issue = 0;
         $complain->detc_issue = null;
-
         $complain->save();
 
-        // Update DETC Action
+        /**
+         * Update DETC Action
+         */
         $detcAction = DetcAction::where('user_application_id', $complain->application_id)
-            // ->where('send_to', 'applicant')
             ->where('missing_info', $missingKey)
             ->latest('id')
             ->first();
-
-        // dd($detcAction);
-         
-        // dd('Done');
 
         if ($detcAction) {
             $detcAction->returned_to_detc_at = now();

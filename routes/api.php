@@ -32,7 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('user/update-profile', [UserDashboardController::class, 'update']);
 });
 
-
 // Route::post('/complaint/{secure_id}/submit-missing-info', [ComplainantController::class, 'submitMissingInfoApi']);
 
 
