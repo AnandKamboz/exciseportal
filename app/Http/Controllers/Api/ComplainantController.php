@@ -1238,17 +1238,6 @@ class ComplainantController extends Controller
 
     public function submitComplaint(Request $request)
     {
-         $user = auth()->user();
-
-        if (! $user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthenticated user',
-            ], 401);
-        }
-
-        $user->roles()->syncWithoutDetaching([1]);
-
         $request->validate([
             'complaintType' => 'required|string',
             'gstDescription' => 'required|string|max:200',
