@@ -107,17 +107,6 @@ class UserDashboardController extends Controller
     public function profile(Request $request)
     {
         $user = Auth()->user();
-
-        return response()->json([
-            'success' => true,
-            'data' => $user,
-        ]);
-    }
-
-    public function update(Request $request)
-    {
-        $user = auth()->user();
-
         if (! $user) {
             return response()->json([
                 'status' => false,
@@ -125,6 +114,25 @@ class UserDashboardController extends Controller
             ], 401);
         }
 
+        $complaint = Complainant::where('complainant_phone', $user->mobile)->first();
+        $name = $user->complainant_name;
+        
+        return response()->json([
+            'success' => true,
+            'data' => $user,
+            'name' => $name,
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $user = auth()->user();
+        if (! $user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthenticated user',
+            ], 401);
+        }
         $request->validate([
             'name' => 'required|string|max:255',
             'mobile' => 'required|digits:10|unique:users,mobile,'.$user->id,
