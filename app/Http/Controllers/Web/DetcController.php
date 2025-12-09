@@ -51,7 +51,7 @@ class DetcController extends Controller
         return view('detc.dashboard', compact(
             'forwardedForAction',
             'allComplain',
-            'pendingInformation',
+            // 'pendingInformation',
             'totalInformation',
             'notActionable'
         ));
