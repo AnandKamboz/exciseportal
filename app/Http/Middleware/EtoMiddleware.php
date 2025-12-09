@@ -15,10 +15,12 @@ class EtoMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        dd("Hiii !");
         if (! Auth::check()) {
             return redirect()->route('login')
                 ->with('error', 'Please login first.');
         }
+        
 
         if (! Auth::user()->roles()->where('role_name', 'eto')->exists()) {
             abort(403, 'Unauthorized access.');

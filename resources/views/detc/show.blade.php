@@ -416,7 +416,7 @@
                                     <div class="col-sm-6">
                                         <label class="form-label fw-semibold required">Upload Document / ATR</label>
                                         <input type="file" name="upload_file" id="upload_file" class="form-control"
-                                            accept=".jpg,.jpeg,.png,.pdf">
+                                            accept=".jpg,.jpeg,.png">
                                     </div>
 
                                     <div class="col-sm-6">
@@ -452,7 +452,7 @@
                                             <option value="">Select field</option>
                                             <option value="gst_number">GST Number</option>
                                             <option value="firm_location">Firm Location</option>
-                                            <option value="address">Address</option>
+                                            <option value="address">Firm Address</option>
                                         </select>
                                     </div>
                                 </div>
