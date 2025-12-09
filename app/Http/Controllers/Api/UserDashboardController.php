@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Complainant;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-
 
 class UserDashboardController extends Controller
 {
@@ -116,7 +115,7 @@ class UserDashboardController extends Controller
 
         $complaint = Complainant::where('complainant_phone', $user->mobile)->first();
         $name = $user->complainant_name;
-        
+
         return response()->json([
             'success' => true,
             'data' => $user,
@@ -124,23 +123,67 @@ class UserDashboardController extends Controller
         ]);
     }
 
+    // public function update(Request $request)
+    // {
+    //     $user = auth()->user();
+    //     if (! $user) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Unauthenticated user',
+    //         ], 401);
+    //     }
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'mobile' => 'required|digits:10|unique:users,mobile,'.$user->id,
+    //     ]);
+
+    //     $user->name = $request->name;
+    //     // $user->mobile = $request->mobile;
+    //     $user->save();
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Profile updated successfully',
+    //         'data' => [
+    //             'secure_id' => $user->secure_id,
+    //             'name' => $user->name,
+    //             'mobile' => $user->mobile,
+    //         ],
+    //     ]);
+    // }
+
     public function update(Request $request)
     {
         $user = auth()->user();
+
         if (! $user) {
             return response()->json([
                 'status' => false,
                 'message' => 'Unauthenticated user',
             ], 401);
         }
+
+        // Validation (mobile unchanged by you)
         $request->validate([
             'name' => 'required|string|max:255',
-            'mobile' => 'required|digits:10|unique:users,mobile,'.$user->id,
+            'email' => 'nullable|email|max:255',
         ]);
 
+        /**
+         * 1️⃣ Update users table
+         */
         $user->name = $request->name;
-        // $user->mobile = $request->mobile;
+        $user->email = $request->email;
         $user->save();
+
+        /**
+         * 2️⃣ Update complainants table → complainant_name
+         */
+        Complainant::where('complainant_phone', $user->mobile)
+            ->update([
+                'complainant_name' => $request->name,
+                'complainant_email' => $request->email,
+            ]);
 
         return response()->json([
             'status' => true,
