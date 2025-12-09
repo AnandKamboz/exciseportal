@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ComplainantController;
 use App\Http\Controllers\Api\UserDashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
 
 Route::get('/test', function () {
     return response()->json([
