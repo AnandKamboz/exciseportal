@@ -1813,9 +1813,16 @@ class ComplainantController extends Controller
 
     public function submitMissingInfoApi(Request $request, $secure_id)
     {
-        $complain = Complainant::where('secure_id', $secure_id)->first();
+        $isLogin = auth()->user();
 
-        // dd($complain);
+        if (! $isLogin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated user',
+            ], 401);
+        }
+
+        $complain = Complainant::where('secure_id', $secure_id)->first();
 
         if (! $complain) {
             return response()->json([
@@ -1874,7 +1881,7 @@ class ComplainantController extends Controller
             ->first();
 
         // dd($detcAction);
-
+         
         // dd('Done');
 
         if ($detcAction) {
