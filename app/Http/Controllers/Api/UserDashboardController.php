@@ -17,7 +17,7 @@ class UserDashboardController extends Controller
                 'message' => 'Unauthenticated',
             ], 401);
         }
-        
+
         $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
             ->where('is_completed', 1)
             ->orderBy('created_at', 'desc')
@@ -57,7 +57,7 @@ class UserDashboardController extends Controller
                 'message' => 'Unauthorized access!',
             ], 401);
         }
-        
+
         $complain = Complainant::where('secure_id', $secure_id)->first();
 
         if (! $complain) {
@@ -100,5 +100,49 @@ class UserDashboardController extends Controller
                 'user_dist' => $user_dist,
             ],
         ], 200);
+    }
+
+    public function profile(Request $request)
+    {
+        $user = Auth()->user();
+
+        return response()->json([
+            'success' => true,
+            'data' => $user,
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        // Logged-in user
+        $user = auth()->user();
+
+        if (! $user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthenticated user',
+            ], 401);
+        }
+
+        // Validation (unique mobile but ignore same user)
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'mobile' => 'required|digits:10|unique:users,mobile,'.$user->id,
+        ]);
+
+        // Update user
+        $user->name = $request->name;
+        $user->mobile = $request->mobile;
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Profile updated successfully',
+            'data' => [
+                'secure_id' => $user->secure_id,
+                'name' => $user->name,
+                'mobile' => $user->mobile,
+            ],
+        ]);
     }
 }
