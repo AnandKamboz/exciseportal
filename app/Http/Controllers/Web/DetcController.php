@@ -46,7 +46,7 @@ class DetcController extends Controller
             ->where('is_approved', 0)
             ->count();
 
-        $pendingInformation = $totalInformation - ($forwardedForAction + $notActionable);
+        // $pendingInformation = $totalInformation - ($forwardedForAction + $notActionable);
 
         return view('detc.dashboard', compact(
             'forwardedForAction',

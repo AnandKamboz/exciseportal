@@ -31,13 +31,13 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        {{-- <div class="col-md-3">
             <div class="card text-center p-3">
                 <h5>Pending Information</h5>
                 <h2>{{ $pendingInformation }}</h2>
                 <a href="" class="new-butt"> View All</a>
             </div>
-        </div>
+        </div> --}}
     </div>
 
 
