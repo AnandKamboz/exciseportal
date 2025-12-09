@@ -8,7 +8,7 @@
     <div class="row g-4 mb-4">
         <div class="col-md-3">
             <div class="card text-center p-3">
-                <h5>Total Information</h5>
+                <h5>Total Cases</h5>
                 <h2>{{ $totalInformation }}</h2>
                 <a href="#" class="new-butt"> View All</a>
             </div>
