@@ -12,48 +12,26 @@ use Illuminate\Support\Str;
 
 class DetcController extends Controller
 {
-    // public function dashboard()
-    // {
-    //     $allComplain = Complainant::where('district_id', Auth::user()->district)->where('is_completed', 1)->orderBy('created_at', 'desc')->get();
-    //     $totalInformation = Complainant::where('district_id', Auth::user()->district)->where('is_completed', 1)->count();
-    //     $forwardedForAction = DB::table('detc_actions')->where('detc_district', Auth::user()->district)->where('is_approved', 1)->count();
-    //     $notActionable = DB::table('detc_actions')->where('detc_district', Auth::user()->district)->where('is_approved', 0)->count();
-    //     $pendingInformation = $totalInformation - ($forwardedForAction + $notActionable);
-
-    //     return view('detc.dashboard', compact('forwardedForAction', 'allComplain', 'pendingInformation', 'totalInformation', 'notActionable'));
-    // }
-
     public function dashboard()
     {
         $district = Auth::user()->district;
-
-        // All complaints of this DETC district
         $allComplain = Complainant::where('district_id', $district)
             ->where('is_completed', 1)
             ->orderBy('created_at', 'desc')
             ->get();
-
-        // Dashboard counters
+        
         $totalInformation = $allComplain->count();
 
-        $forwardedForAction = DB::table('detc_actions')
-            ->where('detc_district', $district)
-            ->where('is_approved', 1)
-            ->count();
+        $forwardedtoEto = DetcAction::where('detc_district', $district)->where('send_to', 'eto')->count();
+        $forwardedtoHq = DetcAction::where('detc_district', $district)->where('send_to', 'hq')->count();
 
-        $notActionable = DB::table('detc_actions')
-            ->where('detc_district', $district)
-            ->where('is_approved', 0)
-            ->count();
 
-        // $pendingInformation = $totalInformation - ($forwardedForAction + $notActionable);
-
+        
         return view('detc.dashboard', compact(
-            'forwardedForAction',
             'allComplain',
-            // 'pendingInformation',
             'totalInformation',
-            'notActionable'
+            'forwardedtoEto',
+            'forwardedtoHq',
         ));
     }
 
@@ -480,14 +458,14 @@ class DetcController extends Controller
 
     public function store(Request $request, $secure_id)
     {
-        $request->validate([
-            'proposed_action' => 'required',
-            'ward_no' => 'required_if:proposed_action,forward_to_eto',
-            'upload_file' => 'required_if:proposed_action,uploaded_report|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'reason' => 'required_if:proposed_action,non_actionable',
-            'missing_info' => 'required_if:reason,information_incomplete',
-            'remarks' => 'required',
-        ]);
+        // $request->validate([
+        //     'proposed_action' => 'required',
+        //     'ward_no' => 'required_if:proposed_action,forward_to_eto',
+        //     'upload_file' => 'required_if:proposed_action,uploaded_report|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        //     'reason' => 'required_if:proposed_action,non_actionable',
+        //     'missing_info' => 'required_if:reason,information_incomplete',
+        //     'remarks' => 'required',
+        // ]);
 
         $userComplaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
 
