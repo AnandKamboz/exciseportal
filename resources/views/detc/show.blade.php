@@ -292,10 +292,7 @@
                     </div>
                 @endif
 
-
                 {{-- Here --}}
-
-
                 @if ($complain->missing_gst_number)
                     <div class="col-md-4">
                         <div class="info-card">
@@ -314,7 +311,7 @@
                     </div>
                 @endif
 
-                 @if ($complain->missing_address)
+                @if ($complain->missing_address)
                     <div class="col-md-4">
                         <div class="info-card">
                             <div class="label-text">Missing firm address</div>
@@ -323,10 +320,15 @@
                     </div>
                 @endif
 
+                @if ($complain->missing_info_submitted_at)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Missing Information Submission Time</div>
+                            <div class="value-text">{{ $complain->missing_info_submitted_at }}</div>
+                        </div>
+                    </div>
+                @endif
                 {{-- Here --}}
-
-
-
             </div>
 
             {{-- ========== DOCUMENTS WITH LIGHTBOX ========== --}}
@@ -379,11 +381,11 @@
 
             <hr>
 
-             @if ($detcActions->count() > 0)
+            @if ($detcActions->count() > 0)
                 @foreach ($detcActions as $action)
                     <div class="card shadow-lg border-0 mt-5">
                         <div class="p-3" style="background:#0a3d62;color:white;font-weight:600;">
-                            Action Taken by DETC  ({{ $action->created_at->format('d-m-Y') }})
+                            Action Taken by DETC ({{ $action->created_at->format('d-m-Y') }})
                         </div>
 
                         <div class="p-4">
@@ -392,7 +394,8 @@
                                 <div class="col-md-6">
                                     <div class="p-3 shadow-sm rounded" style="border-left:4px solid #0a3d62;">
                                         <small class="text-secondary">Proposed Action</small>
-                                        <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->proposed_action)) }}
+                                        <div class="fw-bold">
+                                            {{ ucwords(str_replace('_', ' ', $action->proposed_action)) }}
                                         </div>
                                     </div>
                                 </div>
@@ -410,7 +413,8 @@
                                     <div class="col-md-6">
                                         <div class="p-3 shadow-sm rounded" style="border-left:4px solid #6c757d;">
                                             <small class="text-secondary">Reason</small>
-                                            <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->reason)) }}</div>
+                                            <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->reason)) }}
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
@@ -419,7 +423,8 @@
                                     <div class="col-md-6">
                                         <div class="p-3 shadow-sm rounded" style="border-left:4px solid #20c997;">
                                             <small class="text-secondary">Missing Info</small>
-                                            <div class="fw-bold">{{ ucwords(str_replace('_', ' ', $action->missing_info)) }}
+                                            <div class="fw-bold">
+                                                {{ ucwords(str_replace('_', ' ', $action->missing_info)) }}
                                             </div>
                                         </div>
                                     </div>
@@ -456,9 +461,9 @@
             {{-- ===================== DETC FORM =================== --}}
             {{-- ================================================= --}}
 
-             @if ($showForm)
-            {{-- @if ($detcActions->count() == 0 || $detcActions[0]->reason == 'information_incomplete' ) --}}
-            {{-- @if ($detcActions->count() == 0 || ($detcActions->count() > 0 && $detcActions->last()->reason == 'information_incomplete') || (is_null($complain->missing_gst_number) && is_null($complain->missing_firm_location) && is_null($complain->missing_address))) --}}
+            @if ($showForm)
+                {{-- @if ($detcActions->count() == 0 || $detcActions[0]->reason == 'information_incomplete') --}}
+                {{-- @if ($detcActions->count() == 0 || ($detcActions->count() > 0 && $detcActions->last()->reason == 'information_incomplete') || (is_null($complain->missing_gst_number) && is_null($complain->missing_firm_location) && is_null($complain->missing_address))) --}}
                 <div class="card shadow-lg border-0 mt-5" style="border-left:5px solid #0a3d62;">
                     <div class="p-3" style="background:#0a3d62;color:white;font-weight:600;">Upload Report</div>
 
@@ -481,16 +486,13 @@
                                         <label class="ms-3"><input type="radio" name="proposed_action"
                                                 value="uploaded_report"> Upload Report</label>
 
-                                           
 
-                                                    <label class="ms-3" 
-                                                        @if($detcActions->last() && $detcActions->last()->reason == 'information_incomplete') 
-                                                            style="display:none;" 
-                                                        @endif
-                                                    >
-                                                        <input type="radio" name="proposed_action" value="non_actionable"> 
-                                                        Non Actionable
-                                                    </label>
+
+                                        <label class="ms-3"
+                                            @if ($detcActions->last() && $detcActions->last()->reason == 'information_incomplete') style="display:none;" @endif>
+                                            <input type="radio" name="proposed_action" value="non_actionable">
+                                            Non Actionable
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -547,8 +549,8 @@
                                         <select class="form-select" id="nonReasonSelect" name="reason">
                                             <option value="">Select</option>
                                             <option value="false_information">False Information</option>
-                                                <option value="information_incomplete">Information Incomplete</option>
-                                          
+                                            <option value="information_incomplete">Information Incomplete</option>
+
 
                                             <option value="any_other">Any Other</option>
                                         </select>
@@ -559,7 +561,7 @@
                                         <select name="missing_info" id="missingInfo" class="form-select">
                                             <option value="">Select field</option>
                                             <option value="gst_number">GST Number</option>
-                                            <option value="firm_location">Firm  Name</option>
+                                            <option value="firm_location">Firm Name</option>
                                             <option value="address">Firm Address</option>
                                         </select>
                                     </div>
@@ -591,7 +593,7 @@
 
 
             {{-- ======================= SHOW ALL SAVED REPORTS ======================= --}}
-           
+
 
 
 
@@ -693,9 +695,9 @@
 
 
 
-           
 
-          
+
+
 
 
 
