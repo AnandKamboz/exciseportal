@@ -2157,25 +2157,58 @@ class ComplainantController extends Controller
         $complaint->gst_gstin = strtoupper($request->gstGstin);
         $complaint->gst_firm_address = $request->gstFirmAddress;
         $complaint->detc_issue = null;
-         $complaint->detc_rise_issue = 0;
+        $complaint->detc_rise_issue = 0;
 
-        
-        
+        // if ($request->hasFile('gstProof')) {
+        //     if (! empty($complaint->gst_proof)) {
+        //         foreach (json_decode($complaint->gst_proof) as $oldFile) {
+        //             Storage::disk('public')->delete("complaints/{$complaint->application_id}/{$oldFile}");
+        //         }
+        //     }
+
+        //     $newFiles = [];
+        //     foreach ((array) $request->file('gstProof') as $file) {
+        //         $fileName = uniqid('gst').'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+        //         $file->storeAs("complaints/{$complaint->application_id}", $fileName, 'public');
+        //         $newFiles[] = $fileName;
+        //     }
+
+        //     $complaint->gst_proof = json_encode($newFiles);
+        // }
+
         if ($request->hasFile('gstProof')) {
+
+            $applicationId = $complaint->application_id;
+
             if (! empty($complaint->gst_proof)) {
-                foreach (json_decode($complaint->gst_proof) as $oldFile) {
-                    Storage::disk('public')->delete("complaints/{$complaint->application_id}/{$oldFile}");
+                $oldFiles = json_decode($complaint->gst_proof, true);
+
+                if (is_array($oldFiles)) {
+                    foreach ($oldFiles as $old) {
+                        Storage::disk('public')->delete("complaints/{$applicationId}/{$old}");
+                    }
                 }
             }
 
-            $newFiles = [];
-            foreach ((array) $request->file('gstProof') as $file) {
-                $fileName = uniqid('gst').'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
-                $file->storeAs("complaints/{$complaint->application_id}", $fileName, 'public');
-                $newFiles[] = $fileName;
+            $files = $request->file('gstProof');
+
+            if (! is_array($files)) {
+                $files = [$files];
             }
 
-            $complaint->gst_proof = json_encode($newFiles);
+            $uploadedFiles = [];
+
+            foreach ($files as $file) {
+                if (! $file) {
+                    continue;
+                }
+
+                $fileName = uniqid('gst_').Str::random(8).'.'.$file->getClientOriginalExtension();
+                $file->storeAs("complaints/{$applicationId}", $fileName, 'public');
+                $uploadedFiles[] = $fileName;
+            }
+
+            $complaint->gst_proof = json_encode($uploadedFiles);
         }
 
         $complaint->save();
