@@ -18,7 +18,7 @@
         <div class="col-md-3">
             <div class="card text-center p-3">
                 <h5>Forwarded to HQ</h5>
-                <h2>{{ $forwardedtoEto }}</h2>
+                 <h2>{{ $forwardedtoHq }}</h2>
                 <a href="#" class="new-butt"> View All</a>
             </div>
         </div>
@@ -26,7 +26,7 @@
         <div class="col-md-3">
             <div class="card text-center p-3">
                 <h5>Forwarded to ETO</h5>
-                <h2>{{ $forwardedtoHq }}</h2>
+                <h2>{{ $forwardedtoEto }}</h2>
                 <a href="#" class="new-butt"> View All</a>
             </div>
         </div>
