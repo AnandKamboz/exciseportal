@@ -1247,6 +1247,21 @@ class ComplainantController extends Controller
             'declaration' => 'required|in:1',
         ]);
 
+        // Here New Code
+        
+        if (
+            ! empty($request->missing_gst_number) ||
+            ! empty($request->missing_firm_location) ||
+            ! empty($request->missing_firm_address)
+        ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please fill all required fields.',
+            ], 422);
+        }
+
+        // Here New Code
+
         $yearSuffix = now()->format('y');
         $prefix = 'GST';
 
@@ -1255,7 +1270,7 @@ class ComplainantController extends Controller
         } while (Complainant::where('application_id', $applicationId)->exists());
 
         $districtName = District::where('id', $request->district)->value('name');
-        
+
         if (! $districtName) {
             return response()->json([
                 'success' => false,
@@ -1968,6 +1983,31 @@ class ComplainantController extends Controller
                 'message' => 'Complaint not found',
             ], 404);
         }
+
+        // New code here
+
+        if (! empty($complain->missing_gst_number) && $request->has('missing_gst_number')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'GST Number already submitted earlier.',
+            ], 400);
+        }
+
+        if (! empty($complain->missing_firm_location) && $request->has('missing_firm_location')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Firm Location already submitted earlier.',
+            ], 400);
+        }
+
+        if (! empty($complain->missing_address) && $request->has('missing_address')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Address already submitted earlier.',
+            ], 400);
+        }
+
+        // New code here
 
         $missingKey = null;
 
