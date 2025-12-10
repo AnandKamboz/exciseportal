@@ -1233,6 +1233,7 @@ class ComplainantController extends Controller
 
     public function submitComplaint(Request $request)
     {
+        
         $request->validate([
             'complaintType' => 'required|string',
             'gstDescription' => 'required|string|max:200',
