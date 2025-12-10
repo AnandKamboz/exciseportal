@@ -163,7 +163,7 @@
 
 
             {{-- ================= EXCISE DETAILS ================= --}}
-            @if ($information->excise_name || $information->excise_desc)
+            {{-- @if ($information->excise_name || $information->excise_desc)
                 <hr>
                 <div class="section-head">Excise Details</div>
 
@@ -197,7 +197,7 @@
                     @endif
 
                 </div>
-            @endif
+            @endif --}}
 
 
 
