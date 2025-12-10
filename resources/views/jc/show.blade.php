@@ -201,7 +201,7 @@
 
 
 
-            @if ($information->gst_proof || $information->vat_proof || $information->excise_proof)
+            {{-- @if ($information->gst_proof || $information->vat_proof || $information->excise_proof)
                 <hr>
                 <div class="section-head">Attached Documents</div>
 
@@ -235,7 +235,7 @@
                     @endforeach
 
                 </div>
-            @endif
+            @endif --}}
             <hr>
 
 
