@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class EtoMiddleware
 {
@@ -15,7 +16,7 @@ class EtoMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        dd("Hiii !");
+        // dd('heelo !');
         if (! Auth::check()) {
             return redirect()->route('login')
                 ->with('error', 'Please login first.');

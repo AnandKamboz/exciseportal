@@ -28,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
            'detcrole' => \App\Http\Middleware\DetcMiddleware::class,
            'hq' => \App\Http\Middleware\HqMiddleware::class,
            'jc' => \App\Http\Middleware\JcMiddleware::class,
-           'eto' => \App\Http\Middleware\JcMiddleware::class,
+           'eto' => \App\Http\Middleware\EtoMiddleware::class,
         ]);
 
         //

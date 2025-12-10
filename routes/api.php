@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/dashboard', [UserDashboardController::class, 'userDashboard']);
     Route::get('/user/complaint/{secure_id}', [UserDashboardController::class, 'show']);
     Route::post('/complaint/{secure_id}/submit-missing-info', [ComplainantController::class, 'submitMissingInfoApi']);
+    Route::post('/complaint/update/{secure_id}', [ComplainantController::class, 'updateComplaint']);
+
 
     // For user profile
     Route::get('user/profile', [UserDashboardController::class, 'profile']);

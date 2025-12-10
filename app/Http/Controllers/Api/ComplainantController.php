@@ -1239,7 +1239,6 @@ class ComplainantController extends Controller
             'location' => 'required|string|max:150',
             'district' => 'required|numeric',
             'pincode' => 'nullable|digits:6',
-            // 'gstProof'   => 'nullable|array|max:5',
             'gstProof.*' => 'nullable|mimes:jpg,jpeg,png|max:10240',
             'gstFirmName' => 'nullable|string',
             'gstGstin' => 'nullable|string|max:15',
@@ -1248,7 +1247,7 @@ class ComplainantController extends Controller
         ]);
 
         // Here New Code
-        
+
         if (
             ! empty($request->missing_gst_number) ||
             ! empty($request->missing_firm_location) ||
@@ -2112,6 +2111,76 @@ class ComplainantController extends Controller
             'message' => 'Missing information submitted successfully',
             'submitted_field' => $missingKey,
             'complaint_id' => $complain->application_id,
+        ]);
+    }
+
+    // Update Code
+    public function updateComplaint(Request $request, $secure_id)
+    {
+        $request->validate([
+            'complaintType' => 'required|string',
+            'gstDescription' => 'required|string|max:200',
+            'location' => 'required|string|max:150',
+            'district' => 'required|numeric',
+            'pincode' => 'nullable|digits:6',
+            'gstProof.*' => 'nullable|mimes:jpg,jpeg,png|max:10240',
+            'gstFirmName' => 'nullable|string',
+            'gstGstin' => 'nullable|string|max:15',
+            'gstFirmAddress' => 'nullable|string',
+        ]);
+
+        $complaint = Complainant::where('secure_id', $secure_id)->first();
+
+        if (! $complaint) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid secure_id',
+            ], 404);
+        }
+
+        $districtName = District::where('id', $request->district)->value('name');
+
+        if (! $districtName) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid district',
+            ], 400);
+        }
+
+        $complaint->type_of_complaint = $request->complaintType;
+        $complaint->gst_description = $request->gstDescription;
+        $complaint->location = $request->location;
+        $complaint->district_id = $request->district;
+        $complaint->district_name = $districtName;
+        $complaint->pincode = $request->pincode;
+        $complaint->gst_firm_name = $request->gstFirmName;
+        $complaint->gst_gstin = strtoupper($request->gstGstin);
+        $complaint->gst_firm_address = $request->gstFirmAddress;
+
+        if ($request->hasFile('gstProof')) {
+            if (! empty($complaint->gst_proof)) {
+                foreach (json_decode($complaint->gst_proof) as $oldFile) {
+                    Storage::disk('public')->delete("complaints/{$complaint->application_id}/{$oldFile}");
+                }
+            }
+
+            $newFiles = [];
+            foreach ((array) $request->file('gstProof') as $file) {
+                $fileName = uniqid('gst').'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+                $file->storeAs("complaints/{$complaint->application_id}", $fileName, 'public');
+                $newFiles[] = $fileName;
+            }
+
+            $complaint->gst_proof = json_encode($newFiles);
+        }
+
+        $complaint->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Complaint updated successfully.',
+            'application_id' => $complaint->application_id,
+            'secure_id' => $complaint->secure_id,
         ]);
     }
 }

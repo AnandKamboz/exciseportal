@@ -459,6 +459,8 @@ class DetcController extends Controller
 
     public function store(Request $request, $secure_id)
     {
+       
+        // dd($request->toArray());
         $request->validate([
             'proposed_action' => 'required',
         ]);
@@ -466,9 +468,11 @@ class DetcController extends Controller
         if ($request->proposed_action == 'forward_to_eto') {
             $request->validate([
                 'ward_no' => 'required',
-                'remarks' => 'required',
+                // 'remarks' => 'required',
             ]);
         }
+
+         
 
         if ($request->proposed_action == 'uploaded_report') {
             $request->validate([
@@ -476,6 +480,10 @@ class DetcController extends Controller
                 'remarks' => 'required',
             ]);
         }
+
+          
+             
+
 
         if ($request->proposed_action == 'non_actionable') {
             $request->validate([
@@ -495,6 +503,8 @@ class DetcController extends Controller
                 ]);
             }
         }
+
+        
 
         $userComplaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
 
