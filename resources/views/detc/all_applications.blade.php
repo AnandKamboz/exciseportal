@@ -1,11 +1,8 @@
 @extends('detc.layouts.dashboard')
-
 @section('content')
-    <!-- DataTables CSS -->
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
     <div class="container mt-4">
-
         <h3 class="mb-3">All Applications</h3>
         <table id="applicationsTable" class="table table-bordered table-striped">
             <thead>
@@ -39,7 +36,6 @@
 
     </div>
 
-    <!-- jQuery FIRST -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- DataTables JS -->

@@ -10,31 +10,6 @@
         <div class="card p-3">
             <h5 class="fw-bold mb-3">Complaint Details</h5>
 
-            {{-- <div class="table-responsive">
-            <table id="complaintsTable" class="table table-hover table-striped">
-                <thead style="background: #FF8A73; color: #fff;">
-                    <tr>
-                        <th>#</th>
-                        <th>Application ID</th>
-                        <th>Type of Information</th>
-                        <th>Date on Information</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @foreach ($informations as $index => $information)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $information->application_id }}</td>
-                            <td>{{ ucwords(str_replace('_', ' ', $information->type_of_complaint)) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($information->created_at)->format('d M Y') }}</td>
-                        </tr>
-                    @endforeach
-
-                </tbody>
-            </table>
-        </div> --}}
-
             <div class="table-responsive">
                 <table id="complaintsTable" class="table table-hover table-striped">
                     <thead style="background: #FF8A73; color: #fff;">

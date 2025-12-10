@@ -468,7 +468,7 @@
                 {{-- @if ($detcActions->count() == 0 || $detcActions[0]->reason == 'information_incomplete') --}}
                 {{-- @if ($detcActions->count() == 0 || ($detcActions->count() > 0 && $detcActions->last()->reason == 'information_incomplete') || (is_null($complain->missing_gst_number) && is_null($complain->missing_firm_location) && is_null($complain->missing_address))) --}}
                 <div class="card shadow-lg border-0 mt-5" style="border-left:5px solid #0a3d62;">
-                    <div class="p-3" style="background:#0a3d62;color:white;font-weight:600;">Upload Report</div>
+                    <div class="p-3" style="background:#0a3d62;color:white;font-weight:600;">Proposed Action</div>
 
                     <div class="p-4">
 
@@ -482,10 +482,10 @@
 
                             <div class="row g-4">
                                 <div class="col-md-12">
-                                    <label class="form-label fw-semibold required">Proposed Action</label>
+                                    {{-- <label class="form-label fw-semibold required">Proposed Action</label> --}}
                                     <div class="radio-wrap">
                                         <label><input type="radio" name="proposed_action" value="forward_to_eto">
-                                            Forward to ETO</label>
+                                            Send to ETO</label>
                                         <label class="ms-3"><input type="radio" name="proposed_action"
                                                 value="uploaded_report"> Upload Report</label>
 
@@ -566,6 +566,7 @@
                                             <option value="gst_number">GST Number</option>
                                             <option value="firm_location">Firm Name</option>
                                             <option value="address">Firm Address</option>
+                                            <option value="any_other">Any Other</option>
                                         </select>
                                     </div>
                                 </div>

@@ -112,32 +112,28 @@
                                     ->latest('id')
                                     ->first();
 
-                                // Default
                                 $status = 'No Action Yet';
                                 $badge = 'bg-primary';
 
                                 if ($lastAction) {
-                                    // 1️⃣ DETC ने information_incomplete भेजा लेकिन applicant ने अभी जवाब नहीं दिया
                                     if (
                                         $lastAction->reason == 'information_incomplete' &&
                                         $lastAction->send_to == 'applicant' &&
                                         $lastAction->applicant_submitted_at == null
                                     ) {
-                                        $status = 'Pending From Applicant';
+                                        $status = 'Pending with Applicant';
                                         $badge = 'bg-danger';
                                     }
 
-                                    // 2️⃣ Applicant ने missing info submit कर दी → अब DETC को लेना है action
                                     elseif (
                                         $lastAction->reason == 'information_incomplete' &&
                                         $lastAction->send_to == 'applicant' &&
                                         $lastAction->applicant_submitted_at != null
                                     ) {
-                                        $status = 'Pending For DETC';
+                                        $status = 'Pending with DETC';
                                         $badge = 'bg-warning';
                                     }
 
-                                    // 3️⃣ DETC ने final action ले लिया
                                     elseif ($lastAction->is_approved == 1) {
                                         $status = 'Completed';
                                         $badge = 'bg-success';

@@ -1,4 +1,4 @@
-@extends('detc.layouts.dashboard')
+@extends('eto.layouts.dashboard')
 
 @section('title', 'Information Details')
 @section('page_title', 'Information Details')
