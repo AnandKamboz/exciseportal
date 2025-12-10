@@ -674,4 +674,12 @@ class ComplainantController extends Controller
             'data' => $complainant,
         ], 200);
     }
+
+
+    public function dashboarda()
+    {
+      $action = DetcAction::where('ward_no', auth()->user()->ward_no)->first();
+      $informations = $action ? Complainant::where('id', $action->complaint_id)->get() : collect();
+      return view('eto.dashboard', compact('informations'));
+    }
 }

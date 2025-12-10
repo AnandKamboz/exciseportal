@@ -79,7 +79,7 @@ Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () 
 //     Route::get('dashboard', [EtoController::class, 'dashboard'])->name('dashboard');
 // });
 
-Route::get('eto/dashboard', [EtoController::class, 'dashboard'])->name('eto.dashboard');
+Route::get('eto/dashboard', [ComplainantController::class, 'dashboarda'])->name('eto.dashboard');
 
 
 
