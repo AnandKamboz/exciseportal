@@ -1316,8 +1316,11 @@ class ComplainantController extends Controller
         //     $complaint->gst_proof = json_encode($uploadedFiles);
         // }
 
+        // 
 
-        
+
+
+
         if ($request->hasFile('gstProof')) {
 
             $applicationId = $complaint->application_id;
