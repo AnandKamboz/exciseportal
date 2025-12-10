@@ -1233,9 +1233,6 @@ class ComplainantController extends Controller
 
     public function submitComplaint(Request $request)
     {
-
-        
-
         $request->validate([
             'complaintType' => 'required|string',
             'gstDescription' => 'required|string|max:200',
@@ -1247,6 +1244,10 @@ class ComplainantController extends Controller
             'gstFirmAddress' => 'nullable|string',
             'declaration' => 'required|in:1',
         ]);
+
+
+
+        
 
         // Here New Code
 
