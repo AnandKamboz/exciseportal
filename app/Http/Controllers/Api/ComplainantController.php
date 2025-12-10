@@ -1233,14 +1233,13 @@ class ComplainantController extends Controller
 
     public function submitComplaint(Request $request)
     {
-        
+
         $request->validate([
             'complaintType' => 'required|string',
             'gstDescription' => 'required|string|max:200',
             'location' => 'required|string|max:150',
             'district' => 'required|numeric',
             'pincode' => 'nullable|digits:6',
-            // 'gstProof.*' => 'nullable|mimes:jpg,jpeg,png|max:10240',
             'gstFirmName' => 'nullable|string',
             'gstGstin' => 'nullable|string|max:15',
             'gstFirmAddress' => 'nullable|string',
