@@ -2157,6 +2157,9 @@ class ComplainantController extends Controller
         $complaint->gst_gstin = strtoupper($request->gstGstin);
         $complaint->gst_firm_address = $request->gstFirmAddress;
         $complaint->detc_issue = null;
+         $complaint->detc_rise_issue = 0;
+
+        
         
         if ($request->hasFile('gstProof')) {
             if (! empty($complaint->gst_proof)) {
