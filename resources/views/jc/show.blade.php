@@ -125,7 +125,7 @@
             </div>
 
             {{-- ================= VAT DETAILS IF EXISTS ================= --}}
-            @if ($information->vat_firm_name || $information->vat_tin)
+            {{-- @if ($information->vat_firm_name || $information->vat_tin)
                 <hr>
                 <div class="section-head">VAT Details</div>
 
@@ -159,7 +159,7 @@
                     @endif
 
                 </div>
-            @endif
+            @endif --}}
 
 
             {{-- ================= EXCISE DETAILS ================= --}}
