@@ -1244,6 +1244,7 @@ class ComplainantController extends Controller
             'location' => 'required|string|max:150',
             'district' => 'required|numeric',
             'pincode' => 'nullable|digits:6',
+            // 'gstProof'   => 'nullable|array|max:5',
             'gstProof.*' => 'nullable|mimes:jpg,jpeg,png|max:10240',
             'gstFirmName' => 'nullable|string',
             'gstGstin' => 'nullable|string|max:15',
@@ -1259,14 +1260,31 @@ class ComplainantController extends Controller
         } while (Complainant::where('application_id', $applicationId)->exists());
 
         $districtName = District::where('id', $request->district)->value('name');
+        
+        if (! $districtName) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid district',
+            ], 400);
+        }
+
+        $user = Auth::user();
+        if (! $user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated user',
+            ], 401);
+        }
+
+        // $user->roles()->syncWithoutDetaching([1]);
 
         $complaint = new Complainant;
         $complaint->secure_id = Str::uuid();
         $complaint->application_id = $applicationId;
 
-        $complaint->complainant_name = $user->name;
+        $complaint->complainant_name = $user->name ?? 'N/A';
         $complaint->complainant_phone = $user->mobile;
-        $complaint->complainant_email = $user->email;
+        $complaint->complainant_email = $user->email ?? 'N/A';
 
         $complaint->complaint_type = 'gst';
         $complaint->type_of_complaint = $request->complaintType;
@@ -1283,7 +1301,7 @@ class ComplainantController extends Controller
         if ($request->hasFile('gstProof')) {
             $uploadedFiles = [];
             foreach ((array) $request->file('gstProof') as $file) {
-                $fileName = time().'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+                $fileName = uniqid('gst').'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
                 $file->storeAs("complaints/{$applicationId}", $fileName, 'public');
                 $uploadedFiles[] = $fileName;
             }
