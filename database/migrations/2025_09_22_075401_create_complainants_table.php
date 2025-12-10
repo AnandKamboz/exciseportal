@@ -45,12 +45,12 @@ return new class extends Migration
 
 
             
-            // $table->string('complainant_aadhar', 12)->nullable();
-            // $table->string('complainant_address1')->nullable();
-            // $table->string('complainant_address2')->nullable();
-            // $table->text('complainant_address')->nullable();
-            // $table->string('complainant_state')->nullable();  
-            // $table->string('complainant_district')->nullable();
+            $table->string('complainant_aadhar', 12)->nullable();
+            $table->string('complainant_address1')->nullable();
+            $table->string('complainant_address2')->nullable();
+            $table->text('complainant_address')->nullable();
+            $table->string('complainant_state')->nullable();  
+            $table->string('complainant_district')->nullable();
             
             // 🔹 Step 3 — GST-related Fields
             
@@ -58,32 +58,32 @@ return new class extends Migration
 
            
             
-            // $table->string('involved_type')->nullable();
-            // $table->string('gst_vehicle_number', 15)->nullable(); 
-            // $table->string('gst_person_name')->nullable();
+            $table->string('involved_type')->nullable();
+            $table->string('gst_vehicle_number', 15)->nullable(); 
+            $table->string('gst_person_name')->nullable();
             
             // Missing Field 
            
 
             // 🔹 Step 3 — Excise-related Fields
-            // $table->string('excise_name')->nullable();
-            // $table->string('excise_city')->nullable();
-            // $table->string('excise_desc')->nullable();
-            // $table->string('excise_place')->nullable();
-            // $table->string('excise_time')->nullable();
-            // $table->text('excise_details')->nullable();
-            // $table->string('excise_vehicle_number', 15)->nullable();
-            // $table->string('excise_proof')->nullable();
+            $table->string('excise_name')->nullable();
+            $table->string('excise_city')->nullable();
+            $table->string('excise_desc')->nullable();
+            $table->string('excise_place')->nullable();
+            $table->string('excise_time')->nullable();
+            $table->text('excise_details')->nullable();
+            $table->string('excise_vehicle_number', 15)->nullable();
+            $table->string('excise_proof')->nullable();
             // 🔹 Step 3 — VAT Additional Fields
-            // $table->string('vat_locality')->nullable();
-            // $table->string('vat_city')->nullable();
-            // $table->text('vat_description')->nullable();
-            // $table->string('vat_vehicle_number', 15)->nullable(); 
-            // $table->string('vat_firm_name')->nullable();
-            // $table->string('vat_tin')->nullable();
-            // $table->text('vat_firm_address')->nullable();
-            // $table->string('vat_person_name')->nullable();  
-            // $table->string('vat_proof')->nullable();
+            $table->string('vat_locality')->nullable();
+            $table->string('vat_city')->nullable();
+            $table->text('vat_description')->nullable();
+            $table->string('vat_vehicle_number', 15)->nullable(); 
+            $table->string('vat_firm_name')->nullable();
+            $table->string('vat_tin')->nullable();
+            $table->text('vat_firm_address')->nullable();
+            $table->string('vat_person_name')->nullable();  
+            $table->string('vat_proof')->nullable();
             // 🔹 System Fields
            
         });
