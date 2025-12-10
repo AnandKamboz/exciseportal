@@ -2054,7 +2054,7 @@ class ComplainantController extends Controller
          */
         $complain->detc_rise_issue = 0;
         $complain->detc_issue = null;
-        $complain->applicant_resubmitted_at = now();
+        $complain->missing_info_submitted_at = now();
         $complain->save();
 
         /**

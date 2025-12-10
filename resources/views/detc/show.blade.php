@@ -324,7 +324,7 @@
                     <div class="col-md-4">
                         <div class="info-card">
                             <div class="label-text">Missing Information Submission Time</div>
-                            <div class="value-text">{{ $complain->missing_info_submitted_at }}</div>
+                            <div class="value-text">{{ \Carbon\Carbon::parse($complain->missing_info_submitted_at)->format('Y-m-d') }}</div>
                         </div>
                     </div>
                 @endif

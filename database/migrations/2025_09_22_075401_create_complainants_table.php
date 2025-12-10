@@ -37,7 +37,7 @@ return new class extends Migration
             $table->boolean('detc_rise_issue')->default(0);
             $table->string('detc_issue')->nullable();
             $table->timestamp('missing_info_submitted_at')->nullable();
-             $table->unsignedBigInteger('user_id')->nullable()->comment('Linked user ID if logged in');
+            $table->unsignedBigInteger('user_id')->nullable()->comment('Linked user ID if logged in');
             $table->string('declaration')->default("0");
             $table->boolean('is_completed')->default(false);
             $table->timestamps();
