@@ -19,14 +19,12 @@ class DetcController extends Controller
             ->where('is_completed', 1)
             ->orderBy('created_at', 'desc')
             ->get();
-        
+
         $totalInformation = $allComplain->count();
 
         $forwardedtoEto = DetcAction::where('detc_district', $district)->where('send_to', 'eto')->count();
         $forwardedtoHq = DetcAction::where('detc_district', $district)->where('send_to', 'hq')->count();
 
-
-        
         return view('detc.dashboard', compact(
             'allComplain',
             'totalInformation',
@@ -458,14 +456,42 @@ class DetcController extends Controller
 
     public function store(Request $request, $secure_id)
     {
-        // $request->validate([
-        //     'proposed_action' => 'required',
-        //     'ward_no' => 'required_if:proposed_action,forward_to_eto',
-        //     'upload_file' => 'required_if:proposed_action,uploaded_report|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        //     'reason' => 'required_if:proposed_action,non_actionable',
-        //     'missing_info' => 'required_if:reason,information_incomplete',
-        //     'remarks' => 'required',
-        // ]);
+        $request->validate([
+            'proposed_action' => 'required',
+        ]);
+
+        if ($request->proposed_action == 'forward_to_eto') {
+            $request->validate([
+                'ward_no' => 'required',
+                'remarks' => 'required',
+            ]);
+        }
+
+        if ($request->proposed_action == 'uploaded_report') {
+            $request->validate([
+                'upload_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'remarks' => 'required',
+            ]);
+        }
+
+        if ($request->proposed_action == 'non_actionable') {
+            $request->validate([
+                'reason' => 'required',
+                'remarks' => 'required',
+            ]);
+
+            if ($request->reason == 'information_incomplete') {
+                $request->validate([
+                    'missing_info' => 'required',
+                ]);
+            }
+
+            if ($request->reason == 'other') {
+                $request->validate([
+                    'missing_info' => 'required',
+                ]);
+            }
+        }
 
         $userComplaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
 
@@ -509,7 +535,6 @@ class DetcController extends Controller
             $sendTo = 'none';
         }
 
-
         DetcAction::create([
             'secure_id' => $newSecureId,
             'complaint_id' => $complaint->id,
@@ -545,13 +570,11 @@ class DetcController extends Controller
                 'detc_issue' => $request->missing_info,
             ]);
         }
-                // dd($buttonAction); send_back_to_applicant
+        // dd($buttonAction); send_back_to_applicant
 
-        if($buttonAction == 'send_back_to_applicant'){
+        if ($buttonAction == 'send_back_to_applicant') {
             return back()->with('success', 'Application sent back to applicant');
         }
-
-        
 
         return back()->with('success', 'Action saved successfully');
     }
