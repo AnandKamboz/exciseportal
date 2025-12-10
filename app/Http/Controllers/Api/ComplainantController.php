@@ -86,7 +86,6 @@ class ComplainantController extends Controller
                         // 'complainant_district' => $completedRecord->complainant_district,
                         'complainant_email' => $completedRecord->complainant_email ?? '',
                         'complaint_type' => 'gst',
-                        'current_step' => ($existingIncomplete->current_step == 1) ? 2 : $existingIncomplete->current_step,
                     ]);
 
                     return response()->json([
@@ -109,7 +108,6 @@ class ComplainantController extends Controller
                     'user_id' => auth()->id(),
                     'complaint_type' => 'gst',
                     'is_completed' => 0,
-                    'current_step' => 2,
                 ]);
 
                 return response()->json([
@@ -134,8 +132,6 @@ class ComplainantController extends Controller
                     // 'complainant_district' => $request->informer_district,
                     'complainant_email' => $request->informer_email,
                     'complaint_type' => 'gst',
-                    'current_step' => ($existingComplaint->current_step == 1) ? 2 : $existingComplaint->current_step,
-
                 ]);
 
                 return response()->json([
@@ -159,7 +155,6 @@ class ComplainantController extends Controller
                 'user_id' => auth()->id(),
                 'complaint_type' => 'gst',
                 'is_completed' => 0,
-                'current_step' => 2,
             ]);
 
             return response()->json([
