@@ -68,7 +68,7 @@
 
             <div class="col-md-3">
                 <div class="card text-center p-3">
-                    <h5>Pending From Applicant </h5>
+                    <h5>Pending with Applicant </h5>
                     <h2>{{ $pendingFromApplicant }}</h2>
                     <a href="{{ route('detc.pending.from.applicant') }}" class="new-butt"> View All</a>
                 </div>
@@ -76,7 +76,7 @@
 
             <div class="col-md-3">
                 <div class="card text-center p-3">
-                    <h5>Pending from DETC</h5>
+                    <h5>Pending with DETC</h5>
                     <h2>{{ $pendingFromDetc }}</h2>
                     <a href="{{ route('detc.applications.pending_detc') }}" class="new-butt"> View All</a>
                 </div>
