@@ -3,228 +3,477 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DistrictsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
+    // public function run(): void
+    // {
+    //     \DB::table('districts')->insert([
+    //         0 => [
+    //             'id' => 1,
+    //             'name' => 'Faridabad',
+    //             'code' => 'HRFB',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         1 => [
+    //             'id' => 2,
+    //             'name' => 'Hisar',
+    //             'code' => 'HRHS',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         2 => [
+    //             'id' => 3,
+    //             'name' => 'Bhiwani',
+    //             'code' => 'HRBHA',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         3 => [
+    //             'id' => 4,
+    //             'name' => 'Gurugram',
+    //             'code' => 'HRGR',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         4 => [
+    //             'id' => 5,
+    //             'name' => 'Karnal',
+    //             'code' => 'HRKR',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         5 => [
+    //             'id' => 6,
+    //             'name' => 'Sonipat',
+    //             'code' => 'HRSO',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         6 => [
+    //             'id' => 7,
+    //             'name' => 'Jind',
+    //             'code' => 'HRJN',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         7 => [
+    //             'id' => 8,
+    //             'name' => 'Sirsa',
+    //             'code' => 'HRSI',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         8 => [
+    //             'id' => 9,
+    //             'name' => 'Yamunanagar',
+    //             'code' => 'HRYNA',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         9 => [
+    //             'id' => 10,
+    //             'name' => 'Panipat',
+    //             'code' => 'HRPP',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         10 => [
+    //             'id' => 11,
+    //             'name' => 'Ambala',
+    //             'code' => 'HRAM',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         11 => [
+    //             'id' => 12,
+    //             'name' => 'Charkhi-Dadri',
+    //             'code' => 'HRBHA',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         12 => [
+    //             'id' => 13,
+    //             'name' => 'Kaithal',
+    //             'code' => 'HRKH',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         13 => [
+    //             'id' => 14,
+    //             'name' => 'Rohtak',
+    //             'code' => 'HRRH',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         14 => [
+    //             'id' => 15,
+    //             'name' => 'Palwal',
+    //             'code' => 'HRPL',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         15 => [
+    //             'id' => 16,
+    //             'name' => 'Kurukshetra',
+    //             'code' => 'HRKU',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         16 => [
+    //             'id' => 17,
+    //             'name' => 'Jhajjar',
+    //             'code' => 'HRJR',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         17 => [
+    //             'id' => 18,
+    //             'name' => 'Fatehabad',
+    //             'code' => 'HRFT',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         18 => [
+    //             'id' => 19,
+    //             'name' => 'Mahendergarh',
+    //             'code' => 'HRNR',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         19 => [
+    //             'id' => 20,
+    //             'name' => 'Rewari',
+    //             'code' => 'HRRE',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         20 => [
+    //             'id' => 21,
+    //             'name' => 'Panchkula',
+    //             'code' => 'HRPK',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         21 => [
+    //             'id' => 22,
+    //             'name' => 'Nuh',
+    //             'code' => 'HRME',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+
+    //         // ================================
+    //         // NEWLY ADDED SUB-DISTRICTS
+    //         // ================================
+
+    //         22 => [
+    //             'id' => 23,
+    //             'name' => 'Faridabad (East)',
+    //             'code' => 'HRFBE',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         23 => [
+    //             'id' => 24,
+    //             'name' => 'Faridabad (West)',
+    //             'code' => 'HRFBW',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         24 => [
+    //             'id' => 25,
+    //             'name' => 'Faridabad (North)',
+    //             'code' => 'HRFBN',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         25 => [
+    //             'id' => 26,
+    //             'name' => 'Faridabad (South)',
+    //             'code' => 'HRFBS',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+
+    //         26 => [
+    //             'id' => 27,
+    //             'name' => 'Gurugram (East)',
+    //             'code' => 'HRGRE',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         27 => [
+    //             'id' => 28,
+    //             'name' => 'Gurugram (West)',
+    //             'code' => 'HRGRW',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         28 => [
+    //             'id' => 29,
+    //             'name' => 'Gurugram (North)',
+    //             'code' => 'HRGRN',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //         29 => [
+    //             'id' => 30,
+    //             'name' => 'Gurugram (South)',
+    //             'code' => 'HRGRS',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ],
+    //     ]);
+    // }
+
     public function run(): void
     {
         \DB::table('districts')->insert([
-            0 => [
+
+            [
                 'id' => 1,
                 'name' => 'Faridabad',
+                'name_hi' => 'फरीदाबाद',
                 'code' => 'HRFB',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            1 => [
+            [
                 'id' => 2,
                 'name' => 'Hisar',
+                'name_hi' => 'हिसार',
                 'code' => 'HRHS',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            2 => [
+            [
                 'id' => 3,
                 'name' => 'Bhiwani',
+                'name_hi' => 'भिवानी',
                 'code' => 'HRBHA',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            3 => [
+            [
                 'id' => 4,
                 'name' => 'Gurugram',
+                'name_hi' => 'गुरुग्राम',
                 'code' => 'HRGR',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            4 => [
+            [
                 'id' => 5,
                 'name' => 'Karnal',
+                'name_hi' => 'करनाल',
                 'code' => 'HRKR',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            5 => [
+            [
                 'id' => 6,
                 'name' => 'Sonipat',
+                'name_hi' => 'सोनीपत',
                 'code' => 'HRSO',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            6 => [
+            [
                 'id' => 7,
                 'name' => 'Jind',
+                'name_hi' => 'जींद',
                 'code' => 'HRJN',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            7 => [
+            [
                 'id' => 8,
                 'name' => 'Sirsa',
+                'name_hi' => 'सिरसा',
                 'code' => 'HRSI',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            8 => [
+            [
                 'id' => 9,
                 'name' => 'Yamunanagar',
+                'name_hi' => 'यमुनानगर',
                 'code' => 'HRYNA',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            9 => [
+            [
                 'id' => 10,
                 'name' => 'Panipat',
+                'name_hi' => 'पानीपत',
                 'code' => 'HRPP',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            10 => [
+            [
                 'id' => 11,
                 'name' => 'Ambala',
+                'name_hi' => 'अम्बाला',
                 'code' => 'HRAM',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            11 => [
+            [
                 'id' => 12,
                 'name' => 'Charkhi-Dadri',
+                'name_hi' => 'चरखी दादरी',
                 'code' => 'HRBHA',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            12 => [
+            [
                 'id' => 13,
                 'name' => 'Kaithal',
+                'name_hi' => 'कैथल',
                 'code' => 'HRKH',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            13 => [
+            [
                 'id' => 14,
                 'name' => 'Rohtak',
+                'name_hi' => 'रोहतक',
                 'code' => 'HRRH',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            14 => [
+            [
                 'id' => 15,
                 'name' => 'Palwal',
+                'name_hi' => 'पलवल',
                 'code' => 'HRPL',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            15 => [
+            [
                 'id' => 16,
                 'name' => 'Kurukshetra',
+                'name_hi' => 'कुरुक्षेत्र',
                 'code' => 'HRKU',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            16 => [
+            [
                 'id' => 17,
                 'name' => 'Jhajjar',
+                'name_hi' => 'झज्जर',
                 'code' => 'HRJR',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            17 => [
+            [
                 'id' => 18,
                 'name' => 'Fatehabad',
+                'name_hi' => 'फतेहाबाद',
                 'code' => 'HRFT',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            18 => [
+            [
                 'id' => 19,
                 'name' => 'Mahendergarh',
+                'name_hi' => 'महेंद्रगढ़',
                 'code' => 'HRNR',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            19 => [
+            [
                 'id' => 20,
                 'name' => 'Rewari',
+                'name_hi' => 'रेवाड़ी',
                 'code' => 'HRRE',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            20 => [
+            [
                 'id' => 21,
                 'name' => 'Panchkula',
+                'name_hi' => 'पंचकूला',
                 'code' => 'HRPK',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            21 => [
+            [
                 'id' => 22,
                 'name' => 'Nuh',
+                'name_hi' => 'नूंह',
                 'code' => 'HRME',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
 
-            // ================================
-            // NEWLY ADDED SUB-DISTRICTS
-            // ================================
-
-            22 => [
+            // SUB DISTRICTS (HINDI ADDED)
+            [
                 'id' => 23,
                 'name' => 'Faridabad (East)',
+                'name_hi' => 'फरीदाबाद (पूर्व)',
                 'code' => 'HRFBE',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            23 => [
+            [
                 'id' => 24,
                 'name' => 'Faridabad (West)',
+                'name_hi' => 'फरीदाबाद (पश्चिम)',
                 'code' => 'HRFBW',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            24 => [
+            [
                 'id' => 25,
                 'name' => 'Faridabad (North)',
+                'name_hi' => 'फरीदाबाद (उत्तर)',
                 'code' => 'HRFBN',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            25 => [
+            [
                 'id' => 26,
                 'name' => 'Faridabad (South)',
+                'name_hi' => 'फरीदाबाद (दक्षिण)',
                 'code' => 'HRFBS',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
 
-            26 => [
+            [
                 'id' => 27,
                 'name' => 'Gurugram (East)',
+                'name_hi' => 'गुरुग्राम (पूर्व)',
                 'code' => 'HRGRE',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            27 => [
+            [
                 'id' => 28,
                 'name' => 'Gurugram (West)',
+                'name_hi' => 'गुरुग्राम (पश्चिम)',
                 'code' => 'HRGRW',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            28 => [
+            [
                 'id' => 29,
                 'name' => 'Gurugram (North)',
+                'name_hi' => 'गुरुग्राम (उत्तर)',
                 'code' => 'HRGRN',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            29 => [
+            [
                 'id' => 30,
                 'name' => 'Gurugram (South)',
+                'name_hi' => 'गुरुग्राम (दक्षिण)',
                 'code' => 'HRGRS',
                 'created_at' => now(),
                 'updated_at' => now(),

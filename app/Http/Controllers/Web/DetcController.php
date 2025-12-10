@@ -21,15 +21,18 @@ class DetcController extends Controller
             ->get();
 
         $totalInformation = $allComplain->count();
-
         $forwardedtoEto = DetcAction::where('detc_district', $district)->where('send_to', 'eto')->count();
         $forwardedtoHq = DetcAction::where('detc_district', $district)->where('send_to', 'hq')->count();
+        $pendingFromApplicant = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
+        $pendingFromDetc = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
 
         return view('detc.dashboard', compact(
             'allComplain',
             'totalInformation',
             'forwardedtoEto',
             'forwardedtoHq',
+            'pendingFromApplicant',
+            'pendingFromDetc',
         ));
     }
 
@@ -577,5 +580,87 @@ class DetcController extends Controller
         }
 
         return back()->with('success', 'Action saved successfully');
+    }
+
+    public function allApplications()
+    {
+        $district = Auth::user()->district;
+
+        $applications = Complainant::where('district_id', $district)
+            ->where('is_completed', 1)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('detc.all_applications', compact('applications'));
+    }
+
+    public function forwardedToHqApplications()
+    {
+        $district = Auth::user()->district;
+
+        $applications = Complainant::where('district_id', $district)
+            ->where('is_completed', 1)
+            ->whereIn('application_id', function ($query) use ($district) {
+                $query->select('user_application_id')
+                    ->from('detc_actions')
+                    ->where('detc_district', $district)
+                    ->where('send_to', 'hq');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('detc.forwarded_hq_applications', compact('applications'));
+    }
+
+    public function forwardedToEto()
+    {
+        $district = Auth::user()->district;
+
+        // DetcAction table se woh records jaha send_to = "eto"
+        $forwardedIds = DetcAction::where('detc_district', $district)
+            ->where('send_to', 'eto')
+            ->pluck('user_application_id');
+
+        // Ab complaint table me actual applications fetch karenge
+        $applications = Complainant::whereIn('application_id', $forwardedIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('detc.forwarded_to_eto', compact('applications'));
+    }
+
+    public function pendingFromApplicant()
+    {
+        $district = Auth::user()->district;
+
+        // जिन applications में missing info submit नहीं हुई है
+        $applications = Complainant::where('district_id', $district)
+            ->where('is_completed', 1)
+            ->where('detc_rise_issue', 1)
+            ->whereNull('missing_info_submitted_at')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('detc.pending_from_applicant', compact('applications'));
+    }
+
+    public function pendingFromDetc()
+    {
+        $district = Auth::user()->district;
+
+        $applications = Complainant::where('district_id', $district)
+            ->whereNotNull('missing_info_submitted_at')  // user ने submit कर दी
+            ->where('detc_rise_issue', 1)                // DETC ने issue raise किया हुआ था
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('detc.pending_detc', compact('applications'));
+    }
+
+    public function viewApplication($secure_id)
+    {
+        $complain = Complainant::where('secure_id', $secure_id)->firstOrFail();
+
+        return view('detc.show', compact('complain'));
     }
 }

@@ -55,18 +55,22 @@ Route::prefix('detc')->name('detc.')->middleware(['auth', 'detcrole'])->group(fu
     Route::get('/dashboard', [DetcController::class, 'dashboard'])->name('dashboard');
     Route::get('/complaint/{secure_id}', [DetcController::class, 'show'])->name('details');
     Route::post('/action/store/{secure_id}', [DetcController::class, 'store'])->name('action.store');
+
+
+    Route::get('/all-applications', [DetcController::class, 'allApplications'])->name('allApplications');
+    Route::get('/application/{secure_id}', [DetcController::class, 'show'])->name('application.view');
+    
+    Route::get('/applications/forwarded-hq', [DetcController::class, 'forwardedToHqApplications'])->name('forwarded.hq');
+    Route::get('/applications/forwarded-to-eto',[DetcController::class, 'forwardedToEto'])->name('forwarded.eto');
+    Route::get('/forwarded-to-eto', [DetcController::class, 'forwardedToEto'])->name('forwarded.to.eto');
+    Route::get('/pending-from-applicant', [DetcController::class, 'pendingFromApplicant'])->name('pending.from.applicant');
+    Route::get('/applications/pending-detc', [DetcController::class, 'pendingFromDetc'])->name('applications.pending_detc');
 });
 
 Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::get('dashboard', [HqController::class, 'dashboard'])->name('dashboard');
     Route::get('/information/{secure_id}', [HqController::class, 'show'])->name('details');
 });
-
-// Route::get('jc/dashboard', [JcController::class, 'dashboard'])->name('jc.dashboard');
-// Route::get('jc/details/{secure_id}', [JcController::class, 'details'])
-//     ->name('jc.details');
-// Route::post('/jc/assign/{secure_id}', [JcController::class, 'assign'])
-//     ->name('jc.assign');
 
 Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () {
     Route::get('dashboard', [JcController::class, 'dashboard'])->name('dashboard');
