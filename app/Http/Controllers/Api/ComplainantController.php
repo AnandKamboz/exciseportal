@@ -1245,10 +1245,6 @@ class ComplainantController extends Controller
             'declaration' => 'required|in:1',
         ]);
 
-
-
-        
-
         // Here New Code
 
         if (
@@ -1310,13 +1306,48 @@ class ComplainantController extends Controller
         $complaint->gst_firm_address = $request->gstFirmAddress;
         $complaint->declaration = 1;
 
+        // if ($request->hasFile('gstProof')) {
+        //     $uploadedFiles = [];
+        //     foreach ((array) $request->file('gstProof') as $file) {
+        //         $fileName = uniqid('gst').'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+        //         $file->storeAs("complaints/{$applicationId}", $fileName, 'public');
+        //         $uploadedFiles[] = $fileName;
+        //     }
+        //     $complaint->gst_proof = json_encode($uploadedFiles);
+        // }
+
         if ($request->hasFile('gstProof')) {
+
+            $applicationId = $complaint->application_id;
+
+            if (! empty($complaint->gst_proof)) {
+                $oldFiles = json_decode($complaint->gst_proof, true);
+
+                if (is_array($oldFiles)) {
+                    foreach ($oldFiles as $old) {
+                        Storage::disk('public')->delete("complaints/{$applicationId}/{$old}");
+                    }
+                }
+            }
+
+            $files = $request->file('gstProof');
+
+            if (! is_array($files)) {
+                $files = [$files];
+            }
+
             $uploadedFiles = [];
-            foreach ((array) $request->file('gstProof') as $file) {
-                $fileName = uniqid('gst').'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
+
+            foreach ($files as $file) {
+                if (! $file) {
+                    continue;
+                }
+
+                $fileName = uniqid('gst_').Str::random(8).'.'.$file->getClientOriginalExtension();
                 $file->storeAs("complaints/{$applicationId}", $fileName, 'public');
                 $uploadedFiles[] = $fileName;
             }
+
             $complaint->gst_proof = json_encode($uploadedFiles);
         }
 
