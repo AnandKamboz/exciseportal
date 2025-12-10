@@ -135,12 +135,14 @@
                 @endif
 
                 {{-- District --}}
-                <div class="col-md-4">
-                    <div class="info-card">
-                        <div class="label-text">District</div>
-                        <div class="value-text">{{ $entityDistrict }}</div>
+                @if ($complain->district_name)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">District</div>
+                            <div class="value-text">{{ $complain->district_name }}</div>
+                        </div>
                     </div>
-                </div>
+                @endif
 
                 {{-- Pincode --}}
                 @if ($complain->pincode)
@@ -324,7 +326,8 @@
                     <div class="col-md-4">
                         <div class="info-card">
                             <div class="label-text">Missing Information Submission Time</div>
-                            <div class="value-text">{{ \Carbon\Carbon::parse($complain->missing_info_submitted_at)->format('Y-m-d') }}</div>
+                            <div class="value-text">
+                                {{ \Carbon\Carbon::parse($complain->missing_info_submitted_at)->format('Y-m-d') }}</div>
                         </div>
                     </div>
                 @endif
