@@ -1256,7 +1256,6 @@ class ComplainantController extends Controller
             ], 422);
         }
 
-        // Generate unique application ID
         $yearSuffix = now()->format('y');
         $prefix = 'GST';
 
@@ -1264,7 +1263,6 @@ class ComplainantController extends Controller
             $applicationId = $prefix.$yearSuffix.'-'.mt_rand(100000, 999999);
         } while (Complainant::where('application_id', $applicationId)->exists());
 
-        // District Validation
         $districtName = District::where('id', $request->district)->value('name');
 
         if (! $districtName) {
@@ -1274,7 +1272,6 @@ class ComplainantController extends Controller
             ], 400);
         }
 
-        // User Validation
         $user = Auth::user();
         if (! $user) {
             return response()->json([
@@ -1283,7 +1280,6 @@ class ComplainantController extends Controller
             ], 401);
         }
 
-        // Create complaint record
         $complaint = new Complainant;
         $complaint->secure_id = Str::uuid();
         $complaint->application_id = $applicationId;
@@ -1304,79 +1300,16 @@ class ComplainantController extends Controller
         $complaint->gst_firm_address = $request->gstFirmAddress;
         $complaint->declaration = 1;
 
-        // ----------------------------------------
-        // FILE UPLOAD + DETAILED LOGGING
-        // ----------------------------------------
-
         if ($request->hasFile('gstProof')) {
-
             $uploadedFiles = [];
-            $fileLogs = [];
-
-            foreach ((array) $request->file('gstProof') as $index => $file) {
-
-                // Generate Unique file name
-                $extension = strtolower($file->getClientOriginalExtension());
-                $fileName = uniqid('gst').'_'.Str::random(10).'.'.$extension;
-
-                // Save file
+            foreach ((array) $request->file('gstProof') as $file) {
+                $fileName = uniqid('gst').'_'.Str::random(10).'.'.$file->getClientOriginalExtension();
                 $file->storeAs("complaints/{$applicationId}", $fileName, 'public');
-
-                // File details
-                $originalName = $file->getClientOriginalName();
-                $mimeType = $file->getMimeType();
-                $fileSizeKB = round($file->getSize() / 1024, 2);
-
-                // Resolution (Only for images)
-                $width = null;
-                $height = null;
-                $sourceType = 'unknown';
-
-                try {
-                    $imageInfo = getimagesize($file->getPathname());
-                    if ($imageInfo) {
-                        $width = $imageInfo[0];
-                        $height = $imageInfo[1];
-                    }
-                } catch (\Exception $e) {
-                }
-
-                // Detect Camera vs Gallery
-                $exif = @exif_read_data($file->getPathname());
-                if ($exif && ! empty($exif['Model'])) {
-                    $sourceType = 'camera';
-                } else {
-                    $sourceType = 'gallery';
-                }
-
-                // Store in log array
-                $fileLogs[] = [
-                    'original_name' => $originalName,
-                    'saved_name' => $fileName,
-                    'mime_type' => $mimeType,
-                    'extension' => $extension,
-                    'size_kb' => $fileSizeKB,
-                    'resolution' => $width && $height ? "{$width}x{$height}" : 'unknown',
-                    'source' => $sourceType,
-                ];
-
-                // Save only file names in DB
                 $uploadedFiles[] = $fileName;
             }
-
             $complaint->gst_proof = json_encode($uploadedFiles);
-
-            // -------- SAVE FULL LOG IN DB OR LOG FILE --------
-            \Log::info("GST Complaint File Upload Log for {$applicationId}", $fileLogs);
-
-            // If you want database logging:
-            // FileUploadLog::create([
-            //     "application_id" => $applicationId,
-            //     "logs" => json_encode($fileLogs),
-            // ]);
         }
 
-        // Final Save
         $complaint->is_completed = 1;
         $complaint->save();
 
