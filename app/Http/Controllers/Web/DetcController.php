@@ -474,12 +474,12 @@ class DetcController extends Controller
 
          
 
-        if ($request->proposed_action == 'uploaded_report') {
-            $request->validate([
-                'upload_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                'remarks' => 'required',
-            ]);
-        }
+        // if ($request->proposed_action == 'uploaded_report') {
+        //     $request->validate([
+        //         'upload_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        //         'remarks' => 'required',
+        //     ]);
+        // }
 
           
              
