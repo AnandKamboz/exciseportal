@@ -15,37 +15,13 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    // public function sendOtp(Request $request)
-    // {
-    //     $request->validate([
-    //         'mobile' => 'required|numeric|digits:10',
-    //     ]);
-
-    //     if (env('APP_ENV') === 'local') {
-    //         $otp = '111111';
-    //     } else {
-    //         $otp = rand(100000, 999999);
-    //     }
-
-    //     Otp::create([
-    //         'mobile' => $request->mobile,
-    //         'otp' => $otp,
-    //         'expires_at' => Carbon::now()->addMinutes(5),
-    //     ]);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'OTP sent successfully',
-    //     ], 200);
-    // }
-
     public function sendOtp(Request $request)
     {
         $request->validate([
             'mobile' => 'required|numeric|digits:10',
         ]);
 
-        if (config('app.env') === 'local') {
+        if (env('APP_ENV') === 'local') {
             $otp = '111111';
         } else {
             $otp = rand(100000, 999999);
@@ -57,83 +33,107 @@ class AuthController extends Controller
             'expires_at' => Carbon::now()->addMinutes(5),
         ]);
 
-        $request->session()->put('mobile', $request->mobile);
-
-        $message = "Dear User, $otp is OTP for Kar Hiteshi, Excise Department, Government of Haryana";
-
-        $template_id = '1407176526044359486';
-
-        $this->sendSMS($request->mobile, $message, $template_id);
-
-        $mobileMasked = '******'.substr($request->mobile, -4);
-
         return response()->json([
             'success' => true,
-            'message' => 'OTP sent successfully to '.$mobileMasked,
-        ]);
+            'message' => 'OTP sent successfully',
+        ], 200);
     }
 
-    public function sendSMS($mobile, $message, $temp_id)
-    {
-        $username = 'haryanait-saksham';
-        $password = 'Saksham@123';
-        $senderid = 'GOVHRY';
-        $dept_key = '29d9b6c5-3477-4cb5-90eb-b0e5b478717d';
+    // public function sendOtp(Request $request)
+    // {
+    //     $request->validate([
+    //         'mobile' => 'required|numeric|digits:10',
+    //     ]);
 
-        $encryp_password = sha1(trim($password));
+    //     if (config('app.env') === 'local') {
+    //         $otp = '111111';
+    //     } else {
+    //         $otp = rand(100000, 999999);
+    //     }
 
-        return $this->sendSingleSMS(
-            $username,
-            $encryp_password,
-            $senderid,
-            $message,
-            $mobile,
-            $dept_key,
-            $temp_id
-        );
-    }
+    //     Otp::create([
+    //         'mobile' => $request->mobile,
+    //         'otp' => $otp,
+    //         'expires_at' => Carbon::now()->addMinutes(5),
+    //     ]);
 
-    public function sendSingleSMS($username, $encryp_password, $senderid, $message, $mobileno, $deptSecureKey, $temp_id)
-    {
-        $key = hash('sha512', trim($username).trim($senderid).trim($message).trim($deptSecureKey));
+    //     $request->session()->put('mobile', $request->mobile);
 
-        $data = [
-            'username' => trim($username),
-            'password' => trim($encryp_password),
-            'senderid' => trim($senderid),
-            'content' => trim($message),
-            'smsservicetype' => 'otpmsg',
-            'mobileno' => trim($mobileno),
-            'key' => trim($key),
-            'templateid' => trim($temp_id),
-        ];
+    //     $message = "Dear User, $otp is OTP for Kar Hiteshi, Excise Department, Government of Haryana";
 
-        return $this->postToUrl('https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT', $data);
-    }
+    //     $template_id = '1407176526044359486';
 
-    public function postToUrl($url, $data)
-    {
-        $fields = '';
+    //     $this->sendSMS($request->mobile, $message, $template_id);
 
-        foreach ($data as $key => $value) {
-            $fields .= $key.'='.$value.'&';
-        }
+    //     $mobileMasked = '******'.substr($request->mobile, -4);
 
-        rtrim($fields, '&');
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'OTP sent successfully to '.$mobileMasked,
+    //     ]);
+    // }
 
-        $post = curl_init();
-        curl_setopt($post, CURLOPT_SSLVERSION, 6);
-        curl_setopt($post, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($post, CURLOPT_URL, $url);
-        curl_setopt($post, CURLOPT_POST, count($data));
-        curl_setopt($post, CURLOPT_POSTFIELDS, $fields);
-        curl_setopt($post, CURLOPT_RETURNTRANSFER, 1);
+    // public function sendSMS($mobile, $message, $temp_id)
+    // {
+    //     $username = 'haryanait-saksham';
+    //     $password = 'Saksham@123';
+    //     $senderid = 'GOVHRY';
+    //     $dept_key = '29d9b6c5-3477-4cb5-90eb-b0e5b478717d';
 
-        $result = curl_exec($post);
-        curl_close($post);
+    //     $encryp_password = sha1(trim($password));
 
-        return $result;
-    }
+    //     return $this->sendSingleSMS(
+    //         $username,
+    //         $encryp_password,
+    //         $senderid,
+    //         $message,
+    //         $mobile,
+    //         $dept_key,
+    //         $temp_id
+    //     );
+    // }
+
+    // public function sendSingleSMS($username, $encryp_password, $senderid, $message, $mobileno, $deptSecureKey, $temp_id)
+    // {
+    //     $key = hash('sha512', trim($username).trim($senderid).trim($message).trim($deptSecureKey));
+
+    //     $data = [
+    //         'username' => trim($username),
+    //         'password' => trim($encryp_password),
+    //         'senderid' => trim($senderid),
+    //         'content' => trim($message),
+    //         'smsservicetype' => 'otpmsg',
+    //         'mobileno' => trim($mobileno),
+    //         'key' => trim($key),
+    //         'templateid' => trim($temp_id),
+    //     ];
+
+    //     return $this->postToUrl('https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT', $data);
+    // }
+
+    // public function postToUrl($url, $data)
+    // {
+    //     $fields = '';
+
+    //     foreach ($data as $key => $value) {
+    //         $fields .= $key.'='.$value.'&';
+    //     }
+
+    //     rtrim($fields, '&');
+
+    //     $post = curl_init();
+    //     curl_setopt($post, CURLOPT_SSLVERSION, 6);
+    //     curl_setopt($post, CURLOPT_SSL_VERIFYPEER, false);
+    //     curl_setopt($post, CURLOPT_URL, $url);
+    //     curl_setopt($post, CURLOPT_POST, count($data));
+    //     curl_setopt($post, CURLOPT_POSTFIELDS, $fields);
+    //     curl_setopt($post, CURLOPT_RETURNTRANSFER, 1);
+
+    //     $result = curl_exec($post);
+    //     curl_close($post);
+
+    //     return $result;
+    // }
 
     // public function verifyOtp(Request $request)
     // {
