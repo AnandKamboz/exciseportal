@@ -44,27 +44,20 @@ class AuthController extends Controller
         $request->validate([
             'mobile' => 'required|numeric|digits:10',
         ]);
-
-        // Delete old OTP for same mobile
         Otp::where('mobile', $request->mobile)->delete();
 
-        // Generate Random OTP
         $otp = rand(100000, 999999);
 
-        // Save OTP
         Otp::create([
             'mobile' => $request->mobile,
             'otp' => $otp,
             'expires_at' => Carbon::now()->addMinutes(5),
         ]);
 
-        // SMS Message
         $message = "Dear User, $otp is OTP for Kar Hiteshi, Excise Department, Government of Haryana";
 
-        // Template ID for OTP
         $template_id = '1407176526044359486';
 
-        // Send SMS
         $this->sendSMS($request->mobile, $message, $template_id);
 
         $mobileMasked = '******'.substr($request->mobile, -4);
@@ -72,7 +65,6 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'OTP sent successfully to '.$mobileMasked,
-            // 'otp' => $otp, // Testing-only, production में हटाना
         ]);
     }
 
