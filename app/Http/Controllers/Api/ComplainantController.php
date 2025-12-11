@@ -1243,8 +1243,6 @@ class ComplainantController extends Controller
             'gstGstin' => 'nullable|string|max:15',
             'gstFirmAddress' => 'nullable|string',
             'declaration' => 'required|in:1',
-            'gstProof'   => 'nullable',
-            'gstProof.*' => 'nullable|mimes:jpg,jpeg,png,webp,bmp,gif,heic,heif|max:10240',
         ]);
 
         // Here New Code
