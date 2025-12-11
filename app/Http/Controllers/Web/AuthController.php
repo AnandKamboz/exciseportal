@@ -22,14 +22,6 @@ class AuthController extends Controller
             'mobile' => 'required|numeric|digits:10',
         ]);
 
-        //    dd(config('app.env'));
-
-        // if (env('APP_ENV') === 'local') {
-        //     $otp = '111111';
-        // } else {
-        //     $otp = rand(100000, 999999);
-        // }
-
         if (config('app.env') === 'local') {
             $otp = '111111';
         } else {
@@ -44,13 +36,80 @@ class AuthController extends Controller
 
         $request->session()->put('mobile', $request->mobile);
 
-        $userMobile = $request->mobile;
-        $maskedMobile = '******'.substr($userMobile, -4);
+        $message = "Dear User, $otp is OTP for Kar Hiteshi, Excise Department, Government of Haryana";
+
+        $template_id = '1407176526044359486';
+
+        $this->sendSMS($request->mobile, $message, $template_id);
+
+        $mobileMasked = '******'.substr($request->mobile, -4);
 
         return response()->json([
             'success' => true,
-            'message' => 'OTP sent successfully to '.$maskedMobile,
+            'message' => 'OTP sent successfully to '.$mobileMasked,
         ]);
+    }
+
+    public function sendSMS($mobile, $message, $temp_id)
+    {
+        $username = 'haryanait-saksham';
+        $password = 'Saksham@123';
+        $senderid = 'GOVHRY';
+        $dept_key = '29d9b6c5-3477-4cb5-90eb-b0e5b478717d';
+
+        $encryp_password = sha1(trim($password));
+
+        return $this->sendSingleSMS(
+            $username,
+            $encryp_password,
+            $senderid,
+            $message,
+            $mobile,
+            $dept_key,
+            $temp_id
+        );
+    }
+
+    public function sendSingleSMS($username, $encryp_password, $senderid, $message, $mobileno, $deptSecureKey, $temp_id)
+    {
+        $key = hash('sha512', trim($username).trim($senderid).trim($message).trim($deptSecureKey));
+
+        $data = [
+            'username' => trim($username),
+            'password' => trim($encryp_password),
+            'senderid' => trim($senderid),
+            'content' => trim($message),
+            'smsservicetype' => 'otpmsg',
+            'mobileno' => trim($mobileno),
+            'key' => trim($key),
+            'templateid' => trim($temp_id),
+        ];
+
+        return $this->postToUrl('https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT', $data);
+    }
+
+    public function postToUrl($url, $data)
+    {
+        $fields = '';
+
+        foreach ($data as $key => $value) {
+            $fields .= $key.'='.$value.'&';
+        }
+
+        rtrim($fields, '&');
+
+        $post = curl_init();
+        curl_setopt($post, CURLOPT_SSLVERSION, 6);
+        curl_setopt($post, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($post, CURLOPT_URL, $url);
+        curl_setopt($post, CURLOPT_POST, count($data));
+        curl_setopt($post, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($post, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($post);
+        curl_close($post);
+
+        return $result;
     }
 
     // public function verifyOtp(Request $request)
@@ -302,9 +361,9 @@ class AuthController extends Controller
                 $redirectUrl = route('user.dashboard');
             } elseif ($role === 'hq') {
                 $redirectUrl = route('hq.dashboard');
-            }else if($role === 'eto'){
+            } elseif ($role === 'eto') {
                 $redirectUrl = route('eto.dashboard');
-            }else {
+            } else {
                 // $redirectUrl = route('complainant');
                 abort(403, 'User Not Found.');
             }
