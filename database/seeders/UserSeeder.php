@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
             '8607371000', '7837870199', '9988063434',
             '8901274148', '7988243732',
             '7988243730',  '9466788666',
-            '9250902999' , '9311737801','1212121212','9999999999',
+            '9250902999' , '9311737801','1212121212','9646096546',
         ];
 
         $districtIds = [
@@ -55,14 +55,14 @@ class UserSeeder extends Seeder
             2, 9, 17, 7,
             13, 5, 16, 22,19, 15, 21,
             10, 20, 14,
-            8, 6, 4,1,12,4,
+            8, 6, 4,1,12,21,
         ];
 
         $ward = [
             null, null, null, null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null, null, null,
-            null, 8,
+            null, 1,
         ];
 
 
