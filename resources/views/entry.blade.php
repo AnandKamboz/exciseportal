@@ -267,7 +267,8 @@
                                     GST.</li>
                                 <li>The details of the informer will be kept masked.
                                 </li>
-                                {{-- <li>The informer must verify that the information being provided is correct to his best
+                                {{-- <li>The informer must verify that the information being provided is correct to his
+                                    best
                                     of knowledge and it is being provided only with the purpose to curb tax evasion.
                                 </li> --}}
                             </ul>
@@ -279,7 +280,8 @@
                                 <li>यह ऐप केवल जीएसटी शुल्क की चोरी से संबंधित जानकारी प्रदान करने के
                                     लिए है।</li>
                                 <li>सूचना देने वाले की जानकारी गोपनीय रखी जाएगी।</li>
-                                {{-- <li>सूचना देने वाले को यह सत्यापित करना होगा कि दी जा रही जानकारी उनकी सर्वोत्तम जानकारी
+                                {{-- <li>सूचना देने वाले को यह सत्यापित करना होगा कि दी जा रही जानकारी उनकी सर्वोत्तम
+                                    जानकारी
                                     के अनुसार सही है और यह केवल कर चोरी को रोकने के उद्देश्य से प्रदान की जा रही है।
                                 </li> --}}
                             </ul>
@@ -292,6 +294,10 @@
                                 Login</a>
 
                         </div>
+                        {{-- KarHitesh.apk --}}
+                        <a href="{{ asset('KarHitesh.apk') }}" class="btn btn-primary" download>
+                            Download Karheteshi App
+                        </a>
                     </div>
                 </div>
             </div>
@@ -301,14 +307,14 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @if (session('status'))
-        <script>
-            Swal.fire({
+    <script>
+        Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: "{{ session('status') }}",
                 confirmButtonText: 'OK'
             });
-        </script>
+    </script>
     @endif
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
