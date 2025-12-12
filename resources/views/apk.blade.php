@@ -59,7 +59,7 @@
     <div class="box">
         <h1>📱 Download Karheteshi App</h1>
 
-        <a href="{{ asset('apk') }}" download class="btn-download">
+        <a href="" download class="btn-download">
             Download APK
         </a>
     </div>

@@ -459,52 +459,120 @@ class DetcController extends Controller
 
     public function store(Request $request, $secure_id)
     {
-       
-        // dd($request->toArray());
-        $request->validate([
-            'proposed_action' => 'required',
-        ]);
+        // $request->validate([
+        //     'proposed_action' => 'required',
+        // ]);
 
-        if ($request->proposed_action == 'forward_to_eto') {
-            $request->validate([
-                'ward_no' => 'required',
-                // 'remarks' => 'required',
-            ]);
-        }
-
-         
+        // if ($request->proposed_action == 'forward_to_eto') {
+        //     $request->validate([
+        //         'ward_no' => 'required',
+        //         'remarks_forward' => 'required',
+        //     ]);
+        // }
 
         // if ($request->proposed_action == 'uploaded_report') {
         //     $request->validate([
         //         'upload_file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        //         'remarks' => 'required',
+        //         'remarks_upload' => 'required',
         //     ]);
         // }
 
-          
-             
+        // if ($request->proposed_action == 'non_actionable') {
+        //     $request->validate([
+        //         'reason' => 'required',
+        //         'remarks_non' => 'required',
+        //     ]);
 
+        //     if ($request->reason == 'information_incomplete') {
+        //         $request->validate([
+        //             'missing_info' => 'required',
+        //         ]);
+        //     }
 
-        if ($request->proposed_action == 'non_actionable') {
+        //     if ($request->reason == 'other') {
+        //         $request->validate([
+        //             'missing_info' => 'required',
+        //         ]);
+        //     }
+        // }
+
+        $request->validate([
+            'proposed_action' => 'required',
+        ]);
+
+        // ===============================
+        // 1️⃣ FORWARD TO ETO
+        // ===============================
+        if ($request->proposed_action == 'forward_to_eto') {
+
             $request->validate([
-                'reason' => 'required',
-                'remarks' => 'required',
+                'ward_no' => 'required',
+                'remarks_forward' => 'required',
+
+                // Prevent unwanted fields
+                'upload_file' => 'prohibited',
+                'remarks_upload' => 'prohibited',
+                'reason' => 'prohibited',
+                'remarks_non' => 'prohibited',
+                'missing_info' => 'prohibited',
             ]);
 
-            if ($request->reason == 'information_incomplete') {
-                $request->validate([
-                    'missing_info' => 'required',
-                ]);
-            }
-
-            if ($request->reason == 'other') {
-                $request->validate([
-                    'missing_info' => 'required',
-                ]);
-            }
+            $finalRemarks = $request->remarks_forward;
         }
 
-        
+        // ===============================
+        // 2️⃣ UPLOADED REPORT
+        // ===============================
+        if ($request->proposed_action == 'uploaded_report') {
+
+            $request->validate([
+                'upload_file' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+                'remarks_upload' => 'required',
+
+                // Prevent unwanted fields
+                'ward_no' => 'prohibited',
+                'remarks_forward' => 'prohibited',
+                'reason' => 'prohibited',
+                'remarks_non' => 'prohibited',
+                'missing_info' => 'prohibited',
+            ]);
+
+            $finalRemarks = $request->remarks_upload;
+        }
+
+        // ===============================
+        // 3️⃣ NON ACTIONABLE
+        // ===============================
+        if ($request->proposed_action == 'non_actionable') {
+
+            $request->validate([
+                'reason' => 'required',
+                'remarks_non' => 'required',
+
+                // Prevent unwanted fields
+                'ward_no' => 'prohibited',
+                'remarks_forward' => 'prohibited',
+                'upload_file' => 'prohibited',
+                'remarks_upload' => 'prohibited',
+            ]);
+
+            // Reason-based validation
+            if ($request->reason == 'information_incomplete') {
+
+                $request->validate([
+                    'missing_info' => 'required',
+                ]);
+
+            } else {
+
+                // If reason is NOT info incomplete → missing_info must NOT be sent
+                $request->validate([
+                    'missing_info' => 'prohibited',
+                ]);
+            }
+
+            $finalRemarks = $request->remarks_non;
+        }
 
         $userComplaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
 
@@ -528,6 +596,19 @@ class DetcController extends Controller
         }
 
         $buttonAction = $request->btn;
+
+        $action = $request->proposed_action;
+
+        if ($action == 'forward_to_eto') {
+            $finalRemarks = $request->remarks_forward;
+        } elseif ($action == 'uploaded_report') {
+            $finalRemarks = $request->remarks_upload;
+        } elseif ($action == 'non_actionable') {
+            $finalRemarks = $request->remarks_non;
+        } else {
+            $finalRemarks = null;
+        }
+
         // btn values:
         // submit, reject, send_to_hq, send_back_to_applicant
 
@@ -561,7 +642,7 @@ class DetcController extends Controller
             'reason' => $request->reason,
             'missing_info' => $request->missing_info,
 
-            'remarks' => $request->remarks,
+            'remarks' => $finalRemarks,
 
             // Save uploaded file
             'file_name' => $fileName,

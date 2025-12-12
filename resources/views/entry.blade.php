@@ -295,9 +295,9 @@
 
                         </div>
                         {{-- KarHitesh.apk --}}
-                        <a href="{{ asset('KarHitesh.apk') }}" class="btn btn-primary" download>
+                        {{-- <a href="{{ asset('KarHitesh.apk') }}" class="btn btn-primary" download>
                             Download Karheteshi App
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
             </div>

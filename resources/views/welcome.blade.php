@@ -376,16 +376,16 @@
     <div id="loader" class="loader-overlay d-none">
         <div class="spinner"></div>
     </div>
-
+     
     <!-- Top Bar -->
-    <div class="top-bar">
+    {{-- <div class="top-bar">
         <div class="contact-item">
             <i>📧</i> excisehry@gmail.com
         </div>
         <div class="contact-item">
             <i>📞</i> 0172-4567890
         </div>
-    </div>
+    </div> --}}
 
     <!-- Header -->
     <header class="header">
@@ -610,7 +610,7 @@
                             $('#captcha-input').val('');
                             reloadCaptcha();
                             loginBtn.disabled = false;
-                            loginBtn.innerText = 'Send Otp';
+                            loginBtn.innerText = 'Send OTP';
                         });
                     }
                 })
@@ -623,7 +623,7 @@
                         confirmButtonText: 'OK'
                     });
                     loginBtn.disabled = false;
-                    loginBtn.innerText = 'Send Otp';
+                    loginBtn.innerText = 'Send OTP';
                 });
 
         });

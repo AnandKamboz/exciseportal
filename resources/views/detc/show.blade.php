@@ -514,7 +514,7 @@
 
                                     <div class="col-sm-6">
                                         <label class="form-label fw-semibold required">Remarks</label>
-                                        <textarea class="form-control" id="forwardRemarks" name="remarks" rows="2"></textarea>
+                                        <textarea class="form-control" id="forwardRemarks" name="remarks_forward" rows="2"></textarea>
                                     </div>
                                 </div>
 
@@ -529,12 +529,12 @@
                                     <div class="col-sm-6">
                                         <label class="form-label fw-semibold required">Upload Document / ATR</label>
                                         <input type="file" name="upload_file" id="upload_file" class="form-control"
-                                            accept=".jpg,.jpeg,.png">
+                                            accept=".jpg,.jpeg,.png" onchange="validateImage(this)">
                                     </div>
 
                                     <div class="col-sm-6">
                                         <label class="form-label fw-semibold required">Remarks</label>
-                                        <textarea class="form-control" id="uploadRemarks" name="remarks" rows="2"></textarea>
+                                        <textarea class="form-control" id="uploadRemarks" name="remarks_upload" rows="2"></textarea>
                                     </div>
                                 </div>
 
@@ -574,7 +574,7 @@
                                 <div class="row g-3 mt-2" id="nonRemarksBox" style="display:none;">
                                     <div class="col-sm-6">
                                         <label class="form-label fw-semibold required">Remarks</label>
-                                        <textarea class="form-control" name="remarks" rows="2"></textarea>
+                                        <textarea class="form-control" name="remarks_non" rows="2"></textarea>
                                     </div>
                                 </div>
 
@@ -881,6 +881,38 @@
             });
         </script>
     @endif
+
+    <script>
+        function validateImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            const maxSize = 2 * 1024 * 1024;
+
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File',
+                    text: 'Only JPG, JPEG and PNG files are allowed!',
+                });
+                input.value = "";
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Too Large',
+                    text: 'Maximum file size allowed is 2 MB!',
+                });
+                input.value = "";
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 
     {{-- VALIDATION --}}
 

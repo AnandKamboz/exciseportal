@@ -46,8 +46,16 @@ class AuthController extends Controller
         ]);
         Otp::where('mobile', $request->mobile)->delete();
 
-        $otp = rand(100000, 999999);
+        // $otp = rand(100000, 999999);
         // $otp = '111111';
+
+        if (env('APP_ENV') === 'local') {
+            // Local environment → fixed OTP
+            $otp = '111111';
+        } else {
+            // Production or any other environment → random OTP
+            $otp = rand(100000, 999999);
+        }
 
         Otp::create([
             'mobile' => $request->mobile,
@@ -59,7 +67,10 @@ class AuthController extends Controller
 
         $template_id = '1407176526044359486';
 
-        $this->sendSMS($request->mobile, $message, $template_id);
+        // $this->sendSMS($request->mobile, $message, $template_id);
+        if (env('APP_ENV') !== 'local') {
+            $this->sendSMS($request->mobile, $message, $template_id);
+        }
 
         $mobileMasked = '******'.substr($request->mobile, -4);
 
