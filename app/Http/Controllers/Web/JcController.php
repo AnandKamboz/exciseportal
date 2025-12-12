@@ -62,12 +62,15 @@ class JcController extends Controller
         $allowedDetc = [];
 
         if ($jcDistrict == 4) {
-            $allowedDetc = [27, 28, 29, 30];
+            // $allowedDetc = [27, 28, 29, 30];
+              $allowedDetc = [27, 30, 28, 29];
         } elseif ($jcDistrict == 1) {
             $allowedDetc = [23, 24, 25, 26];
         } else {
             $allowedDetc = [];
         }
+
+        dd($allowedDetc);
 
         $request->validate([
             'detc_id' => [
