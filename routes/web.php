@@ -17,6 +17,10 @@ use Mews\Captcha\Facades\Captcha;
 
 Route::get('/inspector/dashboard', [InspectorDashboard::class, 'dashboard'])->name('inspector.dashboard');
 
+Route::get('/apk',function(){
+   return view('apk');
+});
+
 Route::get('/', function () {
     return view('entry');
 })->name('entry');
