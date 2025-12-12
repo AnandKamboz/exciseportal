@@ -1296,7 +1296,12 @@ class ComplainantController extends Controller
         $complaint->district_name = $districtName;
         $complaint->pincode = $request->pincode;
         $complaint->gst_firm_name = $request->gstFirmName;
-        $complaint->gst_gstin = strtoupper($request->gstGstin);
+        // $complaint->gst_gstin = strtoupper($request->gstGstin);
+        $gst = strtoupper(trim($request->gstGstin));
+        if (substr($gst, 0, 2) !== '06') {
+            $gst = '06'.$gst;
+        }
+        $complaint->gst_gstin = $gst;
         $complaint->gst_firm_address = $request->gstFirmAddress;
         $complaint->declaration = 1;
 
