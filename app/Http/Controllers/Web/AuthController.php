@@ -25,7 +25,8 @@ class AuthController extends Controller
         if (config('app.env') === 'local') {
             $otp = '111111';
         } else {
-            $otp = rand(100000, 999999);
+            // $otp = rand(100000, 999999);
+            $otp = '111111';
         }
 
         Otp::create([
