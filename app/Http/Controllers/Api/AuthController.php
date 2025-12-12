@@ -46,8 +46,8 @@ class AuthController extends Controller
         ]);
         Otp::where('mobile', $request->mobile)->delete();
 
-        $otp = rand(100000, 999999);
-        // $otp = '111111';
+        // $otp = rand(100000, 999999);
+        $otp = '111111';
 
         Otp::create([
             'mobile' => $request->mobile,
