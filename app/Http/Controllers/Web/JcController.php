@@ -70,7 +70,7 @@ class JcController extends Controller
             $allowedDetc = [];
         }
 
-        dd($allowedDetc);
+        // dd($allowedDetc);
 
         $request->validate([
             'detc_id' => [
