@@ -7,6 +7,7 @@ use App\Models\Complainant;
 use App\Models\DetcAction;
 use App\Models\District;
 use App\Models\IndiaDistrict;
+use App\Models\MissingInfoHistory;
 use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -1324,7 +1325,9 @@ class ComplainantController extends Controller
 
         $message = trim(preg_replace('/\s+/', ' ', $message));
 
-        $smsResponse = $this->sendSMS($user->mobile, $message, $template_id);
+        if (env('APP_ENV') !== 'local') {
+            $smsResponse = $this->sendSMS($user->mobile, $message, $template_id);
+        }
 
         return response()->json([
             'success' => true,
@@ -2155,17 +2158,11 @@ class ComplainantController extends Controller
             ], 400);
         }
 
-        /**
-         * Reset DETC issue flags
-         */
         $complain->detc_rise_issue = 0;
         $complain->detc_issue = null;
         $complain->missing_info_submitted_at = now();
         $complain->save();
 
-        /**
-         * Update DETC Action
-         */
         $detcAction = DetcAction::where('user_application_id', $complain->application_id)
             ->where('missing_info', $missingKey)
             ->latest('id')
@@ -2177,6 +2174,29 @@ class ComplainantController extends Controller
             $detcAction->button_action = 'applicant_submitted';
             $detcAction->save();
         }
+
+        MissingInfoHistory::create([
+            'application_id' => $complain->application_id,
+            'complain_secure_id' => $complain->secure_id,
+
+            'applicant_user_id' => auth()->id(),
+
+            'detc_user_id' => optional($detcAction)->detc_user_id,
+            'detc_district_id' => optional($detcAction)->detc_district,
+             
+
+            'missing_key' => $missingKey,
+            'detc_remarks' => optional($detcAction)->remarks,
+            'submitted_value' => $request->input('missing_'.$missingKey),
+
+            'detc_marked_at' => optional($detcAction)->created_at,
+            'applicant_submitted_at' => now(),
+
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+
+        // Here
 
         return response()->json([
             'status' => true,
@@ -2284,6 +2304,38 @@ class ComplainantController extends Controller
         }
 
         $complaint->save();
+
+        $detcAction = DetcAction::where('user_application_id', $complain->application_id)
+            ->where('missing_info', $missingKey)
+            ->latest('id')
+            ->first();
+
+        MissingInfoHistory::create([
+            'application_id' => $complain->application_id,
+            'complain_secure_id' => $complain->secure_id,
+
+            // Applicant
+            'applicant_user_id' => auth()->id(),
+
+            // DETC details
+            'detc_user_id' => optional($detcAction)->action_by_user_id,
+            'detc_name' => optional($detcAction)->action_by_name ?? null,
+            'detc_district_id' => optional($detcAction)->district_id,
+            'detc_district_name' => optional($detcAction)->district_name,
+
+            // Missing info
+            'missing_key' => $missingKey,
+            'detc_remarks' => optional($detcAction)->remarks,
+            'submitted_value' => $request->input('missing_'.$missingKey),
+
+            // Timeline
+            'detc_marked_at' => optional($detcAction)->created_at,
+            'applicant_submitted_at' => now(),
+
+            // Audit
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
 
         return response()->json([
             'success' => true,
