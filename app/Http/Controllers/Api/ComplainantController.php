@@ -1284,6 +1284,8 @@ class ComplainantController extends Controller
         $complaint = new Complainant;
         $complaint->secure_id = Str::uuid();
         $complaint->application_id = $applicationId;
+        $complaint->user_id = Auth::user()->id;
+
 
         $complaint->complainant_name = $user->name ?? 'N/A';
         $complaint->complainant_phone = $user->mobile;

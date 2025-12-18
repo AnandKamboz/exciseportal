@@ -350,7 +350,7 @@
                                     $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                                 @endphp
 
-                                {{-- If image → lightbox --}}
+
                                 @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
                                     <div class="col-md-4">
                                         <a href="{{ $path }}" data-lightbox="{{ $label }}-docs"
@@ -374,6 +374,280 @@
                     @endforeach
                 </div>
             @endif
+            <hr>
+
+            <div class="container mt-4">
+                @if ($etoActions->count())
+                    <div class="card shadow-lg border-0 mb-4" style="border-left:5px solid #28a745;">
+                        <div class="p-3 bg-success text-white fw-semibold">
+                            ETO Action Submitted
+                        </div>
+
+                        <div class="p-4">
+                            @foreach ($etoActions as $action)
+                                <div class="mb-3">
+                                    <b>Action:</b> {{ ucfirst(str_replace('_', ' ', $action->action)) }} <br>
+
+                                    @if ($action->reason)
+                                        <b>Reason:</b> {{ ucfirst(str_replace('_', ' ', $action->reason)) }} <br>
+                                    @endif
+
+                                    @if ($action->missing_info)
+                                        <b>Missing Info:</b>
+                                        {{ ucfirst(str_replace('_', ' ', $action->missing_info)) }} <br>
+                                    @endif
+
+                                    <b>Status:</b> {{ ucfirst($action->status) }} <br>
+
+                                    <b>Remarks:</b> {{ $action->remarks }}
+
+                                    @if ($action->report_file)
+                                        <div class="mt-2">
+                                            <a href="{{ asset('storage/eto_reports/' . $action->application_id . '/' . $action->report_file) }}"
+                                                target="_blank" class="btn btn-sm btn-primary">
+                                                View Uploaded Report
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                                <hr>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                @php
+                    $showForm = false;
+                    $lastAction = $etoActions->last();
+
+                    if ($complain->eto_rise_issue == 1) {
+                        $showForm = false;
+                    } elseif ($etoActions->count() === 0) {
+                        $showForm = true;
+                    } elseif (
+                        $lastAction &&
+                        $lastAction->action === 'non_actionable' &&
+                        $lastAction->reason === 'information_incomplete' &&
+                        $infoIncompleteCount < 2 &&
+                        $complain->eto_rise_issue == 0
+                    ) {
+                        $showForm = true;
+                    }
+                @endphp
+
+
+                @if ($showForm)
+                    <div class="card shadow-lg border-0" style="border-left:5px solid #0a3d62;">
+                        <div class="p-3 text-white fw-semibold" style="background:#0a3d62;">
+                            Proposed Action (ETO)
+                        </div>
+
+                        <div class="p-4">
+                            <form method="POST" action="{{ route('eto.action.store', $complain->secure_id) }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label class="fw-semibold">
+                                        <input type="radio" name="proposed_action" value="uploaded_report">
+                                        Upload Report
+                                    </label>
+
+                                    <label class="fw-semibold ms-4">
+                                        <input type="radio" name="proposed_action" value="non_actionable">
+                                        Non Actionable
+                                    </label>
+                                </div>
+
+                                <div id="uploadBox" style="display:none;">
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="fw-semibold required">Upload Document</label>
+                                            <input type="file" name="upload_file" class="form-control">
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <label class="fw-semibold required">Remarks</label>
+                                            <textarea name="remarks_upload" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end mt-3">
+                                        <button class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
+
+                                <div id="nonBox" style="display:none;">
+                                    <div class="row g-3">
+                                        <div class="col-sm-6">
+                                            <label class="fw-semibold required">Select Reason</label>
+                                            <select name="reason" id="nonReason" class="form-select">
+                                                <option value="">Select</option>
+                                                <option value="false_information">False Information</option>
+                                                <option value="information_incomplete">Information Incomplete</option>
+                                                <option value="any_other">Any Other</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-sm-6" id="missingBox" style="display:none;">
+                                            <label class="fw-semibold required">What is missing?</label>
+                                            <select name="missing_info" class="form-select">
+                                                <option value="">Select</option>
+                                                <option value="gst_number">GST Number</option>
+                                                <option value="firm_location">Firm Location</option>
+                                                <option value="address">Address</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3 mt-2">
+                                        <div class="col-sm-6">
+                                            <label class="fw-semibold required">Remarks</label>
+                                            <textarea name="remarks_non" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end mt-3">
+                                        <button class="btn btn-danger">Submit</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <div class="alert alert-warning">
+                        Form is closed. Submitted information is shown above.
+                    </div>
+                @endif
+
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+
+                    const uploadBox = document.getElementById('uploadBox');
+                    const nonBox = document.getElementById('nonBox');
+                    const nonReason = document.getElementById('nonReason');
+                    const missingBox = document.getElementById('missingBox');
+
+                    document.querySelectorAll('input[name="proposed_action"]').forEach(el => {
+                        el.addEventListener('change', function() {
+                            uploadBox.style.display = this.value === 'uploaded_report' ? 'block' : 'none';
+                            nonBox.style.display = this.value === 'non_actionable' ? 'block' : 'none';
+                        });
+                    });
+
+                    if (nonReason) {
+                        nonReason.addEventListener('change', function() {
+                            missingBox.style.display = this.value === 'information_incomplete' ?
+                                'block' :
+                                'none';
+                        });
+                    }
+                });
+            </script>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const proceedBtn = document.getElementById("proceedBtn");
+                    const proceedSection = document.getElementById("proceedSection");
+                    const etoForm = document.getElementById("etoForm");
+
+                    const uploadBox = document.getElementById("uploadBox");
+                    const nonBox = document.getElementById("nonBox");
+
+                    const nonReason = document.getElementById("nonReason");
+                    const missingBox = document.getElementById("missingBox");
+                    const nonRemarksBox = document.getElementById("nonRemarksBox");
+                    const nonSubmitBtn = document.getElementById("nonSubmitBtn");
+
+                    proceedBtn.addEventListener("click", function() {
+                        proceedSection.style.display = "none";
+                        etoForm.style.display = "block";
+                    });
+
+                    document.querySelectorAll('input[name="proposed_action"]').forEach(el => {
+                        el.addEventListener("change", function() {
+                            uploadBox.style.display = "none";
+                            nonBox.style.display = "none";
+
+                            if (this.value === "uploaded_report") uploadBox.style.display = "block";
+                            if (this.value === "non_actionable") nonBox.style.display = "block";
+                        });
+                    });
+
+                    nonReason.addEventListener("change", function() {
+                        missingBox.style.display = "none";
+                        nonRemarksBox.style.display = "none";
+                        nonSubmitBtn.style.display = "none";
+
+                        if (this.value === "false_information" || this.value === "any_other") {
+                            nonRemarksBox.style.display = "block";
+                            nonSubmitBtn.style.display = "block";
+                        }
+
+                        if (this.value === "information_incomplete") {
+                            missingBox.style.display = "block";
+                            nonRemarksBox.style.display = "block";
+                            nonSubmitBtn.style.display = "block";
+                        }
+                    });
+
+                    etoForm.addEventListener("submit", function(e) {
+
+                        let action = document.querySelector('input[name="proposed_action"]:checked');
+
+                        if (!action) {
+                            e.preventDefault();
+                            return Swal.fire("Required!", "Please select Proposed Action", "warning");
+                        }
+
+                        if (action.value === "uploaded_report") {
+
+                            let file = upload_file.files[0];
+
+                            if (!file) {
+                                e.preventDefault();
+                                return Swal.fire("Required!", "Please upload a file", "warning");
+                            }
+
+                            let ext = file.name.split('.').pop().toLowerCase();
+                            if (!["jpg", "jpeg", "png", "pdf"].includes(ext)) {
+                                e.preventDefault();
+                                return Swal.fire("Invalid!", "Only JPG, JPEG, PNG, PDF allowed!", "error");
+                            }
+
+                            if (file.size > 2 * 1024 * 1024) {
+                                e.preventDefault();
+                                return Swal.fire("Too Large!", "Max file size 2MB allowed", "error");
+                            }
+
+                            if (uploadRemarks.value.trim() === "") {
+                                e.preventDefault();
+                                return Swal.fire("Required!", "Please enter Remarks", "warning");
+                            }
+                        }
+
+                        if (action.value === "non_actionable") {
+
+                            if (nonReason.value === "") {
+                                e.preventDefault();
+                                return Swal.fire("Required!", "Please select Reason", "warning");
+                            }
+
+                            if (nonRemarks.value.trim() === "") {
+                                e.preventDefault();
+                                return Swal.fire("Required!", "Please enter Remarks", "warning");
+                            }
+
+                            if (nonReason.value === "information_incomplete" && missingInfo.value === "") {
+                                e.preventDefault();
+                                return Swal.fire("Required!", "Please select what is missing", "warning");
+                            }
+                        }
+                    });
+                });
+            </script>
             <hr>
 
             <div class="text-center mt-4">

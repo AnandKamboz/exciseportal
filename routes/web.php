@@ -87,6 +87,8 @@ Route::prefix('eto')->name('eto.')->middleware(['auth', 'eto'])->group(function 
     // Route::get('dashboard', [ComplainantController::class, 'dashboarda'])->name('dashboard');
     Route::get('dashboard', [EtoController::class, 'dashboard'])->name('dashboard');
     Route::get('/information/view/{id}', [EtoController::class, 'show'])->name('information.view');
+    
+    Route::post('/action/store/{secure_id}',[EtoController::class, 'store'])->name('action.store');
 
 });
 

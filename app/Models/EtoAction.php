@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class EtoAction extends Model
 {
-    //
+    protected $guarded = [];
+    protected $table = 'eto_case_actions';
 }
