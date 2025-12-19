@@ -114,15 +114,6 @@
 
             <div class="row g-3">
 
-                {{-- @if ($information->complaint_type)
-                    <div class="col-md-4">
-                        <div class="info-card">
-                            <div class="label-text">Information Type</div>
-                            <div class="value-text">{{ $information->complaint_type }}</div>
-                        </div>
-                    </div>
-                @endif --}}
-
                 @if ($information->type_of_complaint)
                     <div class="col-md-4">
                         <div class="info-card">
@@ -245,7 +236,6 @@
                         <div class="col-md-4">
                             <div class="info-card" style="border-left:4px solid #0a3d62;">
                                 <div class="label-text">Proposed Action</div>
-                                {{-- <div class="value-text">{{ $detcAction->proposed_action }}</div> --}}
                                 <div class="value-text">
                                     {{ ucfirst(str_replace('_', ' ', $detcAction->proposed_action)) }}
                                 </div>

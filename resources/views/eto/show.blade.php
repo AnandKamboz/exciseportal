@@ -438,7 +438,7 @@
 
                                     @if ($action->report_file)
                                         <div class="mt-2">
-                                            <a href="{{ asset('storage/eto_reports/' . $action->application_id . '/' . $action->report_file) }}"
+                                            <a href="{{ asset('storage/complainant/' . $action->application_id . '/' . $action->report_file) }}"
                                                 target="_blank" class="btn btn-sm btn-primary">
                                                 View Uploaded Report
                                             </a>
@@ -508,7 +508,7 @@
                                     </div>
 
                                     <div class="text-end mt-3">
-                                        <button class="btn btn-success">Submit</button>
+                                        <button class="btn btn-success">Send to HQ</button>
                                     </div>
                                 </div>
 
@@ -718,39 +718,39 @@
         </script>
     @endif
     <script>
-            function validateUploadFile(input) {
-                const file = input.files[0];
+        function validateUploadFile(input) {
+            const file = input.files[0];
 
-                if (!file) return;
+            if (!file) return;
 
-                const allowedTypes = ['image/jpeg', 'image/png'];
-                const maxSize = 1000 * 1024; 
+            const allowedTypes = ['image/jpeg', 'image/png'];
+            const maxSize = 1000 * 1024;
 
-                if (!allowedTypes.includes(file.type)) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid File Type',
-                        text: 'Only JPG, JPEG and PNG files are allowed.',
-                    });
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File Type',
+                    text: 'Only JPG, JPEG and PNG files are allowed.',
+                });
 
-                    input.value = '';
-                    return false;
-                }
-
-               
-                if (file.size > maxSize) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'File Too Large',
-                        text: 'File size must not exceed 1 MB.',
-                    });
-
-                    input.value = '';
-                    return false;
-                }
-
-                return true;
+                input.value = '';
+                return false;
             }
+
+
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Too Large',
+                    text: 'File size must not exceed 1 MB.',
+                });
+
+                input.value = '';
+                return false;
+            }
+
+            return true;
+        }
     </script>
 
 
