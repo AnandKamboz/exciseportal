@@ -50,7 +50,7 @@
             </div>
 
 
-            <div class="col-md-3">
+            {{-- <div class="col-md-3">
                 <div class="card text-center p-3">
                     <h5>Forwarded to HQ</h5>
                     <h2>{{ $forwardedtoHq }}</h2>
@@ -80,7 +80,7 @@
                     <h2>{{ $pendingFromDetc }}</h2>
                     <a href="{{ route('detc.applications.pending_detc') }}" class="new-butt"> View All</a>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
 
