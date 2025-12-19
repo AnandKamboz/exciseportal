@@ -687,7 +687,7 @@
             <hr>
 
             <div class="text-center mt-4">
-                <a href="{{ route('detc.dashboard') }}" class="btn btn-back px-4">← Back to Dashboard</a>
+                <a href="{{ route('eto.dashboard') }}" class="btn btn-back px-4">← Back to Dashboard</a>
             </div>
         </div>
     </div>
