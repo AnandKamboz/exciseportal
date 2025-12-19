@@ -331,7 +331,42 @@
                         </div>
                     </div>
                 @endif
+
+
                 {{-- Here --}}
+
+                @if ($complain->eto_missing_gst_number)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Missing GST Number</div>
+                            <div class="value-text">
+                                {{ $complain->eto_missing_gst_number }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($complain->eto_missing_firm_location)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Firm location</div>
+                            <div class="value-text">
+                                {{ $complain->eto_missing_firm_location }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($complain->eto_missing_address)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Firm Address</div>
+                            <div class="value-text">
+                                {{ $complain->eto_missing_address }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             {{-- ========== DOCUMENTS WITH LIGHTBOX ========== --}}
