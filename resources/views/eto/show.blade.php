@@ -376,7 +376,7 @@
             @endif
             <hr>
 
-            <div class="container mt-4">
+            <div class="container mt-4 d-none">
                 @if ($etoActions->count())
                     <div class="card shadow-lg border-0 mb-4" style="border-left:5px solid #28a745;">
                         <div class="p-3 bg-success text-white fw-semibold">
