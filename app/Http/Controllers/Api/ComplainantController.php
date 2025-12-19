@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Complainant;
 use App\Models\DetcAction;
 use App\Models\District;
+use App\Models\EtoAction;
 use App\Models\IndiaDistrict;
 use App\Models\MissingInfoHistory;
 use App\Models\State;
@@ -1286,7 +1287,6 @@ class ComplainantController extends Controller
         $complaint->application_id = $applicationId;
         $complaint->user_id = Auth::user()->id;
 
-
         $complaint->complainant_name = $user->name ?? 'N/A';
         $complaint->complainant_phone = $user->mobile;
         $complaint->complainant_email = $user->email ?? 'N/A';
@@ -2150,9 +2150,6 @@ class ComplainantController extends Controller
             $missingKey = 'address';
         }
 
-        /**
-         * No valid submitted field
-         */
         if (! $missingKey) {
             return response()->json([
                 'status' => false,
@@ -2185,7 +2182,6 @@ class ComplainantController extends Controller
 
             'detc_user_id' => optional($detcAction)->detc_user_id,
             'detc_district_id' => optional($detcAction)->detc_district,
-             
 
             'missing_key' => $missingKey,
             'detc_remarks' => optional($detcAction)->remarks,
@@ -2345,5 +2341,197 @@ class ComplainantController extends Controller
             'application_id' => $complaint->application_id,
             'secure_id' => $complaint->secure_id,
         ]);
+    }
+
+    // Here
+
+    // public function updateMissingInfoApiForEto(Request $request, $secure_id)
+    // {
+
+    //     $complainant = Complainant::where('secure_id', $secure_id)->first();
+
+    //     if (! $complainant) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Complaint not found.',
+    //         ], 404);
+    //     }
+
+    //     $action = EtoAction::where('application_id', $complainant->application_id)->first();
+
+    //     if (! $action) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'No ETO action found for this complaint.',
+    //         ], 404);
+    //     }
+
+    //     if ($action->missing_info === 'gst_number') {
+
+    //         $request->validate([
+    //             'missing_gst_number' => 'required|string|max:255',
+    //         ]);
+
+    //         $complainant->eto_missing_gst_number = $request->missing_gst_number;
+    //     }
+
+    //     if ($action->missing_info === 'firm_location') {
+
+    //         $complainant->eto_missing_firm_location = $request->eto_missing_address;
+    //     }
+
+    //     if ($action->missing_info === 'address') {
+
+    //         $request->validate([
+    //             'missing_address' => 'required|string|max:255',
+    //         ]);
+
+    //         $complainant->eto_missing_address = $request->missing_address;
+    //     }
+
+    //     $complainant->eto_rise_issue = 0;
+    //     $complainant->eto_rise_issue = null;
+    //     // $complain->eto_missing_info_submitted_at = now();
+
+    //     $etoAction = EtoAction::where('application_id', $complainant->application_id)
+    //         ->where('missing_info', $missingKey)
+    //         ->latest('id')
+    //         ->first();
+
+    //     DB::table('eto_case_missing_info')->insert([
+    //         'application_id' => $complain->application_id,
+    //         'complain_secure_id' => $complain->secure_id,
+
+    //         'applicant_user_id' => auth()->id(),
+
+    //         // DETC / ETO details
+    //         'detc_user_id' => optional($etoAction)->action_by_user_id,
+    //         'detc_name' => optional($etoAction)->action_by_name,
+    //         'detc_district_id' => optional($etoAction)->district_id,
+    //         'detc_district_name' => optional($etoAction)->district_name,
+
+    //         // Missing info
+    //         'missing_key' => $missingKey,
+    //         'detc_remarks' => optional($etoAction)->remarks,
+    //         'submitted_value' => $request->input('missing_'.$missingKey),
+
+    //         // Timeline
+    //         'detc_marked_at' => optional($etoAction)->created_at,
+    //         'applicant_submitted_at' => now(),
+
+    //         // Audit
+    //         'ip_address' => request()->ip(),
+    //         'user_agent' => request()->userAgent(),
+    //         'created_at' => now(),
+    //         'updated_at' => now(),
+    //     ]);
+
+    //     // Here New Table Code
+
+    //     $complainant->save();
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Missing information updated successfully (ETO).',
+    //         'data' => $complainant,
+    //     ], 200);
+    // }
+
+    public function updateMissingInfoApiForEto(Request $request, $secure_id)
+    {
+        // dd("Hello !");
+        $complainant = Complainant::where('secure_id', $secure_id)->first();
+
+        if (! $complainant) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Complaint not found.',
+            ], 404);
+        }
+
+        $action = EtoAction::where('application_id', $complainant->application_id)
+            ->latest('id')
+            ->first();
+
+        // dd($action);
+
+        if (! $action) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No ETO action found for this complaint.',
+            ], 404);
+        }
+
+        /** 🔑 DEFINE missingKey */
+        $missingKey = $action->missing_info;
+
+        // dd($missingKey);  gst_number
+
+        /** ===== Handle Missing Info ===== */
+        if ($missingKey === 'gst_number') {
+
+            // $request->validate([
+            //     'missing_gst_number' => 'required|string|max:255',
+            // ]);
+
+            $complainant->eto_missing_gst_number = $request->missing_gst_number;
+        }
+
+        if ($missingKey === 'firm_location') {
+
+            // $request->validate([
+            //     'missing_firm_location' => 'required|string|max:255',
+            // ]);
+
+            $complainant->eto_missing_firm_location = $request->missing_firm_location;
+        }
+
+        if ($missingKey === 'address') {
+
+            // $request->validate([
+            //     'missing_address' => 'required|string|max:255',
+            // ]);
+
+            $complainant->eto_missing_address = $request->missing_address;
+        }
+
+        /** ===== Flags ===== */
+        $complainant->eto_rise_issue = 0;
+         $complainant->eto_issue = null;
+        $complainant->eto_missing_info_submitted_at = now();
+        $complainant->save();
+
+        /** ===== History Table Insert ===== */
+        DB::table('eto_case_missing_info')->insert([
+            'application_id' => $complainant->application_id,
+            'complain_secure_id' => $complainant->secure_id,
+
+            'applicant_user_id' => auth()->id(),
+
+            'eto_user_id' => optional($action)->id,
+            'eto_name' => optional($action)->action_by_name,
+            'eto_district_id' => optional($action)->eto_district,
+            'eto_district_name' => optional($action)->district_name,
+
+            'missing_key' => $missingKey,
+            'eto_remarks' => optional($action)->remarks,
+            // 'submitted_value' => $request->input('missing_'.$missingKey),
+            'submitted_value' => "",
+            
+
+            'eto_marked_at' => optional($action)->created_at,
+            'applicant_submitted_at' => now(),
+
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Missing information updated successfully (ETO).',
+            'data' => $complainant,
+        ], 200);
     }
 }
