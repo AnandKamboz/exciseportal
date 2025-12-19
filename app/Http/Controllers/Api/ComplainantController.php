@@ -2439,7 +2439,6 @@ class ComplainantController extends Controller
 
     public function updateMissingInfoApiForEto(Request $request, $secure_id)
     {
-        // dd("Hello !");
         $complainant = Complainant::where('secure_id', $secure_id)->first();
 
         if (! $complainant) {
@@ -2453,8 +2452,6 @@ class ComplainantController extends Controller
             ->latest('id')
             ->first();
 
-        // dd($action);
-
         if (! $action) {
             return response()->json([
                 'status' => false,
@@ -2462,66 +2459,39 @@ class ComplainantController extends Controller
             ], 404);
         }
 
-        /** 🔑 DEFINE missingKey */
         $missingKey = $action->missing_info;
 
-        // dd($missingKey);  gst_number
-
-        /** ===== Handle Missing Info ===== */
         if ($missingKey === 'gst_number') {
-
-            // $request->validate([
-            //     'missing_gst_number' => 'required|string|max:255',
-            // ]);
-
             $complainant->eto_missing_gst_number = $request->missing_gst_number;
         }
 
         if ($missingKey === 'firm_location') {
-
-            // $request->validate([
-            //     'missing_firm_location' => 'required|string|max:255',
-            // ]);
-
             $complainant->eto_missing_firm_location = $request->missing_firm_location;
         }
 
         if ($missingKey === 'address') {
-
-            // $request->validate([
-            //     'missing_address' => 'required|string|max:255',
-            // ]);
-
             $complainant->eto_missing_address = $request->missing_address;
         }
 
-        /** ===== Flags ===== */
         $complainant->eto_rise_issue = 0;
-         $complainant->eto_issue = null;
+        $complainant->eto_issue = null;
         $complainant->eto_missing_info_submitted_at = now();
         $complainant->save();
-
-        /** ===== History Table Insert ===== */
+        
         DB::table('eto_case_missing_info')->insert([
             'application_id' => $complainant->application_id,
             'complain_secure_id' => $complainant->secure_id,
-
             'applicant_user_id' => auth()->id(),
-
             'eto_user_id' => optional($action)->id,
             'eto_name' => optional($action)->action_by_name,
             'eto_district_id' => optional($action)->eto_district,
             'eto_district_name' => optional($action)->district_name,
-
             'missing_key' => $missingKey,
             'eto_remarks' => optional($action)->remarks,
-            // 'submitted_value' => $request->input('missing_'.$missingKey),
-            'submitted_value' => "",
-            
-
+            'submitted_value' => $request->input('missing_'.$missingKey),
+            'submitted_value' => '',
             'eto_marked_at' => optional($action)->created_at,
             'applicant_submitted_at' => now(),
-
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
             'created_at' => now(),
