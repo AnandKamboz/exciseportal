@@ -638,8 +638,7 @@ class ComplainantController extends Controller
                 'message' => 'No DETC action found for this complaint.',
             ], 404);
         }
-
-        // Validation + Save based on missing_info
+   
         if ($action->missing_info == 'gst_number') {
 
             $request->validate([
@@ -659,7 +658,6 @@ class ComplainantController extends Controller
         }
 
         if ($action->missing_info == 'address') {
-
             $request->validate([
                 'missing_address' => 'required|string|max:255',
             ]);
@@ -684,7 +682,6 @@ class ComplainantController extends Controller
         return view('eto.dashboard', compact('informations'));
     }
 
-    // Missing for eto
     public function updateMissingInfoApiForEto(Request $request, $secure_id)
     {
         $complainant = Complainant::where('secure_id', $secure_id)->first();
@@ -695,17 +692,15 @@ class ComplainantController extends Controller
                 'message' => 'Complaint not found.',
             ], 404);
         }
-
+        
         $action = EtoAction::where('application_id', $complainant->application_id)->first();
-       
+
         if (! $action) {
             return response()->json([
                 'status' => false,
                 'message' => 'No ETO action found for this complaint.',
             ], 404);
         }
-
-        // ===== Missing Info Handling =====
 
         if ($action->missing_info === 'gst_number') {
 

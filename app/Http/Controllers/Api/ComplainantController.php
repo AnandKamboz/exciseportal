@@ -2042,6 +2042,20 @@ class ComplainantController extends Controller
 
     public function submitMissingInfoApi(Request $request, $secure_id)
     {
+        if (
+            ! $request->hasAny([
+                'missing_gst_number',
+                'missing_firm_location',
+                'missing_address',
+                'any_other',
+            ])
+        ) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Please submit at least one missing information (GST Number / Firm Location / Address / Any Other).',
+            ], 422);
+        }
+
         $isLogin = auth()->user();
 
         if (! $isLogin) {
@@ -2059,8 +2073,6 @@ class ComplainantController extends Controller
                 'message' => 'Complaint not found',
             ], 404);
         }
-
-        // New code here
 
         if (! empty($complain->missing_gst_number) && $request->has('missing_gst_number')) {
             return response()->json([
@@ -2083,16 +2095,9 @@ class ComplainantController extends Controller
             ], 400);
         }
 
-        // New code here
-
         $missingKey = null;
 
-        /**
-         * 1️⃣ missing_gst_number
-         */
         if ($request->has('missing_gst_number')) {
-
-            // CHECK: Already filled? Stop!
             if (! empty($complain->missing_gst_number)) {
                 return response()->json([
                     'status' => false,
@@ -2101,19 +2106,14 @@ class ComplainantController extends Controller
             }
 
             $request->validate([
-                'missing_gst_number' => 'required|string|max:255',
+                'missing_gst_number' => 'required|string|size:15',
             ]);
 
             $complain->missing_gst_number = $request->missing_gst_number;
             $missingKey = 'gst_number';
         }
 
-        /**
-         * 2️⃣ missing_firm_location
-         */
         if ($request->has('missing_firm_location')) {
-
-            // CHECK: Already filled? Stop!
             if (! empty($complain->missing_firm_location)) {
                 return response()->json([
                     'status' => false,
@@ -2129,12 +2129,7 @@ class ComplainantController extends Controller
             $missingKey = 'firm_location';
         }
 
-        /**
-         * 3️⃣ missing_address
-         */
         if ($request->has('missing_address')) {
-
-            // CHECK: Already filled? Stop!
             if (! empty($complain->missing_address)) {
                 return response()->json([
                     'status' => false,
@@ -2193,8 +2188,6 @@ class ComplainantController extends Controller
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
-
-        // Here
 
         return response()->json([
             'status' => true,
@@ -2450,23 +2443,20 @@ class ComplainantController extends Controller
 
         $submittedValue = null;
 
-
-
-        
         if ($missingKey === 'gst_number') {
             $complainant->eto_missing_gst_number = $request->gst_number;
-            $submittedValue = "GST Number";
+            $submittedValue = 'GST Number';
         }
 
         if ($missingKey === 'firm_location') {
             $complainant->eto_missing_firm_location = $request->missing_firm_location;
-            $submittedValue = "Firm Location";
+            $submittedValue = 'Firm Location';
 
         }
 
         if ($missingKey === 'address') {
             $complainant->eto_missing_address = $request->missing_address;
-            $submittedValue = "Firm Address";
+            $submittedValue = 'Firm Address';
 
         }
 
@@ -2475,7 +2465,6 @@ class ComplainantController extends Controller
         $complainant->eto_missing_info_submitted_at = now();
         $complainant->save();
 
-      
         $etoDetails = User::where('id', $action->action_by)->first();
         $etoDistName = District::where('id', $action->eto_district)->value('name');
 

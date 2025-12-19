@@ -52,7 +52,6 @@ class EtoController extends Controller
         ));
     }
 
-
     public function store(Request $request, $secure_id)
     {
         $user = Auth::user();
@@ -195,7 +194,6 @@ class EtoController extends Controller
                 );
             }
 
-          
             EtoAction::create([
                 'application_id' => $complaint->application_id,
                 'secure_id' => $secure_id,
