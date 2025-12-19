@@ -497,7 +497,8 @@
                                     <div class="row g-3">
                                         <div class="col-sm-6">
                                             <label class="fw-semibold required">Upload Document</label>
-                                            <input type="file" name="upload_file" class="form-control">
+                                            <input type="file" name="upload_file" class="form-control"
+                                                accept=".jpg,.jpeg,.png" onchange="validateUploadFile(this)">
                                         </div>
 
                                         <div class="col-sm-6">
@@ -716,6 +717,42 @@
             });
         </script>
     @endif
+    <script>
+            function validateUploadFile(input) {
+                const file = input.files[0];
+
+                if (!file) return;
+
+                const allowedTypes = ['image/jpeg', 'image/png'];
+                const maxSize = 1000 * 1024; 
+
+                if (!allowedTypes.includes(file.type)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid File Type',
+                        text: 'Only JPG, JPEG and PNG files are allowed.',
+                    });
+
+                    input.value = '';
+                    return false;
+                }
+
+               
+                if (file.size > maxSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'File Too Large',
+                        text: 'File size must not exceed 1 MB.',
+                    });
+
+                    input.value = '';
+                    return false;
+                }
+
+                return true;
+            }
+    </script>
+
 
     {{-- VALIDATION --}}
 
