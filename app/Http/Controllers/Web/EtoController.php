@@ -20,8 +20,8 @@ class EtoController extends Controller
             $query->select(DB::raw(1))
                 ->from('detc_actions')
                 ->whereColumn('complainants.id', 'detc_actions.complaint_id')
-                ->where('ward_no', 1)
-                ->where('detc_district', 11);
+                ->where('ward_no', Auth::user()->ward_no)
+                ->where('detc_district', Auth::user()->district);
         })->get();
 
         $action = DetcAction::where('ward_no', auth()->user()->ward_no)->first();
