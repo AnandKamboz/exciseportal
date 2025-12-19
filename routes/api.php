@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // For user profile
     Route::get('user/profile', [UserDashboardController::class, 'profile']);
     Route::post('user/update-profile', [UserDashboardController::class, 'update']);
+    Route::post('/complaint/{secure_id}/detc/missing-info',[ComplainantController::class, 'updateMissingInfoApiForEto']);
 });
 
 // Route::post('/complaint/{secure_id}/submit-missing-info', [ComplainantController::class, 'submitMissingInfoApi']);

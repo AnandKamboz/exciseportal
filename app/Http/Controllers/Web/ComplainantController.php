@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Complainant;
+use App\Models\DetcAction;
 use App\Models\District;
 use App\Models\IndiaDistrict;
 use App\Models\State;
@@ -14,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use App\Models\DetcAction;
 
 class ComplainantController extends Controller
 {
@@ -676,11 +676,73 @@ class ComplainantController extends Controller
         ], 200);
     }
 
-
     public function dashboarda()
     {
-      $action = DetcAction::where('ward_no', auth()->user()->ward_no)->first();
-      $informations = $action ? Complainant::where('id', $action->complaint_id)->get() : collect();
-      return view('eto.dashboard', compact('informations'));
+        $action = DetcAction::where('ward_no', auth()->user()->ward_no)->first();
+        $informations = $action ? Complainant::where('id', $action->complaint_id)->get() : collect();
+
+        return view('eto.dashboard', compact('informations'));
+    }
+
+    // Missing for eto
+    public function updateMissingInfoApiForEto(Request $request, $secure_id)
+    {
+        $complainant = Complainant::where('secure_id', $secure_id)->first();
+
+        if (! $complainant) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Complaint not found.',
+            ], 404);
+        }
+
+        $action = EtoAction::where('application_id', $complainant->application_id)->first();
+       
+        if (! $action) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No ETO action found for this complaint.',
+            ], 404);
+        }
+
+        // ===== Missing Info Handling =====
+
+        if ($action->missing_info === 'gst_number') {
+
+            $request->validate([
+                'missing_gst_number' => 'required|string|max:255',
+            ]);
+
+            $complainant->eto_missing_gst_number = $request->missing_gst_number;
+        }
+
+        if ($action->missing_info === 'firm_location') {
+
+            $request->validate([
+                'missing_firm_location' => 'required|string|max:255',
+            ]);
+
+            $complainant->eto_missing_firm_location = $request->missing_firm_location;
+        }
+
+        if ($action->missing_info === 'address') {
+
+            $request->validate([
+                'missing_address' => 'required|string|max:255',
+            ]);
+
+            $complainant->eto_missing_address = $request->missing_address;
+        }
+
+        $complainant->eto_rise_issue = 0;
+        $complainant->eto_rise_issue = null;
+
+        $complainant->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Missing information updated successfully (ETO).',
+            'data' => $complainant,
+        ], 200);
     }
 }

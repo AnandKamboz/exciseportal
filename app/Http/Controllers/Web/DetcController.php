@@ -740,8 +740,8 @@ class DetcController extends Controller
         $district = Auth::user()->district;
 
         $applications = Complainant::where('district_id', $district)
-            ->whereNotNull('missing_info_submitted_at')  // user ने submit कर दी
-            ->where('detc_rise_issue', 1)                // DETC ने issue raise किया हुआ था
+            ->whereNotNull('missing_info_submitted_at') 
+            ->where('detc_rise_issue', 1)
             ->orderBy('id', 'desc')
             ->get();
 
