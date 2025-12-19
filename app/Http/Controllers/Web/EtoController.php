@@ -8,6 +8,7 @@ use App\Models\DetcAction;
 use App\Models\EtoAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -15,17 +16,15 @@ class EtoController extends Controller
 {
     public function dashboard()
     {
-
-        $informations = Complainant::with([
-            'latestEtoAction' => function ($q) {
-                $q->orderBy('id', 'desc');
-            },
-        ])->get();
+        $informations = Complainant::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('detc_actions')
+                ->whereColumn('complainants.id', 'detc_actions.complaint_id')
+                ->where('ward_no', 1)
+                ->where('detc_district', 11);
+        })->get();
 
         $action = DetcAction::where('ward_no', auth()->user()->ward_no)->first();
-        // dd($action->complaint_id);
-        // $informations = $action ? Complainant::where('id', 2)->get() : collect();
-        // dd($informations);
 
         return view('eto.dashboard', compact('informations'));
     }

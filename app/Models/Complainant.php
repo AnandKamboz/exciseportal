@@ -23,10 +23,20 @@ class Complainant extends Model
         return $this->hasOne(DetcAction::class, 'user_application_id', 'application_id');
     }
 
-    public function latestEtoAction()
+       public function latestEtoAction()
 {
     return $this->hasOne(EtoAction::class, 'application_id', 'application_id')
         ->latestOfMany();
 }
+
+// App\Models\Complainant.php
+
+public function detcActions()
+{
+    return $this->hasMany(DetcAction::class, 'application_id', 'application_id');
+}
+
+
+
 
 }
