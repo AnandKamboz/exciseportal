@@ -451,6 +451,9 @@
                     </div>
                 @endif
 
+                {{-- {{ dd($infoIncompleteCount) }} --}}
+                {{-- {{ dd($complain->eto_rise_issue == 1) }} --}}
+
                 @php
                     $showForm = false;
                     $lastAction = $etoActions->last();
@@ -469,6 +472,27 @@
                         $showForm = true;
                     }
                 @endphp
+
+                {{-- @php
+                    $showForm = false;
+                    $lastAction = $etoActions->last();
+
+                    if ($complain->eto_rise_issue == 1) {
+                        $showForm = false;
+                    } elseif ($etoActions->count() === 0) {
+                        $showForm = true;
+                    } elseif (
+                        $lastAction &&
+                        $lastAction->action === 'non_actionable' &&
+                        $lastAction->reason === 'information_incomplete' &&
+                        $infoIncompleteCount < 2 &&
+                        $complain->eto_rise_issue == 0 &&
+                        $lastAction->button_action !== 'applicant_submitted' // 🔥 FIX
+                    ) {
+                        $showForm = true;
+                    }
+                @endphp --}}
+
 
 
                 @if ($showForm)
