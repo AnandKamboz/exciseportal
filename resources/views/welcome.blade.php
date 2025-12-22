@@ -360,9 +360,10 @@
             line-height: 80px;
             margin-bottom: 0;
             font-weight: 700;
-            background: linear-gradient(90deg, #3beaef, #404ee8);
+            color: #FF9E3E;
+            /* background: linear-gradient(90deg, #3beaef, #404ee8);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-text-fill-color: transparent; */
         }
 
         img#captcha {

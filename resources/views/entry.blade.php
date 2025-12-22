@@ -129,9 +129,10 @@
             margin: 0;
             line-height: 1.5;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            color: #FF9E3E;
+            /* background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-text-fill-color: transparent; */
         }
 
         .dept-title p {
