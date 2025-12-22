@@ -12,6 +12,24 @@ class UserDashboardController extends Controller
 {
     public function userDashboard()
     {
+        // if (! Auth::check()) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Unauthenticated',
+        //     ], 401);
+        // }
+
+        // $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
+        //     ->where('is_completed', 1)
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
+
+        // return response()->json([
+        //     'success' => true,
+        //     'count' => $allComplain->count(),
+        //     'data' => $allComplain,
+        // ], 200);
+
         if (! Auth::check()) {
             return response()->json([
                 'success' => false,
@@ -22,17 +40,38 @@ class UserDashboardController extends Controller
         $allComplain = Complainant::where('complainant_phone', Auth::user()->mobile)
             ->where('is_completed', 1)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($c) {
+                if ($c->current_owner === null) {
+                    $c->applicant_status = 'Complaint Submitted';
+                } elseif ($c->current_owner === 'APPLICANT') {
+                    $c->applicant_status = 'Action Required';
+                } elseif ($c->current_owner === 'CLOSED') {
+                    $c->applicant_status = 'Complaint Closed';
+                } else {
+                    $c->applicant_status = 'Under Review';
+                }
+
+                return $c;
+            });
 
         return response()->json([
             'success' => true,
             'count' => $allComplain->count(),
             'data' => $allComplain,
         ], 200);
+
     }
 
     // public function show($secure_id)
     // {
+    //     if (! auth()->check()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Unauthorized access!',
+    //         ], 401);
+    //     }
+
     //     $complain = Complainant::where('secure_id', $secure_id)->first();
 
     //     if (! $complain) {
@@ -42,10 +81,28 @@ class UserDashboardController extends Controller
     //         ], 404);
     //     }
 
+    //     $user_state = null;
+
+    //     if (! empty($complain->complainant_state)) {
+    //         $user_state = DB::table('states')
+    //             ->where('id', $complain->complainant_state)
+    //             ->value('name');
+    //     }
+
+    //     $user_dist = null;
+
+    //     if (! empty($complain->complainant_district)) {
+    //         $user_dist = DB::table('india_districts')
+    //             ->where('id', $complain->complainant_district)
+    //             ->value('name');
+    //     }
+
     //     return response()->json([
     //         'success' => true,
     //         'data' => [
     //             'complaint' => $complain,
+    //             'user_state' => $user_state,
+    //             'user_dist' => $user_dist,
     //         ],
     //     ], 200);
     // }
@@ -68,9 +125,6 @@ class UserDashboardController extends Controller
             ], 404);
         }
 
-        // ============================
-        //  GET STATE NAME
-        // ============================
         $user_state = null;
 
         if (! empty($complain->complainant_state)) {
@@ -79,9 +133,6 @@ class UserDashboardController extends Controller
                 ->value('name');
         }
 
-        // ============================
-        //  GET DISTRICT NAME
-        // ============================
         $user_dist = null;
 
         if (! empty($complain->complainant_district)) {
@@ -90,15 +141,28 @@ class UserDashboardController extends Controller
                 ->value('name');
         }
 
-        // ============================
-        //  SEND JSON RESPONSE
-        // ============================
+        /*
+        |--------------------------------------------------------------------------
+        | ⭐ NEW: Applicant readable status (SIMPLE)
+        |--------------------------------------------------------------------------
+        */
+        if ($complain->current_owner === null) {
+            $applicantStatus = 'Complaint Submitted';
+        } elseif ($complain->current_owner === 'APPLICANT') {
+            $applicantStatus = 'Action Required';
+        } elseif ($complain->current_owner === 'CLOSED') {
+            $applicantStatus = 'Complaint Closed';
+        } else {
+            $applicantStatus = 'Under Review';
+        }
+
         return response()->json([
             'success' => true,
             'data' => [
                 'complaint' => $complain,
                 'user_state' => $user_state,
                 'user_dist' => $user_dist,
+                'applicant_status' => $applicantStatus,
             ],
         ], 200);
     }
