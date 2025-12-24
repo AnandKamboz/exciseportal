@@ -377,16 +377,26 @@
     <div id="loader" class="loader-overlay d-none">
         <div class="spinner"></div>
     </div>
-     
+
     <!-- Top Bar -->
     {{-- <div class="top-bar">
         <div class="contact-item">
-            <i>📧</i> excisehry@gmail.com
+            <i>📧</i> Helpdesk@haryanatax.gov.in
         </div>
         <div class="contact-item">
-            <i>📞</i> 0172-4567890
+            <i>📞</i> 18001022012 
         </div>
     </div> --}}
+
+    <div class="top-bar">
+        <div class="contact-item">
+            <i>📧</i> helpdesk@haryanatax.gov.in
+        </div>
+        <div class="contact-item">
+            <i>📞</i> 1800 102 2012
+        </div>
+    </div>
+
 
     <!-- Header -->
     <header class="header">
@@ -527,7 +537,7 @@
                     if (res.data.success) {
                         $('#loader').addClass('d-none');
                         successMsg.innerText = res.data.message || 'OTP sent successfully!';
-                        
+
                         successMsg.classList.remove('hidden');
                         otpSection.classList.remove('hidden');
                         mobileSection.classList.add('hidden');
