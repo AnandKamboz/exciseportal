@@ -83,6 +83,7 @@ Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::get('/eto/list', [HqController::class, 'etoList'])->name('eto.list');
     Route::get('/eto/create', [HqController::class, 'etoCreate'])->name('eto.create');
     Route::post('/eto/store', [HqController::class, 'etoStore'])->name('eto.store');
+    Route::delete('/eto/{secure_id}', [HqController::class, 'destroy'])->name('eto.delete');
 });
 
 Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () {

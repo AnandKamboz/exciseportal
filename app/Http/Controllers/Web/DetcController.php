@@ -15,12 +15,22 @@ class DetcController extends Controller
     public function dashboard()
     {
         $district = Auth::user()->district;
-        $allComplain = Complainant::where('district_id', $district)
-            ->where('is_completed', 1)
-            ->orderBy('created_at', 'desc')
-            ->get();
+
+        if ($district == 3) {
+            $allComplain = Complainant::whereIn('district_id', [3, 12])
+                ->where('is_completed', 1)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+        } else {
+            $allComplain = Complainant::where('district_id', $district)
+                ->where('is_completed', 1)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
 
         $totalInformation = $allComplain->count();
+
         $forwardedtoEto = DetcAction::where('detc_district', $district)->where('send_to', 'eto')->count();
         $forwardedtoHq = DetcAction::where('detc_district', $district)->where('send_to', 'hq')->count();
         $pendingFromApplicant = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
@@ -36,21 +46,18 @@ class DetcController extends Controller
         ));
     }
 
-
     public function show($secure_id)
     {
         $complain = Complainant::where('secure_id', $secure_id)->firstOrFail();
         $applicationId = $complain->application_id;
 
-      
         $detcActions = DetcAction::where('user_application_id', $applicationId)
             ->orderBy('id', 'asc')
             ->get();
 
-        $actionCount = $detcActions->count();            
-        $lastAction = $detcActions->last();              
+        $actionCount = $detcActions->count();
+        $lastAction = $detcActions->last();
 
-     
         $showForm = false;
 
         if ($actionCount == 0) {
@@ -116,343 +123,190 @@ class DetcController extends Controller
         return redirect()->back()->with('success', 'Complaint status updated successfully!');
     }
 
-   
-
-    // public function store(Request $request, $secure_id)
-    // {
-    //     $request->validate([
-    //         'proposed_action' => 'required',
-    //     ]);
-
-    //     if ($request->proposed_action == 'forward_to_eto') {
-
-    //         $request->validate([
-    //             'ward_no' => 'required',
-    //             'remarks_forward' => 'required',
-
-    //             'upload_file' => 'prohibited',
-    //             'remarks_upload' => 'prohibited',
-    //             'reason' => 'prohibited',
-    //             'remarks_non' => 'prohibited',
-    //             'missing_info' => 'prohibited',
-    //         ]);
-
-    //         $finalRemarks = $request->remarks_forward;
-    //     }
-
-    //     if ($request->proposed_action == 'uploaded_report') {
-
-    //         $request->validate([
-    //             'upload_file' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-    //             'remarks_upload' => 'required',
-
-    //             'ward_no' => 'prohibited',
-    //             'remarks_forward' => 'prohibited',
-    //             'reason' => 'prohibited',
-    //             'remarks_non' => 'prohibited',
-    //             'missing_info' => 'prohibited',
-    //         ]);
-
-    //         $finalRemarks = $request->remarks_upload;
-    //     }
-
-    //     if ($request->proposed_action == 'non_actionable') {
-
-    //         $request->validate([
-    //             'reason' => 'required',
-    //             'remarks_non' => 'required',
-
-    //             'ward_no' => 'prohibited',
-    //             'remarks_forward' => 'prohibited',
-    //             'upload_file' => 'prohibited',
-    //             'remarks_upload' => 'prohibited',
-    //         ]);
-
-    //         if ($request->reason == 'information_incomplete') {
-    //             $request->validate([
-    //                 'missing_info' => 'required',
-    //             ]);
-
-    //         } else {
-    //             $request->validate([
-    //                 'missing_info' => 'prohibited',
-    //             ]);
-    //         }
-
-    //         $finalRemarks = $request->remarks_non;
-    //     }
-
-    //     $userComplaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
-
-    //     $complaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
-
-    //     do {
-    //         $newSecureId = Str::random(32);
-    //     } while (DetcAction::where('secure_id', $newSecureId)->exists());
-
-    //     $fileName = null;
-
-    //     if ($request->hasFile('upload_file')) {
-
-    //         $file = $request->file('upload_file');
-
-    //         $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
-
-    //         $path = 'complaints/'.$complaint->application_id.'/';
-
-    //         $file->storeAs($path, $fileName, 'public');
-    //     }
-
-    //     $buttonAction = $request->btn;
-
-    //     $action = $request->proposed_action;
-
-    //     if ($action == 'forward_to_eto') {
-    //         $finalRemarks = $request->remarks_forward;
-    //     } elseif ($action == 'uploaded_report') {
-    //         $finalRemarks = $request->remarks_upload;
-    //     } elseif ($action == 'non_actionable') {
-    //         $finalRemarks = $request->remarks_non;
-    //     } else {
-    //         $finalRemarks = null;
-    //     }
-
-    //     $sendTo = null;
-
-    //     if ($request->proposed_action == 'forward_to_eto') {
-    //         $sendTo = 'eto';
-    //     } elseif ($request->proposed_action == 'uploaded_report' && $buttonAction == 'send_to_hq') {
-    //         $sendTo = 'hq';
-    //     } elseif ($request->proposed_action == 'non_actionable' && $buttonAction == 'send_back_to_applicant') {
-    //         $sendTo = 'applicant';
-    //     } else {
-    //         $sendTo = 'none';
-    //     }
-
-    //     DetcAction::create([
-    //         'secure_id' => $newSecureId,
-    //         'complaint_id' => $complaint->id,
-    //         'user_application_id' => $complaint->application_id,
-    //         'detc_district' => Auth::user()->district,
-    //         'proposed_action' => $request->proposed_action,
-    //         'ward_no' => $request->ward_no,
-
-          
-    //         'reason' => $request->reason,
-    //         'missing_info' => $request->missing_info,
-
-    //         'remarks' => $finalRemarks,
-
-    //         'file_name' => $fileName,
-
-    //         'button_action' => $buttonAction,
-
-    //         'send_to' => $sendTo,
-
-    //         'is_approved' => in_array($buttonAction, ['submit', 'send_to_hq']) ? 1 : 0,
-
-    //         'detc_user_id' => auth()->id(),
-    //     ]);
-
-    //     if ($request->reason == 'information_incomplete') {
-    //         Complainant::where('secure_id', $secure_id)->update([
-    //             'detc_rise_issue' => 1,
-    //             'detc_issue' => $request->missing_info,
-    //         ]);
-    //     }
-
-    //     if ($buttonAction == 'send_back_to_applicant') {
-    //         return back()->with('success', 'Application sent back to applicant');
-    //     }
-
-    //     return back()->with('success', 'Action saved successfully');
-    // }
-
     public function store(Request $request, $secure_id)
-{
-    $request->validate([
-        'proposed_action' => 'required',
-    ]);
-
-    if ($request->proposed_action == 'forward_to_eto') {
-
+    {
         $request->validate([
-            'ward_no' => 'required',
-            'remarks_forward' => 'required',
-
-            'upload_file' => 'prohibited',
-            'remarks_upload' => 'prohibited',
-            'reason' => 'prohibited',
-            'remarks_non' => 'prohibited',
-            'missing_info' => 'prohibited',
+            'proposed_action' => 'required',
         ]);
 
-        $finalRemarks = $request->remarks_forward;
-    }
+        if ($request->proposed_action == 'forward_to_eto') {
 
-    if ($request->proposed_action == 'uploaded_report') {
-
-        $request->validate([
-            'upload_file' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-            'remarks_upload' => 'required',
-
-            'ward_no' => 'prohibited',
-            'remarks_forward' => 'prohibited',
-            'reason' => 'prohibited',
-            'remarks_non' => 'prohibited',
-            'missing_info' => 'prohibited',
-        ]);
-
-        $finalRemarks = $request->remarks_upload;
-    }
-
-    if ($request->proposed_action == 'non_actionable') {
-
-        $request->validate([
-            'reason' => 'required',
-            'remarks_non' => 'required',
-
-            'ward_no' => 'prohibited',
-            'remarks_forward' => 'prohibited',
-            'upload_file' => 'prohibited',
-            'remarks_upload' => 'prohibited',
-        ]);
-
-        if ($request->reason == 'information_incomplete') {
             $request->validate([
-                'missing_info' => 'required',
-            ]);
-        } else {
-            $request->validate([
+                'ward_no' => 'required',
+                'remarks_forward' => 'required',
+
+                'upload_file' => 'prohibited',
+                'remarks_upload' => 'prohibited',
+                'reason' => 'prohibited',
+                'remarks_non' => 'prohibited',
                 'missing_info' => 'prohibited',
+            ]);
+
+            $finalRemarks = $request->remarks_forward;
+        }
+
+        if ($request->proposed_action == 'uploaded_report') {
+
+            $request->validate([
+                'upload_file' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+                'remarks_upload' => 'required',
+
+                'ward_no' => 'prohibited',
+                'remarks_forward' => 'prohibited',
+                'reason' => 'prohibited',
+                'remarks_non' => 'prohibited',
+                'missing_info' => 'prohibited',
+            ]);
+
+            $finalRemarks = $request->remarks_upload;
+        }
+
+        if ($request->proposed_action == 'non_actionable') {
+
+            $request->validate([
+                'reason' => 'required',
+                'remarks_non' => 'required',
+
+                'ward_no' => 'prohibited',
+                'remarks_forward' => 'prohibited',
+                'upload_file' => 'prohibited',
+                'remarks_upload' => 'prohibited',
+            ]);
+
+            if ($request->reason == 'information_incomplete') {
+                $request->validate([
+                    'missing_info' => 'required',
+                ]);
+            } else {
+                $request->validate([
+                    'missing_info' => 'prohibited',
+                ]);
+            }
+
+            $finalRemarks = $request->remarks_non;
+        }
+
+        $userComplaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
+        $complaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
+
+        do {
+            $newSecureId = Str::random(32);
+        } while (DetcAction::where('secure_id', $newSecureId)->exists());
+
+        $fileName = null;
+
+        if ($request->hasFile('upload_file')) {
+
+            $file = $request->file('upload_file');
+            $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+            $path = 'complaints/'.$complaint->application_id.'/';
+            $file->storeAs($path, $fileName, 'public');
+        }
+
+        $buttonAction = $request->btn;
+        $action = $request->proposed_action;
+
+        if ($action == 'forward_to_eto') {
+            $finalRemarks = $request->remarks_forward;
+        } elseif ($action == 'uploaded_report') {
+            $finalRemarks = $request->remarks_upload;
+        } elseif ($action == 'non_actionable') {
+            $finalRemarks = $request->remarks_non;
+        } else {
+            $finalRemarks = null;
+        }
+
+        $sendTo = null;
+
+        if ($request->proposed_action == 'forward_to_eto') {
+            $sendTo = 'eto';
+        } elseif ($request->proposed_action == 'uploaded_report' && $buttonAction == 'send_to_hq') {
+            $sendTo = 'hq';
+        } elseif ($request->proposed_action == 'non_actionable' && $buttonAction == 'send_back_to_applicant') {
+            $sendTo = 'applicant';
+        } else {
+            $sendTo = 'none';
+        }
+
+        DetcAction::create([
+            'secure_id' => $newSecureId,
+            'complaint_id' => $complaint->id,
+            'user_application_id' => $complaint->application_id,
+            'detc_district' => Auth::user()->district,
+            'proposed_action' => $request->proposed_action,
+            'ward_no' => $request->ward_no,
+
+            'reason' => $request->reason,
+            'missing_info' => $request->missing_info,
+            'remarks' => $finalRemarks,
+            'file_name' => $fileName,
+            'button_action' => $buttonAction,
+            'send_to' => $sendTo,
+            'is_approved' => in_array($buttonAction, ['submit', 'send_to_hq']) ? 1 : 0,
+            'detc_user_id' => auth()->id(),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ⭐ NEW: MASTER STATE UPDATE (DET C SIDE)
+        |--------------------------------------------------------------------------
+        */
+
+        // DETC → ETO
+        if ($request->proposed_action == 'forward_to_eto') {
+            $complaint->update([
+                'current_owner' => 'ETO',
+                'current_level' => 'ETO',
+                'current_status' => 'forwarded_to_eto',
+                'is_final' => false,
             ]);
         }
 
-        $finalRemarks = $request->remarks_non;
+        // DETC → HQ
+        if ($request->proposed_action == 'uploaded_report' && $buttonAction == 'send_to_hq') {
+            $complaint->update([
+                'current_owner' => 'HQ',
+                'current_level' => 'HQ',
+                'current_status' => 'detc_report_uploaded',
+                'is_final' => false,
+            ]);
+        }
+
+        // DETC → Applicant (information incomplete)
+        if ($request->reason == 'information_incomplete') {
+
+            Complainant::where('secure_id', $secure_id)->update([
+                'detc_rise_issue' => 1,
+                'detc_issue' => $request->missing_info,
+            ]);
+
+            $complaint->update([
+                'current_owner' => 'APPLICANT',
+                'current_level' => 'DETC',
+                'current_status' => 'information_incomplete',
+                'is_final' => false,
+            ]);
+        }
+
+        // DETC → CLOSED (false_information / any_other)
+        if (
+            $request->proposed_action == 'non_actionable' &&
+            in_array($request->reason, ['false_information', 'any_other'])
+        ) {
+            $complaint->update([
+                'current_owner' => 'CLOSED',
+                'current_level' => 'CLOSED',
+                'current_status' => 'detc_non_actionable_closed',
+                'is_final' => true,
+            ]);
+        }
+
+        if ($buttonAction == 'send_back_to_applicant') {
+            return back()->with('success', 'Application sent back to applicant');
+        }
+
+        return back()->with('success', 'Action saved successfully');
     }
-
-    $userComplaint = Complainant::where('secure_id', $secure_id)->firstOrFail();
-    $complaint     = Complainant::where('secure_id', $secure_id)->firstOrFail();
-
-    do {
-        $newSecureId = Str::random(32);
-    } while (DetcAction::where('secure_id', $newSecureId)->exists());
-
-    $fileName = null;
-
-    if ($request->hasFile('upload_file')) {
-
-        $file = $request->file('upload_file');
-        $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
-        $path = 'complaints/'.$complaint->application_id.'/';
-        $file->storeAs($path, $fileName, 'public');
-    }
-
-    $buttonAction = $request->btn;
-    $action = $request->proposed_action;
-
-    if ($action == 'forward_to_eto') {
-        $finalRemarks = $request->remarks_forward;
-    } elseif ($action == 'uploaded_report') {
-        $finalRemarks = $request->remarks_upload;
-    } elseif ($action == 'non_actionable') {
-        $finalRemarks = $request->remarks_non;
-    } else {
-        $finalRemarks = null;
-    }
-
-    $sendTo = null;
-
-    if ($request->proposed_action == 'forward_to_eto') {
-        $sendTo = 'eto';
-    } elseif ($request->proposed_action == 'uploaded_report' && $buttonAction == 'send_to_hq') {
-        $sendTo = 'hq';
-    } elseif ($request->proposed_action == 'non_actionable' && $buttonAction == 'send_back_to_applicant') {
-        $sendTo = 'applicant';
-    } else {
-        $sendTo = 'none';
-    }
-
-    DetcAction::create([
-        'secure_id' => $newSecureId,
-        'complaint_id' => $complaint->id,
-        'user_application_id' => $complaint->application_id,
-        'detc_district' => Auth::user()->district,
-        'proposed_action' => $request->proposed_action,
-        'ward_no' => $request->ward_no,
-
-        'reason' => $request->reason,
-        'missing_info' => $request->missing_info,
-        'remarks' => $finalRemarks,
-        'file_name' => $fileName,
-        'button_action' => $buttonAction,
-        'send_to' => $sendTo,
-        'is_approved' => in_array($buttonAction, ['submit', 'send_to_hq']) ? 1 : 0,
-        'detc_user_id' => auth()->id(),
-    ]);
-
-    /*
-    |--------------------------------------------------------------------------
-    | ⭐ NEW: MASTER STATE UPDATE (DET C SIDE)
-    |--------------------------------------------------------------------------
-    */
-
-    // DETC → ETO
-    if ($request->proposed_action == 'forward_to_eto') {
-        $complaint->update([
-            'current_owner'  => 'ETO',
-            'current_level'  => 'ETO',
-            'current_status' => 'forwarded_to_eto',
-            'is_final'       => false,
-        ]);
-    }
-
-    // DETC → HQ
-    if ($request->proposed_action == 'uploaded_report' && $buttonAction == 'send_to_hq') {
-        $complaint->update([
-            'current_owner'  => 'HQ',
-            'current_level'  => 'HQ',
-            'current_status' => 'detc_report_uploaded',
-            'is_final'       => false,
-        ]);
-    }
-
-    // DETC → Applicant (information incomplete)
-    if ($request->reason == 'information_incomplete') {
-
-        Complainant::where('secure_id', $secure_id)->update([
-            'detc_rise_issue' => 1,
-            'detc_issue' => $request->missing_info,
-        ]);
-
-        $complaint->update([
-            'current_owner'  => 'APPLICANT',
-            'current_level'  => 'DETC',
-            'current_status' => 'information_incomplete',
-            'is_final'       => false,
-        ]);
-    }
-
-    // DETC → CLOSED (false_information / any_other)
-    if (
-        $request->proposed_action == 'non_actionable' &&
-        in_array($request->reason, ['false_information', 'any_other'])
-    ) {
-        $complaint->update([
-            'current_owner'  => 'CLOSED',
-            'current_level'  => 'CLOSED',
-            'current_status' => 'detc_non_actionable_closed',
-            'is_final'       => true,
-        ]);
-    }
-
-    if ($buttonAction == 'send_back_to_applicant') {
-        return back()->with('success', 'Application sent back to applicant');
-    }
-
-    return back()->with('success', 'Action saved successfully');
-}
-
 
     public function allApplications()
     {
@@ -518,7 +372,7 @@ class DetcController extends Controller
         $district = Auth::user()->district;
 
         $applications = Complainant::where('district_id', $district)
-            ->whereNotNull('missing_info_submitted_at') 
+            ->whereNotNull('missing_info_submitted_at')
             ->where('detc_rise_issue', 1)
             ->orderBy('id', 'desc')
             ->get();

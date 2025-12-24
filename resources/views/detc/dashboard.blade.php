@@ -54,49 +54,14 @@
         <div class="card p-3">
             <h5 class="fw-bold  mb-3">Complaint Details</h5>
             <div class="table-responsive">
-                {{-- <table id="complaintsTable" class="table table-hover table-striped">
-                    <thead style="background: #FF8A73; color: #fff;">
-                        <tr>
-                            <th>#</th>
-                            <th>Date of Receiving</th>
-                            <th>Application Id</th>
-                            <th>Category</th>
-                            <th>Type of Information</th>
-                            <th>Issue Status</th>
-                            <th>View</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($allComplain as $index => $complain)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-            <td>{{ $complain->created_at->format('d-m-Y') }}</td>
-            <td>{{ $complain->application_id }}</td>
-            <td>{{ ucfirst($complain->complaint_type) }}</td>
-            <td>{{ ucwords(str_replace('_', ' ', $complain->type_of_complaint)) }}</td>
-            <td>
-                @if (!empty($complain->returned_to_detc_at && $complain->reason == 'information_incomplete'))
-                <span class="badge bg-danger">Pending</span>
-                @else
-                <span class="badge bg-success">Cleared</span>
-                @endif
-            </td>
-            <td>
-                <a href="{{ route('detc.details', [$complain->secure_id]) }}" class="btn btn-sm btn-primary">View</a>
-            </td>
-            </tr>
-            @endforeach
-            </tbody>
-            </table> --}}
-
                 <table id="complaintsTable" class="table table-hover table-striped">
                     <thead style="background: #FF8A73; color: #fff;">
                         <tr>
                             <th>#</th>
                             <th>Date of Receiving</th>
                             <th>Application Id</th>
-                            {{-- <th>Category</th> --}}
                             <th>Type of Information</th>
+                            <th>Category</th>
                             <th>Status</th>
                             <th>View</th>
                         </tr>
@@ -123,18 +88,14 @@
                                     ) {
                                         $status = 'Pending with Applicant';
                                         $badge = 'bg-danger';
-                                    }
-
-                                    elseif (
+                                    } elseif (
                                         $lastAction->reason == 'information_incomplete' &&
                                         $lastAction->send_to == 'applicant' &&
                                         $lastAction->applicant_submitted_at != null
                                     ) {
                                         $status = 'Pending with DETC';
                                         $badge = 'bg-warning';
-                                    }
-
-                                    elseif ($lastAction->is_approved == 1) {
+                                    } elseif ($lastAction->is_approved == 1) {
                                         $status = 'Completed';
                                         $badge = 'bg-success';
                                     }
@@ -145,8 +106,8 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $complain->created_at->format('d-m-Y') }}</td>
                                 <td>{{ $complain->application_id }}</td>
-                                {{-- <td>{{ ucfirst($complain->complaint_type) }}</td> --}}
                                 <td>{{ ucwords(str_replace('_', ' ', $complain->type_of_complaint)) }}</td>
+                                <td>{{ ucfirst($complain->district_name) }}</td>
                                 <td>
                                     <span class="badge {{ $badge }}">{{ $status }}</span>
                                 </td>
@@ -159,9 +120,6 @@
                         @endforeach
                     </tbody>
                 </table>
-
-
-
             </div>
         </div>
     </div>

@@ -106,10 +106,11 @@
                 <table id="complaintsTable" class="table table-hover table-striped">
                     <thead style="background: #FF8A73; color: #fff;">
                         <tr>
-                            <th>#</th>
+                            {{-- <th>#</th> --}}
                             <th>Date of Receiving</th>
                             <th>Application Id</th>
                             <th>Type of Information</th>
+                            <th>District</th>
                             <th>View</th>
                         </tr>
                     </thead>
@@ -117,10 +118,11 @@
 
                         @foreach ($informations as $index => $row)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
+                                {{-- <td>{{ $index + 1 }}</td> --}}
                                 <td>{{ $row->created_at->format('d-m-Y') }}</td>
                                 <td>{{ $row->application_id }}</td>
                                 <td>{{ ucwords(str_replace('_', ' ', $row->type_of_complaint)) }}</td>
+                                <td>{{ $row->district_name }}</td>
                                 <td>
                                     <a href="{{ route('hq.details', [$row->secure_id]) }}"
                                         class="btn btn-sm btn-primary">View</a>

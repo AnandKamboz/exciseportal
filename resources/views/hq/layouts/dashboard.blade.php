@@ -181,7 +181,7 @@
                     </a>
                 </li> --}}
 
-                <li class="nav-item d-none">
+                <li class="nav-item">
                     <a class="nav-link text-white" href="{{ route('hq.eto.list') }}">
                               <i class="bi bi-plus-circle"></i>
 

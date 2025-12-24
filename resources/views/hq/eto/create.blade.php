@@ -7,44 +7,6 @@
 
     <div class="card shadow-sm border-0 p-4">
         <h5 class="fw-bold mb-4">Assign District & Ward</h5>
-
-        {{-- <form method="POST" action="{{ route('hq.eto.store') }}">
-            @csrf
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">ETO Name</label>
-                <input type="text" name="name" class="form-control" placeholder="Enter ETO Name" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">
-                    District
-                </label>
-                <select name="district_id" class="form-select" required>
-                    <option value="">Select District</option>
-                    @foreach ($districts as $district)
-                        <option value="{{ $district->id }}">
-                            {{ $district->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">
-                    Ward Number
-                </label>
-                <input type="number" name="ward_no" class="form-control" placeholder="Enter Ward Number" required>
-            </div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn btn-primary">
-                    Save
-                </button>
-            </div>
-
-        </form> --}}
-
         <form method="POST" action="{{ route('hq.eto.store') }}">
             @csrf
 
@@ -102,5 +64,36 @@
         </form>
 
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"
+        integrity="sha512-pnPZhx5S+z5FSVwy62gcyG2Mun8h6R+PG01MidzU+NGF06/ytcm2r6+AaWMBXAnDHsdHWtsxS0dH8FBKA84FlQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#3085d6'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#d33'
+            });
+        </script>
+    @endif
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 @endsection
