@@ -291,8 +291,7 @@
 
                     <div class="">
                         <div class="cta-row">
-                            <a href="{{ route('login') }}" class="btn btn-cta btn-lg" role="button">Register /
-                                Login</a>
+                            <a href="{{ route('login') }}" class="btn btn-cta btn-lg" role="button">Login</a>
 
                         </div>
                         {{-- KarHitesh.apk --}}
