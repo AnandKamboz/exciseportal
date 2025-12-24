@@ -78,6 +78,11 @@ Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::get('dashboard', [HqController::class, 'dashboard'])->name('dashboard');
     Route::get('/information/{secure_id}', [HqController::class, 'show'])->name('details');
     Route::get('complaints/{type}', [HqController::class, 'viewAll']);
+
+    // Create Eto
+    Route::get('/eto/list', [HqController::class, 'etoList'])->name('eto.list');
+    Route::get('/eto/create', [HqController::class, 'etoCreate'])->name('eto.create');
+    Route::post('/eto/store', [HqController::class, 'etoStore'])->name('eto.store');
 });
 
 Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () {

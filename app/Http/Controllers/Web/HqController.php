@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Complainant;
 use App\Models\DetcAction;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class HqController extends Controller
 {
@@ -258,5 +262,138 @@ class HqController extends Controller
             ->get();
 
         return view('hq.complaints.list', compact('complaints', 'type'));
+    }
+
+    public function etoList()
+    {
+        // $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
+        //     ->where('role_types.role_id', 7)
+        //     ->select('users.*')
+        //     ->get();
+
+        $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
+            ->leftJoin('districts', 'districts.id', '=', 'users.district')
+            ->where('role_types.role_id', 7)
+            ->select(
+                'users.*',
+                'districts.name as district_name'
+            )
+            ->get();
+
+        // dd($users);
+
+        return view('hq.eto.index', compact('users'));
+    }
+
+    public function etoCreate()
+    {
+        // $districts = DB::table('districts')->get();
+        $districts = DB::table('districts')->get();
+
+        return view('hq.eto.create', compact('districts'));
+    }
+
+    public function etoStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'district_id' => 'required|integer',
+            'ward_no' => 'required|integer',
+            'mobile' => 'required|digits:10|unique:users,mobile',
+        ]);
+
+        // here
+        $districtWard = DB::table('district_wards')->where('district_id', $request->district_id)->first();
+        if (! $districtWard) {
+            return response()->json([
+                'message' => 'Ward configuration not found for this district.',
+            ], 422);
+        }
+
+        if ($request->ward_no > $districtWard->ward_count) {
+            return response()->json([
+                'message' => "Invalid ward number. Allowed ward numbers are 1 to {$districtWard->ward_count}.",
+            ], 422);
+        }
+
+        $exists = User::where('district', $request->district_id)
+            ->where('ward_no', $request->ward_no)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => 'This ward number already exists in the selected district.',
+                'errors' => [
+                    'ward_no' => ['Duplicate district and ward combination'],
+                ],
+            ], 422);
+        }
+
+        do {
+            $secureId = (string) Str::uuid();
+        } while (
+            DB::table('users')->where('secure_id', $secureId)->exists()
+        );
+
+        $userId = DB::table('users')->insertGetId([
+            'secure_id' => $secureId,
+            'name' => $request->name,
+            'mobile' => $request->mobile,
+            'district' => $request->district_id,
+            'ward_no' => $request->ward_no,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('role_types')->insert([
+            'user_id' => $userId,
+            'role_id' => 7,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // DB::commit();
+
+        return redirect()->route('hq.eto.list')->with('success', 'ETO created successfully');
+
+        // DB::beginTransaction();
+
+        // try {
+
+        //     do {
+        //         $secureId = (string) Str::uuid();
+        //     } while (
+        //         DB::table('users')->where('secure_id', $secureId)->exists()
+        //     );
+
+        //     $userId = DB::table('users')->insertGetId([
+        //         'secure_id' => $secureId,
+        //         'name' => $request->name,
+        //         'district_id' => $request->district_id,
+        //         'ward_no' => $request->ward_no,
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ]);
+
+        //     DB::table('role_types')->insert([
+        //         'user_id' => $userId,
+        //         'role_id' => 7,
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ]);
+
+        //     DB::commit();
+
+        //     return redirect()->route('hq.eto.list')->with('success', 'ETO created successfully');
+
+        // } catch (\Exception $e) {
+
+        //     DB::rollBack();
+
+        //     return redirect()->back()->with(
+        //         'error',
+        //         'Something went wrong while creating ETO'
+        //     );
+        // }
     }
 }

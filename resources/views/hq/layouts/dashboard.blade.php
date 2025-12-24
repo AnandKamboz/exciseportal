@@ -175,6 +175,21 @@
                     </a>
                 </li>
 
+                {{-- <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ route('hq.eto.list') }}">
+                        <i class="bi bi-house"></i> <span>Create ETO</span>
+                    </a>
+                </li> --}}
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ route('hq.eto.list') }}">
+                              <i class="bi bi-plus-circle"></i>
+
+                        <span>Create ETO</span>
+                    </a>
+                </li>
+
+
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
