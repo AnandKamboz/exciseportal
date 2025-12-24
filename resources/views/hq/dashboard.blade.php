@@ -5,82 +5,97 @@
 
 @section('content')
     <div class="container-fluid">
+        <div class="row">
 
-        {{-- <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="card text-center p-3">
-                <h5>Total</h5>
-                <h2>{{ $informations->count() }}</h2>
-                <a href="#" class="new-butt"> View All</a>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-center p-3">
-                <h5>Pending</h5>
-                <h2>{{ $informations->where('is_completed', 0)->count() }}</h2>
-                <a href="#" class="new-butt"> View All</a>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-center p-3">
-                <h5>Forwarded for Action</h5>
-                <h2>{{ $informations->where('status', 'forward_to_inspector')->count() }}</h2>
-                <a href="#" class="new-butt"> View All</a>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-center p-3">
-                <h5>Rejected</h5>
-                <h2>{{ $informations->where('status', 'rejected')->count() }}</h2>
-                <a href="#" class="new-butt"> View All</a>
-            </div>
-        </div>
-    </div> --}}
-
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
+            {{-- 🟣 Total Information --}}
+            <div class="col-md-3 mb-3">
                 <div class="card text-center p-3">
-                    <h5>Total Cases</h5>
-                    <h2>{{ $totalInformation }}</h2>
-                    <a href="{{ route('detc.allApplications') }}" class="new-butt"> View All</a>
+                    <h5>Total Information</h5>
+                    <h2>{{ $allComplain->count() }}</h2>
+                    <a href="{{ url('hq/complaints/all') }}" class="new-butt">
+                        View All
+                    </a>
                 </div>
             </div>
 
 
-            {{-- <div class="col-md-3">
+            {{-- 🟢 Open / New Complaints --}}
+            <div class="col-md-3 mb-3">
                 <div class="card text-center p-3">
-                    <h5>Forwarded to HQ</h5>
-                    <h2>{{ $forwardedtoHq }}</h2>
-                    <a href="{{ route('detc.forwarded.hq') }}" class="new-butt"> View All</a>
+                    <h5>Open / New Information</h5>
+                    <h2>{{ $openNew }}</h2>
+                    <a href="{{ url('hq/complaints/open') }}" class="new-butt">View All</a>
                 </div>
             </div>
 
-            <div class="col-md-3">
+            {{-- 🟡 Pending with Applicant --}}
+            <div class="col-md-3 mb-3">
                 <div class="card text-center p-3">
-                    <h5>Forwarded to ETO</h5>
-                    <h2>{{ $forwardedtoEto }}</h2>
-                    <a href="{{ route('detc.forwarded.to.eto') }}" class="new-butt"> View All</a>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card text-center p-3">
-                    <h5>Pending with Applicant </h5>
+                    <h5>Pending with Applicant</h5>
                     <h2>{{ $pendingFromApplicant }}</h2>
-                    <a href="{{ route('detc.pending.from.applicant') }}" class="new-butt"> View All</a>
+                    <a href="{{ url('hq/complaints/pending-applicant') }}" class="new-butt">
+                        View All
+                    </a>
                 </div>
             </div>
 
-            <div class="col-md-3">
+
+            {{-- 🔵 Under Review (DETC / ETO / HQ) --}}
+            <div class="col-md-3 mb-3">
                 <div class="card text-center p-3">
-                    <h5>Pending with DETC</h5>
-                    <h2>{{ $pendingFromDetc }}</h2>
-                    <a href="{{ route('detc.applications.pending_detc') }}" class="new-butt"> View All</a>
+                    <h5>Under Review</h5>
+                    <h2>{{ $underReview }}</h2>
+
+                    <a href="{{ url('hq/complaints/under-review') }}" class="new-butt">
+                        View All
+                    </a>
                 </div>
-            </div> --}}
+            </div>
+
+            {{-- hello --}}
+            {{-- 🔴 Closed Complaints --}}
+            <div class="col-md-3 mb-3">
+                <div class="card text-center p-3">
+                    <h5>Closed Information</h5>
+                    <h2>{{ $closed }}</h2>
+                    <a href="{{ url('hq/complaints/closed') }}" class="new-butt">
+                        View All
+                    </a>
+                </div>
+            </div>
+
+            {{-- 🕵️ With DETC --}}
+            <div class="col-md-3 mb-3">
+                <div class="card text-center p-3">
+                    <h5>With DETC</h5>
+                    <h2>{{ $allComplain->where('current_owner', 'DETC')->count() }}</h2>
+                    <a href="{{ url('hq/complaints/with-detc') }}" class="new-butt">
+                        View All
+                    </a>
+                </div>
+            </div>
+
+            {{-- 🕵️ With ETO --}}
+            <div class="col-md-3 mb-3">
+                <div class="card text-center p-3">
+                    <h5>With ETO</h5>
+                    <h2>{{ $allComplain->where('current_owner', 'ETO')->count() }}</h2>
+                    <a href="{{ url('hq/complaints/with-eto') }}" class="new-butt">
+                        View All
+                    </a>
+                </div>
+            </div>
+
+            {{-- 📄 With HQ --}}
+            <div class="col-md-3 mb-3">
+                <div class="card text-center p-3">
+                    <h5>With HQ</h5>
+                    <h2>{{ $allComplain->where('current_owner', 'HQ')->count() }}</h2>
+                    <a href="{{ url('hq/complaints/with-hq') }}" class="new-butt">
+                        View All
+                    </a>
+                </div>
+            </div>
         </div>
 
 
@@ -94,9 +109,7 @@
                             <th>#</th>
                             <th>Date of Receiving</th>
                             <th>Application Id</th>
-                            <th>Category</th>
                             <th>Type of Information</th>
-                            {{-- <th>Status</th> --}}
                             <th>View</th>
                         </tr>
                     </thead>
@@ -107,17 +120,7 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $row->created_at->format('d-m-Y') }}</td>
                                 <td>{{ $row->application_id }}</td>
-                                <td>{{ ucfirst($row->complaint_type) }}</td>
                                 <td>{{ ucwords(str_replace('_', ' ', $row->type_of_complaint)) }}</td>
-
-                                {{-- <td>
-                                @if ($row->is_completed)
-                                    <span class="badge bg-success">Completed</span>
-                                @else
-                                    <span class="badge bg-warning text-dark">Pending</span>
-                                @endif
-                            </td> --}}
-
                                 <td>
                                     <a href="{{ route('hq.details', [$row->secure_id]) }}"
                                         class="btn btn-sm btn-primary">View</a>

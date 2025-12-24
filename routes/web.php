@@ -69,11 +69,15 @@ Route::prefix('detc')->name('detc.')->middleware(['auth', 'detcrole'])->group(fu
     Route::get('/forwarded-to-eto', [DetcController::class, 'forwardedToEto'])->name('forwarded.to.eto');
     Route::get('/pending-from-applicant', [DetcController::class, 'pendingFromApplicant'])->name('pending.from.applicant');
     Route::get('/applications/pending-detc', [DetcController::class, 'pendingFromDetc'])->name('applications.pending_detc');
+
+    // Here 
+    
 });
 
 Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::get('dashboard', [HqController::class, 'dashboard'])->name('dashboard');
     Route::get('/information/{secure_id}', [HqController::class, 'show'])->name('details');
+    Route::get('complaints/{type}', [HqController::class, 'viewAll']);
 });
 
 Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () {
@@ -84,10 +88,8 @@ Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () 
 
 
 Route::prefix('eto')->name('eto.')->middleware(['auth', 'eto'])->group(function () {
-    // Route::get('dashboard', [ComplainantController::class, 'dashboarda'])->name('dashboard');
     Route::get('dashboard', [EtoController::class, 'dashboard'])->name('dashboard');
     Route::get('/information/view/{id}', [EtoController::class, 'show'])->name('information.view');
-    
     Route::post('/action/store/{secure_id}',[EtoController::class, 'store'])->name('action.store');
 
 });
