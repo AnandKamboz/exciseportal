@@ -142,7 +142,7 @@
                     </div>
                 @endif
 
-                @if ($information->gst_gstin)
+                @if ($information->gst_gstin && strlen($information->gst_gstin) == 15)
                     <div class="col-md-4">
                         <div class="info-card">
                             <div class="label-text">GSTIN</div>
