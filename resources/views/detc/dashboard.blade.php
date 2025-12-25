@@ -62,7 +62,7 @@
                             <th>Application Id</th>
                             <th>Type of Information</th>
                             <th>Category</th>
-                            <th>Status</th>
+                            {{-- <th>Status</th> --}}
                             <th>View</th>
                         </tr>
                     </thead>
@@ -108,10 +108,9 @@
                                 <td>{{ $complain->application_id }}</td>
                                 <td>{{ ucwords(str_replace('_', ' ', $complain->type_of_complaint)) }}</td>
                                 <td>{{ ucfirst($complain->district_name) }}</td>
-                                <td>
+                                {{-- <td>
                                     <span class="badge {{ $badge }}">{{ $status }}</span>
-                                </td>
-
+                                </td> --}}
                                 <td>
                                     <a href="{{ route('detc.details', [$complain->secure_id]) }}"
                                         class="btn btn-sm btn-primary">View</a>

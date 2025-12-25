@@ -12,17 +12,56 @@ use Illuminate\Support\Str;
 
 class DetcController extends Controller
 {
+    // public function dashboard()
+    // {
+    //     $district = Auth::user()->district;
+
+    //     if ($district == 3) {
+    //         $allComplain = Complainant::whereIn('district_id', [3, 12])
+    //             ->where('is_completed', 1)
+    //             ->orderBy('created_at', 'desc')
+    //             ->get();
+
+    //     } else {
+    //         $allComplain = Complainant::where('district_id', $district)
+    //             ->where('is_completed', 1)
+    //             ->orderBy('created_at', 'desc')
+    //             ->get();
+    //     }
+
+    //     $totalInformation = $allComplain->count();
+    //     $forwardedtoEto = DetcAction::where('detc_district', $district)->where('send_to', 'eto')->count();
+    //     $forwardedtoHq = DetcAction::where('detc_district', $district)->where('send_to', 'hq')->count();
+    //     $pendingFromApplicant = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
+    //     $pendingFromDetc = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
+
+    //     return view('detc.dashboard', compact(
+    //         'allComplain',
+    //         'totalInformation',
+    //         'forwardedtoEto',
+    //         'forwardedtoHq',
+    //         'pendingFromApplicant',
+    //         'pendingFromDetc',
+    //     ));
+    // }
+
     public function dashboard()
     {
         $district = Auth::user()->district;
 
+        /* =========================
+           ALL COMPLAINTS
+        ========================= */
+
         if ($district == 3) {
+
             $allComplain = Complainant::whereIn('district_id', [3, 12])
                 ->where('is_completed', 1)
                 ->orderBy('created_at', 'desc')
                 ->get();
 
         } else {
+
             $allComplain = Complainant::where('district_id', $district)
                 ->where('is_completed', 1)
                 ->orderBy('created_at', 'desc')
@@ -31,10 +70,83 @@ class DetcController extends Controller
 
         $totalInformation = $allComplain->count();
 
-        $forwardedtoEto = DetcAction::where('detc_district', $district)->where('send_to', 'eto')->count();
-        $forwardedtoHq = DetcAction::where('detc_district', $district)->where('send_to', 'hq')->count();
-        $pendingFromApplicant = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
-        $pendingFromDetc = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
+        /* =========================
+           FORWARDED TO ETO
+        ========================= */
+
+        if ($district == 3) {
+
+            $forwardedtoEto = DetcAction::whereIn('detc_district', [3, 12])
+                ->where('send_to', 'eto')
+                ->count();
+
+        } else {
+
+            $forwardedtoEto = DetcAction::where('detc_district', $district)
+                ->where('send_to', 'eto')
+                ->count();
+        }
+
+        /* =========================
+           FORWARDED TO HQ
+        ========================= */
+
+        if ($district == 3) {
+
+            $forwardedtoHq = DetcAction::whereIn('detc_district', [3, 12])
+                ->where('send_to', 'hq')
+                ->count();
+
+        } else {
+
+            $forwardedtoHq = DetcAction::where('detc_district', $district)
+                ->where('send_to', 'hq')
+                ->count();
+        }
+
+        /* =========================
+           PENDING FROM APPLICANT
+           (missing info not submitted)
+        ========================= */
+
+        if ($district == 3) {
+
+            $pendingFromApplicant = Complainant::whereIn('district_id', [3, 12])
+                ->where('is_completed', 1)
+                ->where('detc_rise_issue', 1)
+                ->whereNull('missing_info_submitted_at')
+                ->count();
+
+        } else {
+
+            $pendingFromApplicant = Complainant::where('district_id', $district)
+                ->where('is_completed', 1)
+                ->where('detc_rise_issue', 1)
+                ->whereNull('missing_info_submitted_at')
+                ->count();
+        }
+
+        /* =========================
+           PENDING FROM DETC
+           (info submitted, action pending)
+        ========================= */
+
+        if ($district == 3) {
+
+            $pendingFromDetc = Complainant::whereIn('district_id', [3, 12])
+                ->where('is_completed', 1)
+                ->where('detc_rise_issue', 1)
+                ->whereNotNull('missing_info_submitted_at')
+                ->count();
+
+        } else {
+
+            $pendingFromDetc = Complainant::where('district_id', $district)
+                ->where('is_completed', 1)
+                ->where('detc_rise_issue', 1)
+                ->whereNotNull('missing_info_submitted_at')
+                ->count();
+        }
 
         return view('detc.dashboard', compact(
             'allComplain',
@@ -42,7 +154,7 @@ class DetcController extends Controller
             'forwardedtoEto',
             'forwardedtoHq',
             'pendingFromApplicant',
-            'pendingFromDetc',
+            'pendingFromDetc'
         ));
     }
 
@@ -228,11 +340,19 @@ class DetcController extends Controller
             $sendTo = 'none';
         }
 
+        $additionalChargeDistrict = null;
+
+        if (Auth::user()->district == 3) {
+            $additionalChargeDistrict = 12;
+        }
+
         DetcAction::create([
             'secure_id' => $newSecureId,
             'complaint_id' => $complaint->id,
             'user_application_id' => $complaint->application_id,
             'detc_district' => Auth::user()->district,
+            'additional_charge_district' => $additionalChargeDistrict,
+
             'proposed_action' => $request->proposed_action,
             'ward_no' => $request->ward_no,
 

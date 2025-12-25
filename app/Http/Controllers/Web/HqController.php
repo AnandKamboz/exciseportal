@@ -152,63 +152,6 @@ class HqController extends Controller
         return view('hq.details', compact('information', 'stateName', 'districtName', 'detcAction'));
     }
 
-    // Here Code
-    // public function viewAll($type)
-    // {
-    //     $query = Complainant::where('is_completed', 1);
-
-    //     switch ($type) {
-
-    //         case 'all':
-    //         break;
-
-    //         case 'open':
-    //             $query->where(function ($q) {
-    //                 $q->whereNull('current_owner')
-    //                     ->orWhereIn('current_owner', ['DETC', 'ETO']);
-    //             })->where('is_final', 0);
-    //             break;
-
-    //         case 'pending-applicant':
-    //             $query->where('current_owner', 'APPLICANT')
-    //                 ->where('is_final', 0);
-    //             break;
-
-    //         case 'under-review':
-    //             $query->whereIn('current_owner', ['DETC', 'ETO', 'HQ'])
-    //                 ->where('is_final', 0);
-    //             break;
-
-    //         case 'with-detc':
-    //             $query->where('current_owner', 'DETC');
-    //             break;
-
-    //         case 'with-eto':
-    //             $query->where('current_owner', 'ETO');
-    //             break;
-
-    //         case 'with-hq':
-    //             $query->where('current_owner', 'HQ');
-    //             break;
-
-    //         case 'closed':
-    //             $query->where(function ($q) {
-    //                 $q->where('current_owner', 'CLOSED')
-    //                     ->orWhere('is_final', 1);
-    //             });
-    //             break;
-
-    //         default:
-    //             break;
-    //     }
-
-    //     $complaints = $query
-    //         ->orderBy('created_at', 'desc')
-    //         ->get();
-
-    //     return view('hq.complaints.list', compact('complaints', 'type'));
-    // }
-
     public function viewAll($type)
     {
         $query = Complainant::where('is_completed', 1);
@@ -351,22 +294,6 @@ class HqController extends Controller
         return redirect()->route('hq.eto.list')->with('success', 'ETO created successfully');
     }
 
-    // public function destroy($secure_id)
-    // {
-    //     $user = User::where('secure_id', $secure_id)->first();
-
-    //     if (! $user) {
-    //         return response()->json([
-    //             'message' => 'User not found',
-    //         ], 404);
-    //     }
-
-    //     $user->delete();
-
-    //     return redirect()->route('hq.eto.list')->with('success', 'ETO deleted successfully');
-
-    // }
-
     public function destroy($secure_id)
     {
         $eto = User::where('secure_id', $secure_id)->firstOrFail();
@@ -385,5 +312,83 @@ class HqController extends Controller
         $eto->delete();
 
         return redirect()->back()->with('success', 'ETO deleted successfully');
+    }
+
+    public function hqList()
+    {
+        // $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
+        //     ->leftJoin('districts', 'districts.id', '=', 'users.district')
+        //     ->where('role_types.role_id', 5)
+        //     ->select(
+        //         'users.*',
+        //         'districts.name as district_name'
+        //     )
+        //     ->orderBy('users.id', 'desc')
+        //     ->get();
+
+        $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
+            ->leftJoin('districts', 'districts.id', '=', 'users.district')
+            ->where('role_types.role_id', 5)
+            ->select(
+                'users.*',
+                'districts.name as district_name'
+            )
+            ->orderByRaw('
+        CASE 
+            WHEN users.id = 91 THEN 1
+            WHEN users.id = 93 THEN 2
+            WHEN users.id = 1  THEN 3
+            ELSE 4
+        END
+    ')
+            ->orderBy('users.id', 'asc')
+            ->get();
+
+        return view('hq.hq_user.index', compact('users'));
+    }
+
+    // createHqUser
+
+    public function createHqUser()
+    {
+        return view('hq.hq_user.create');
+    }
+
+    public function hqUserStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'mobile' => 'required|digits:10|unique:users,mobile',
+        ]);
+
+        do {
+            $secureId = (string) Str::uuid();
+        } while (
+            DB::table('users')->where('secure_id', $secureId)->exists()
+        );
+
+        $userId = DB::table('users')->insertGetId([
+            'secure_id' => $secureId,
+            'name' => $request->name,
+            'mobile' => $request->mobile,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('role_types')->insert([
+            'user_id' => $userId,
+            'role_id' => 5,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('hq_creation_logs')->insert([
+            'created_by_hq_id' => Auth::id(),
+            'created_hq_id' => $userId,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('hq.list')->with('success', 'HQ User created successfully');
     }
 }

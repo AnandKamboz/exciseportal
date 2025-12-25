@@ -16,8 +16,8 @@
             <table id="complaintsTable" class="table table-bordered table-hover align-middle">
                 <thead style="background: #FF8A73; color: #fff;">
                     <tr>
-                        <th class="text-center">ETO Name</th>
-                        <th class="text-center">ETO Mobile</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Mobile</th>
                         <th class="text-center">District</th>
                         <th class="text-center">Ward No.</th>
                         <th class="text-center">Action</th>
@@ -58,18 +58,8 @@
                                     </button>
                                 </form>
                             </td>
-
-
                         </tr>
                     @endforeach
-
-                    @if ($users->count() === 0)
-                        <tr>
-                            <td colspan="3" class="text-center text-muted">
-                                No ETO found
-                            </td>
-                        </tr>
-                    @endif
                 </tbody>
             </table>
         </div>

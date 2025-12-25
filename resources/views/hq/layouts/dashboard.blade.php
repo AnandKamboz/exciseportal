@@ -158,6 +158,11 @@
             font-size: 14px;
             border-radius: 10px;
         }
+
+        .nav-link.active {
+            background-color: rgba(18, 53, 229, 0.35);
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -169,25 +174,52 @@
             </div>
 
             <ul class="nav flex-column">
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link text-white" href="{{ route('hq.dashboard') }}">
                         <i class="bi bi-house"></i> <span>Dashboard</span>
-                    </a>
-                </li>
-
-                {{-- <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('hq.eto.list') }}">
-                        <i class="bi bi-house"></i> <span>Create ETO</span>
                     </a>
                 </li> --}}
 
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('hq.eto.list') }}">
-                              <i class="bi bi-plus-circle"></i>
+                    <a class="nav-link text-white {{ request()->is('hq/dashboard') || request()->is('hq/information/*') ? 'active' : '' }}"
+                        href="{{ route('hq.dashboard') }}">
+                        <i class="bi bi-house"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
 
+
+                {{-- <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ route('hq.eto.list') }}">
+                        <i class="bi bi-plus-circle"></i>
+                        <span>Create ETO</span>
+                    </a>
+                </li> --}}
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->is('hq/eto*') ? 'active' : '' }}"
+                        href="{{ route('hq.eto.list') }}">
+                        <i class="bi bi-plus-circle"></i>
                         <span>Create ETO</span>
                     </a>
                 </li>
+
+
+                {{-- <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ route('hq.list') }}">
+                        <i class="bi bi-building-add"></i>
+                        <span>Create HQ</span>
+                    </a>
+                </li> --}}
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->is('hq/list') || request()->is('hq/user/create') || request()->is('hq/edit/*') ? 'active' : '' }}"
+                        href="{{ route('hq.list') }}">
+                        <i class="bi bi-building-add"></i>
+                        <span>Create HQ</span>
+                    </a>
+                </li>
+
 
 
                 <li class="nav-item">

@@ -84,6 +84,15 @@ Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::get('/eto/create', [HqController::class, 'etoCreate'])->name('eto.create');
     Route::post('/eto/store', [HqController::class, 'etoStore'])->name('eto.store');
     Route::delete('/eto/{secure_id}', [HqController::class, 'destroy'])->name('eto.delete');
+
+    // HQ list
+    Route::get('/list', [HqController::class, 'hqList'])->name('list');
+    Route::get('/user/create', [HqController::class, 'createHqUser'])->name('user.create');
+    Route::post('/user/store', [HqController::class, 'hqUserStore'])->name('user.store');
+    Route::delete('/hq_user/{secure_id}', [HqController::class, 'hqDestroy'])->name('hq_user.delete');
+
+
+
 });
 
 Route::prefix('jc')->name('jc.')->middleware(['auth', 'jc'])->group(function () {
