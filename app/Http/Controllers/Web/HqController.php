@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\District;
+use Illuminate\Validation\Rule;
+use App\Models\DetcDeleteLog;
+use App\Models\DetcTransferLog;
+use App\Models\DetcUpdateLog;
 
 class HqController extends Controller
 {
@@ -316,16 +321,6 @@ class HqController extends Controller
 
     public function hqList()
     {
-        // $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
-        //     ->leftJoin('districts', 'districts.id', '=', 'users.district')
-        //     ->where('role_types.role_id', 5)
-        //     ->select(
-        //         'users.*',
-        //         'districts.name as district_name'
-        //     )
-        //     ->orderBy('users.id', 'desc')
-        //     ->get();
-
         $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
             ->leftJoin('districts', 'districts.id', '=', 'users.district')
             ->where('role_types.role_id', 5)
@@ -390,5 +385,157 @@ class HqController extends Controller
         ]);
 
         return redirect()->route('hq.list')->with('success', 'HQ User created successfully');
+    }
+
+    public function detcList(Request $request){
+        $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
+            ->leftJoin('districts', 'districts.id', '=', 'users.district')
+            ->where('role_types.role_id', 3)
+            ->select(
+                'users.*',
+                'districts.name as district_name'
+            )
+            ->orderBy('districts.name', 'asc')
+            ->orderBy('users.id', 'asc')
+            ->get();
+
+        return view("hq.detc.index",compact("users"));
+    }
+
+    public function editDetc($secure_id)
+    {
+        $detc = User::where('secure_id', $secure_id)->firstOrFail();
+        $districtName = District::where('id', $detc->district)->value('name');
+
+        return view('hq.detc.edit', compact('detc','districtName'));
+    }
+
+    public function updateDetc(Request $request, $secure_id)
+    {
+        $detc = User::where('secure_id', $secure_id)->firstOrFail();
+
+        $request->validate([
+            'name'   => 'required|string|max:255',
+            'mobile' => [
+                'required',
+                'digits:10',
+                Rule::unique('users', 'mobile')->ignore($detc->id),
+            ],
+        ]);
+
+        $oldName   = $detc->name;
+        $oldMobile = $detc->mobile;
+
+        $detc->update([
+            'name'   => $request->name,
+            'mobile' => $request->mobile,
+        ]);
+
+        DetcUpdateLog::create([
+            'detc_user_id' => $detc->id,
+            'updated_by'   => auth()->id(),
+            'old_name'     => $oldName,
+            'new_name'     => $request->name,
+            'old_mobile'   => $oldMobile,
+            'new_mobile'   => $request->mobile,
+            'ip_address'   => $request->ip(),
+            'user_agent'   => $request->userAgent(),
+        ]);
+
+        return redirect()
+            ->route('hq.detc.list')
+            ->with('success', 'DETC details updated successfully');
+    }
+
+    public function destroyDetc($secure_id)
+    {
+        $detc = User::where('secure_id', $secure_id)->firstOrFail();
+
+        $districtName = District::where('id', $detc->district)->value('name');
+
+        DetcDeleteLog::create([
+            'detc_user_id'  => $detc->id,
+            'detc_name'     => $detc->name,
+            'detc_mobile'   => $detc->mobile,
+            'district_id'   => $detc->district,
+            'district_name' => $districtName,
+            'deleted_by'    => auth()->id(), 
+            'ip_address'    => request()->ip(),
+            'user_agent'    => request()->userAgent(),
+        ]);
+
+        $detc->delete();
+
+        return redirect()->route('hq.detc.list')->with('success', 'DETC deleted successfully');
+    }
+
+    public function transferDetc(Request $request)
+    {
+        $detcs = User::join('role_types', 'role_types.user_id', '=', 'users.id')
+            ->leftJoin('districts', 'districts.id', '=', 'users.district')
+            ->where('role_types.role_id', 3) 
+            ->select(
+                'users.id',
+                'users.secure_id',
+                'users.name',
+                'users.district as district_id',     
+                'districts.name as district_name',
+                DB::raw("CONCAT(districts.name, ' (', users.name, ')') as detc_label")
+            )
+            ->orderBy('districts.name', 'asc')
+            ->get();
+
+            return view('hq.detc.transfer', compact('detcs'));
+    }
+
+
+    public function transferStore(Request $request)
+    {
+        $request->validate([
+            'from_detc' => 'required|different:to_detc',
+            'to_detc'   => 'required',
+            'remarks'   => 'nullable|string|max:500',
+        ]);
+
+        DB::transaction(function () use ($request) {
+            $fromDetc = User::where('secure_id', $request->from_detc)->firstOrFail();
+            $toDetc   = User::where('secure_id', $request->to_detc)->firstOrFail();
+
+            $fromDistrictId = $fromDetc->district;
+            $toDistrictId   = $toDetc->district;
+
+            $fromDistrictName = District::where('id', $fromDistrictId)->value('name');
+            $toDistrictName   = District::where('id', $toDistrictId)->value('name');
+
+            $fromDetc->update([
+                'district' => $toDistrictId,
+            ]);
+
+            $toDetc->update([
+                'district' => $fromDistrictId,
+            ]);
+
+            DetcTransferLog::create([
+                'from_detc_id'        => $fromDetc->id,
+                'from_detc_name'      => $fromDetc->name,
+                'from_district_id'    => $fromDistrictId,
+                'from_district_name'  => $fromDistrictName,
+
+                'to_detc_id'          => $toDetc->id,
+                'to_detc_name'        => $toDetc->name,
+                'to_district_id'      => $toDistrictId,
+                'to_district_name'    => $toDistrictName,
+
+                'transferred_by'      => auth()->id(), 
+                'remarks'             => $request->remarks,
+
+                'ip_address'          => request()->ip(),
+                'user_agent'          => request()->userAgent(),
+            ]);
+        });
+
+        return redirect()
+            ->route('hq.detc.list')
+            ->with('success', 'DETC transferred successfully');
     }
 }

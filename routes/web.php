@@ -91,6 +91,22 @@ Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::post('/user/store', [HqController::class, 'hqUserStore'])->name('user.store');
     Route::delete('/hq_user/{secure_id}', [HqController::class, 'hqDestroy'])->name('hq_user.delete');
 
+    // Detc List 
+    Route::get('detc/list', [HqController::class, 'detcList'])->name('detc.list');
+    Route::delete('/detc/{secure_id}', [HqController::class, 'destroyDetc'])->name('detc.delete');
+    Route::get('/detc/{secure_id}/edit', [HqController::class, 'editDetc'])->name('detc.edit');
+    Route::put('/detc/{secure_id}', [HqController::class, 'updateDetc'])->name('detc.update');
+
+
+
+    Route::get('/detc/transfer', [HqController::class, 'transferDetc'])->name('detc.transfer');
+    Route::post('/detc/transfer/store', [HqController::class, 'transferStore'])->name('detc.transfer.store');
+
+
+
+
+
+
 
 
 });

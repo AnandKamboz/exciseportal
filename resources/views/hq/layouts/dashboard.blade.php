@@ -205,12 +205,20 @@
                 </li>
 
 
-                {{-- <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('hq.list') }}">
-                        <i class="bi bi-building-add"></i>
-                        <span>Create HQ</span>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ route('hq.detc.list') }}">
+                        <i class="bi bi-diagram-3-fill"></i>
+                        <span>Create DETC</span>
                     </a>
-                </li> --}}
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ route('hq.detc.transfer') }}">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span>DETC Transfer</span>
+                    </a>
+                </li>
+
 
                 <li class="nav-item">
                     <a class="nav-link text-white {{ request()->is('hq/list') || request()->is('hq/user/create') || request()->is('hq/edit/*') ? 'active' : '' }}"
