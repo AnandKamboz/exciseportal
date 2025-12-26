@@ -218,6 +218,7 @@ class HqController extends Controller
         $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
             ->leftJoin('districts', 'districts.id', '=', 'users.district')
             ->where('role_types.role_id', 7)
+             ->where('users.is_deleted', 0) 
             ->select(
                 'users.*',
                 'districts.name as district_name'
@@ -241,10 +242,17 @@ class HqController extends Controller
             'name' => 'required|string|max:255',
             'district_id' => 'required|integer',
             'ward_no' => 'required|integer',
-            'mobile' => 'required|digits:10|unique:users,mobile',
+            'mobile' => 'required|digits:10',
         ]);
 
+        $existingUser = User::where('mobile', $request->mobile)->first();
+
+        if ($existingUser) {
+            return redirect()->back()->with('error', 'This mobile number is already registered.');
+        }
+        
         $districtWard = DB::table('district_wards')->where('district_id', $request->district_id)->first();
+
         if (! $districtWard) {
             return redirect()->back()->with('error', 'Ward configuration not found for this district.');
         }
@@ -254,12 +262,13 @@ class HqController extends Controller
 
         }
 
-        $exists = User::where('district', $request->district_id)
-            ->where('ward_no', $request->ward_no)
+        $exists = User::where('district', $request->district_id)->where('ward_no', $request->ward_no)
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
             ->exists();
 
         if ($exists) {
-            return redirect()->back()->with('error', 'This ward number already exists in the selected district.');
+            return redirect()->back()->with('error', 'An ETO is already assigned to this district and ward.');
         }
 
         do {
@@ -287,8 +296,10 @@ class HqController extends Controller
 
         DB::table('eto_creation_logs')->insert([
             'hq_user_id' => Auth::id(),
+            'hq_name'    => Auth::user()->name, 
             'hq_mobile' => Auth::user()->mobile,
             'eto_user_id' => $userId,
+            'eto_name'    => $request->name, 
             'eto_district_id' => $request->district_id,
             'eto_ward_number' => $request->ward_no,
             'eto_mobile' => $request->mobile,
@@ -299,25 +310,64 @@ class HqController extends Controller
         return redirect()->route('hq.eto.list')->with('success', 'ETO created successfully');
     }
 
+    // public function destroy($secure_id)
+    // {
+    //     $eto = User::where('secure_id', $secure_id)->firstOrFail();
+
+    //     DB::table('eto_deletion_logs')->insert([
+    //         'hq_user_id' => Auth::id(),
+    //         'hq_name'    => Auth::user()->name,
+    //         'hq_mobile' => Auth::user()->mobile,
+    //         'eto_user_id' => $eto->id,
+    //         'eto_name'    => $eto->name, 
+    //         'eto_district_id' => $eto->district,
+    //         'eto_ward_number' => $eto->ward_no,
+    //         'eto_mobile' => $eto->mobile,
+    //         'created_at' => now(),
+    //         'updated_at' => now(),
+    //     ]);
+
+    //     DB::table('role_types')->where('user_id', $eto->id)->delete();
+    //     $eto->delete();
+
+    //     return redirect()->back()->with('success', 'ETO deleted successfully');
+    // }
+
     public function destroy($secure_id)
     {
-        $eto = User::where('secure_id', $secure_id)->firstOrFail();
+        $eto = User::where('secure_id', $secure_id)
+                ->where('is_deleted', 0)
+                ->firstOrFail();
+
         DB::table('eto_deletion_logs')->insert([
-            'hq_user_id' => Auth::id(),
-            'hq_mobile' => Auth::user()->mobile,
-            'eto_user_id' => $eto->id,
-            'eto_district_id' => $eto->district,
-            'eto_ward_number' => $eto->ward_no,
-            'eto_mobile' => $eto->mobile,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'hq_user_id'        => Auth::id(),
+            'hq_name'           => Auth::user()->name,
+            'hq_mobile'         => Auth::user()->mobile,
+
+            'eto_user_id'       => $eto->id,
+            'eto_name'          => $eto->name,
+            'eto_district_id'   => $eto->district,
+            'eto_ward_number'   => $eto->ward_no,
+            'eto_mobile'        => $eto->mobile,
+
+            'created_at'        => now(),
+            'updated_at'        => now(),
         ]);
 
-        DB::table('role_types')->where('user_id', $eto->id)->delete();
-        $eto->delete();
+        $eto->update([
+            'is_active'  => 0,   
+            'is_deleted' => 1, 
+        ]);
+
+        // DB::table('role_types')
+        //     ->where('user_id', $eto->id)
+        //     ->update([
+        //         'is_active' => 0
+        //     ]);
 
         return redirect()->back()->with('success', 'ETO deleted successfully');
     }
+
 
     public function hqList()
     {
@@ -391,6 +441,7 @@ class HqController extends Controller
         $users = User::join('role_types', 'role_types.user_id', '=', 'users.id')
             ->leftJoin('districts', 'districts.id', '=', 'users.district')
             ->where('role_types.role_id', 3)
+             ->where('users.is_deleted', 0)
             ->select(
                 'users.*',
                 'districts.name as district_name'
@@ -434,6 +485,8 @@ class HqController extends Controller
         DetcUpdateLog::create([
             'detc_user_id' => $detc->id,
             'updated_by'   => auth()->id(),
+            'hq_name'      => auth()->user()->name,
+            'hq_mobile'    => auth()->user()->mobile,
             'old_name'     => $oldName,
             'new_name'     => $request->name,
             'old_mobile'   => $oldMobile,
@@ -460,11 +513,17 @@ class HqController extends Controller
             'district_id'   => $detc->district,
             'district_name' => $districtName,
             'deleted_by'    => auth()->id(), 
+            'hq_name'     => Auth::user()->name,     
+            'hq_mobile'      => Auth::user()->mobile,
             'ip_address'    => request()->ip(),
             'user_agent'    => request()->userAgent(),
         ]);
 
-        $detc->delete();
+        // $detc->delete();
+        $detc->update([
+            'is_active' => 0,
+            'is_deleted' => 1,
+        ]);
 
         return redirect()->route('hq.detc.list')->with('success', 'DETC deleted successfully');
     }
@@ -520,14 +579,20 @@ class HqController extends Controller
                 'from_detc_name'      => $fromDetc->name,
                 'from_district_id'    => $fromDistrictId,
                 'from_district_name'  => $fromDistrictName,
+                'from_detc_mobile'    => $fromDetc->mobile, 
 
                 'to_detc_id'          => $toDetc->id,
                 'to_detc_name'        => $toDetc->name,
                 'to_district_id'      => $toDistrictId,
                 'to_district_name'    => $toDistrictName,
+                'to_detc_mobile'      => $toDetc->mobile,     
+
 
                 'transferred_by'      => auth()->id(), 
+                'hq_name'             => auth()->user()->name,    
+                'hq_mobile'           => auth()->user()->mobile,   
                 'remarks'             => $request->remarks,
+
 
                 'ip_address'          => request()->ip(),
                 'user_agent'          => request()->userAgent(),
@@ -538,4 +603,53 @@ class HqController extends Controller
             ->route('hq.detc.list')
             ->with('success', 'DETC transferred successfully');
     }
+
+    public function toggleStatus($secure_id)
+    {
+        $eto = User::where('secure_id', $secure_id)->firstOrFail();
+
+        $eto->update([
+            'is_active' => $eto->is_active == 1 ? 0 : 1,
+        ]);
+
+        return back()->with(
+            'success',
+            $eto->is_active == 1
+                ? 'ETO activated successfully'
+                : 'ETO deactivated successfully'
+        );
+    }
+
+    // public function deactivate($secure_id)
+    // {
+    //     $detc = User::where('secure_id', $secure_id)
+    //                 ->where('is_deleted', 0)
+    //                 ->firstOrFail();
+
+    //     $detc->update([
+    //         'is_active' => 0
+    //     ]);
+
+    //     return redirect()->back()->with('success', 'DETC deactivated successfully.');
+    // }
+
+    public function detcToggle(Request $request)
+    {
+        $detc = User::where('secure_id', $request->secure_id)
+                    ->where('is_deleted', 0)
+                    ->firstOrFail();
+
+        $detc->update([
+            'is_active' => $request->status
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => $request->status
+                ? 'DETC activated successfully.'
+                : 'DETC deactivated successfully.'
+        ]);
+    }
+
+
 }

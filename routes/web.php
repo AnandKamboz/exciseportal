@@ -112,7 +112,10 @@ Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
 
     Route::get('/district-complaints/application/{secure_id}',[HQDistrictApplicationController::class, 'applicationDetails'])->name('district.complaints.view');
 
+    Route::post('/eto/toggle-status/{secure_id}',[HqController::class, 'toggleStatus'])->name('eto.toggle.status');
 
+    Route::put('/detc.deactivate/{secure_id}', [HqController::class, 'deactivate'])->name('detc.deactivate');
+    Route::post('/detc/toggle-status', [HqController::class, 'detcToggle'])->name('detc.toggle');
 
 
 });

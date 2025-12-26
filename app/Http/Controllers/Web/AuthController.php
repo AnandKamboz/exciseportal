@@ -22,6 +22,42 @@ class AuthController extends Controller
             'mobile' => 'required|numeric|digits:10',
         ]);
 
+        $user = User::where('mobile', $request->mobile)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found.',
+            ], 404);
+        }
+
+        if ($user->is_deleted == 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your account has been deleted. Please contact administrator.',
+            ], 403);
+        }
+
+        if ($user->is_active == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your account is deactivated. Please contact administrator.',
+            ], 403);
+        }
+
+        // if (!$user) {
+        //     return redirect()->back()->with('error', 'User not found.');
+        // }
+
+        // if ($user->is_deleted == 1) {
+        //     return redirect()->back()->with('error', 'Your account has been deleted. Please contact administrator.');
+        // }
+
+        // if ($user->is_active == 0) {
+        //     return redirect()->back()->with('error', 'Your account is deactivated. Please contact administrator.');
+        // }
+
+
         if (config('app.env') === 'local') {
             $otp = '111111';
         } else {

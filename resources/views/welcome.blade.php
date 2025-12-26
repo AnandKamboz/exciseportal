@@ -650,6 +650,38 @@
             });
         </script>
     @endif
+
+   @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: @json(session('error')),
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#d33'
+            }).then(() => {
+                // popup automatically closes
+                // optional: window.location.reload();
+            });
+        </script>
+        @endif
+
+        @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: @json(session('success')),
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            }).then(() => {
+                // popup automatically closes
+                // optional: window.location.reload();
+            });
+        </script>
+@endif
+
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"

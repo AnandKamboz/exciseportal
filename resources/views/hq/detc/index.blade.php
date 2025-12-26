@@ -13,7 +13,7 @@
         </div>
 
         <div class="table-responsive">
-            <table id="complaintsTable" class="table table-bordered table-hover align-middle">
+            {{-- <table id="complaintsTable" class="table table-bordered table-hover align-middle">
                 <thead style="background: #FF8A73; color: #fff;">
                     <tr>
                         <th class="text-center">Name</th>
@@ -66,7 +66,71 @@
                         </tr>
                     @endforeach
                 </tbody>
+            </table> --}}
+
+            <table id="complaintsTable" class="table table-bordered table-hover align-middle">
+                <thead style="background: #FF8A73; color: #fff;">
+                    <tr>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Mobile</th>
+                        <th class="text-center">District</th>
+                        <th class="text-center d-none">Ward No.</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach ($users as $row)
+                        <tr>
+
+                            {{-- NAME --}}
+                            <td class="text-center">
+                                <i class="bi bi-person-badge-fill me-1 text-primary"></i>
+                                {{ $row->name }}
+                            </td>
+
+                            {{-- MOBILE --}}
+                            <td class="text-center">
+                                <i class="bi bi-telephone-fill me-1 text-success"></i>
+                                {{ $row->mobile }}
+                            </td>
+
+                            {{-- DISTRICT --}}
+                            <td class="text-center">
+                                <i class="bi bi-geo-alt-fill me-1 text-danger"></i>
+                                {{ $row->district_name }}
+                            </td>
+
+                            {{-- WARD (HIDDEN) --}}
+                            <td class="text-center d-none">
+                                Ward No {{ $row->ward_no }}
+                            </td>
+
+                            {{-- STATUS TOGGLE --}}
+                            <td class="text-center">
+                                <div class="form-check form-switch d-flex justify-content-center">
+                                    <input class="form-check-input status-toggle" type="checkbox"
+                                        data-id="{{ $row->secure_id }}" {{ $row->is_active ? 'checked' : '' }}>
+                                </div>
+                            </td>
+
+                            {{-- ACTION --}}
+                            <td class="text-center">
+                                <a href="{{ route('hq.detc.edit', $row->secure_id) }}" class="btn btn-sm btn-warning"
+                                    title="Edit DETC">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+                    @endforeach
+                </tbody>
             </table>
+
+
+
+
         </div>
     </div>
 
@@ -123,5 +187,93 @@
             });
         </script>
     @endif
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- <script>
+        document.querySelectorAll('.status-toggle').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+
+                let secureId = this.dataset.id;
+                let status = this.checked ? 1 : 0;
+
+                Swal.fire({
+                    title: status ? 'Activate DETC?' : 'Deactivate DETC?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        fetch("{{ route('hq.detc.toggle') }}", {
+                                method: "POST",
+                                headers: {
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    secure_id: secureId,
+                                    status: status
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                Swal.fire('Success', data.message, 'success');
+                            });
+                    } else {
+                        // revert toggle if cancelled
+                        this.checked = !status;
+                    }
+                });
+            });
+        });
+    </script> --}}
+
+    <script>
+        document.querySelectorAll('.status-toggle').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+
+                let checkbox = this; 
+                let secureId = checkbox.dataset.id;
+                let status = checkbox.checked ? 1 : 0;
+
+                Swal.fire({
+                    title: status ? 'Activate DETC?' : 'Deactivate DETC?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch("{{ route('hq.detc.toggle') }}", {
+                                method: "POST",
+                                headers: {
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    secure_id: secureId,
+                                    status: status
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                Swal.fire('Success', data.message, 'success');
+                            })
+                            .catch(() => {
+                                checkbox.checked = !status;
+                                Swal.fire('Error', 'Something went wrong', 'error');
+                            });
+
+                    } else {
+                        // ❌ revert toggle
+                        checkbox.checked = !status;
+                    }
+                });
+            });
+        });
+    </script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

@@ -13,7 +13,7 @@
         </div>
 
         <div class="table-responsive">
-            <table id="complaintsTable" class="table table-bordered table-hover align-middle">
+            {{-- <table id="complaintsTable" class="table table-bordered table-hover align-middle">
                 <thead style="background: #FF8A73; color: #fff;">
                     <tr>
                         <th class="text-center">Name</th>
@@ -61,7 +61,63 @@
                         </tr>
                     @endforeach
                 </tbody>
+            </table> --}}
+
+            <table id="complaintsTable" class="table table-bordered table-hover align-middle">
+                <thead style="background: #FF8A73; color: #fff;">
+                    <tr>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Mobile</th>
+                        <th class="text-center">District</th>
+                        <th class="text-center">Ward No.</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach ($users as $row)
+                        <tr>
+                            <td class="text-center">{{ $row->name }}</td>
+                            <td class="text-center">{{ $row->mobile }}</td>
+                            <td class="text-center">{{ $row->district_name }}</td>
+                            <td class="text-center">Ward No {{ $row->ward_no }}</td>
+
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-1">
+
+                                    {{-- 🔄 Activate / Deactivate --}}
+                                    <form action="{{ route('hq.eto.toggle.status', $row->secure_id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-sm {{ $row->is_active ? 'btn-warning' : 'btn-success' }}"
+                                            title="{{ $row->is_active ? 'Deactivate' : 'Activate' }}">
+
+                                            @if ($row->is_active)
+                                                <i class="bi bi-pause-fill"></i>
+                                            @else
+                                                <i class="bi bi-play-fill"></i>
+                                            @endif
+                                        </button>
+                                    </form>
+
+                                    {{-- 🗑 Delete --}}
+                                    <form action="{{ route('hq.eto.delete', $row->secure_id) }}" method="POST"
+                                        class="delete-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
             </table>
+
+
         </div>
     </div>
 

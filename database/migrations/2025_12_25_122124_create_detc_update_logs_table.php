@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('detc_update_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('detc_user_id');   // jis DETC ko update kiya
-            $table->unsignedBigInteger('updated_by');     // HQ user id
+            $table->unsignedBigInteger('detc_user_id');
+            $table->unsignedBigInteger('updated_by');
 
             $table->string('old_name')->nullable();
             $table->string('new_name')->nullable();

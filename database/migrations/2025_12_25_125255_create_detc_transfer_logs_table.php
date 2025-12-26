@@ -18,14 +18,13 @@ return new class extends Migration
                 $table->unsignedBigInteger('from_district_id')->nullable();
                 $table->string('from_district_name')->nullable();
 
-                // TO DETC
                 $table->unsignedBigInteger('to_detc_id');
                 $table->string('to_detc_name')->nullable();
                 $table->unsignedBigInteger('to_district_id')->nullable();
                 $table->string('to_district_name')->nullable();
 
-                // META
-                $table->unsignedBigInteger('transferred_by'); // HQ user id
+                
+                $table->unsignedBigInteger('transferred_by'); 
                 $table->text('remarks')->nullable();
 
                 $table->ipAddress('ip_address')->nullable();
