@@ -14,6 +14,9 @@ use App\Http\Controllers\Web\EtoController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Mews\Captcha\Facades\Captcha;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 
 Route::get('/inspector/dashboard', [InspectorDashboard::class, 'dashboard'])->name('inspector.dashboard');
@@ -21,6 +24,81 @@ Route::get('/inspector/dashboard', [InspectorDashboard::class, 'dashboard'])->na
 Route::get('/apk',function(){
    return view('apk');
 });
+
+Route::get('/privacy-policy', function () {
+    return view('privacy-policy');
+})->name('privacy.policy');
+
+Route::get('/user-delete-request', function () {
+    return view('user_delete_requests');
+})->name('user.delete.request');
+
+
+
+Route::post('/verify-delete-otp', function (Request $request) {
+
+    $mobile = $request->mobile;
+    $otp    = $request->otp;
+
+    // $user = = DB::table('user_delete_requests')->where('mobile', $mobile)->first();
+    $user = DB::table('user_delete_requests')
+            ->where('mobile', $mobile)
+            ->first();
+
+
+    if (! $user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'User not found'
+        ], 404);
+    }
+
+    // 2️⃣ OTP check
+    if ($otp !== '111111') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Wrong OTP'
+        ], 422);
+    }
+
+    // dd("Hey");
+
+    DB::table('user_delete_requests')->where('mobile', $mobile)->delete();
+
+
+   
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Your Account Deleted Successfully',
+    ]);
+
+});
+
+Route::post('/check-mobile-and-send-otp', function (Request $request) {
+
+    $mobile = $request->mobile;
+
+    $user = DB::table('user_delete_requests')->where('mobile', $mobile)->first();
+
+    if (! $user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'User not found'
+        ], 404);
+    }
+
+    // Dummy OTP send success
+    return response()->json([
+        'success' => true,
+        'message' => 'A 6-digit OTP has been sent to your registered mobile number'
+    ]);
+
+});
+
+
+
+
 
 Route::get('/', function () {
     return view('entry');
