@@ -76,7 +76,10 @@ class AuthController extends Controller
 
         $template_id = '1407176526044359486';
 
-        $this->sendSMS($request->mobile, $message, $template_id);
+        // $this->sendSMS($request->mobile, $message, $template_id);
+        if (env('APP_ENV') !== 'local') {
+            $this->sendSMS($request->mobile, $message, $template_id);
+        }
 
         $mobileMasked = '******'.substr($request->mobile, -4);
 
