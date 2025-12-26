@@ -158,6 +158,14 @@
             font-size: 14px;
             border-radius: 10px;
         }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: #fff !important;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45);
+        }
     </style>
 </head>
 
@@ -169,11 +177,46 @@
             </div>
 
             <ul class="nav flex-column">
-                <li class="nav-item">
+
+
+
+
+                {{-- <li class="nav-item">
                     <a class="nav-link text-white" href="{{ route('detc.dashboard') }}">
                         <i class="bi bi-house"></i> <span>Dashboard</span>
                     </a>
+                </li> --}}
+
+                <li class="nav-item">
+                    <a class="nav-link text-white
+                        {{ request()->is('detc/dashboard') ||
+                        request()->is('detc/all-applications') ||
+                        request()->is('detc/application/*') ||
+                        request()->is('detc/pending-from-applicant') ||
+                        request()->is('detc/applications/pending-detc') ||
+                        request()->is('detc/closed-information') ||
+                        request()->is('detc/no-action') ||
+                        request()->is('detc/with-eto') ||
+                        request()->is('detc/with-hq')
+                            ? 'active'
+                            : '' }}"
+                        href="{{ route('detc.dashboard') }}">
+                        <i class="bi bi-house"></i>
+                        <span>Dashboard</span>
+                    </a>
                 </li>
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}">

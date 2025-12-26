@@ -158,6 +158,14 @@
             font-size: 14px;
             border-radius: 10px;
         }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #3D49CFFF, #1F10C4FF);
+            color: #fff !important;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.45);
+        }
     </style>
 </head>
 
@@ -169,11 +177,21 @@
             </div>
 
             <ul class="nav flex-column">
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link text-white" href="{{ route('eto.dashboard') }}">
                         <i class="bi bi-house"></i> <span>Dashboard</span>
                     </a>
+                </li> --}}
+
+                <li class="nav-item">
+                    <a class="nav-link text-white
+                         {{ request()->is('eto/dashboard') || request()->is('eto/information/view/*') ? 'active' : '' }}"
+                        href="{{ route('eto.dashboard') }}">
+                        <i class="bi bi-house"></i>
+                        <span>Dashboard</span>
+                    </a>
                 </li>
+
 
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}">
