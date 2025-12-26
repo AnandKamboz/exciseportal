@@ -16,12 +16,15 @@ class DetcController extends Controller
     // {
     //     $district = Auth::user()->district;
 
+    //     /* =========================
+    //        ALL COMPLAINTS
+    //     ========================= */
+
     //     if ($district == 3) {
     //         $allComplain = Complainant::whereIn('district_id', [3, 12])
     //             ->where('is_completed', 1)
     //             ->orderBy('created_at', 'desc')
     //             ->get();
-
     //     } else {
     //         $allComplain = Complainant::where('district_id', $district)
     //             ->where('is_completed', 1)
@@ -30,10 +33,83 @@ class DetcController extends Controller
     //     }
 
     //     $totalInformation = $allComplain->count();
-    //     $forwardedtoEto = DetcAction::where('detc_district', $district)->where('send_to', 'eto')->count();
-    //     $forwardedtoHq = DetcAction::where('detc_district', $district)->where('send_to', 'hq')->count();
-    //     $pendingFromApplicant = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
-    //     $pendingFromDetc = Complainant::where('district_id', $district)->where('is_completed', 1)->where('detc_rise_issue', 1)->whereNull('missing_info_submitted_at')->count();
+
+    //     /* =========================
+    //        FORWARDED TO ETO
+    //     ========================= */
+
+    //     if ($district == 3) {
+    //         $forwardedtoEto = DetcAction::whereIn('detc_district', [3, 12])
+    //             ->where('send_to', 'eto')
+    //             ->count();
+
+    //     } else {
+
+    //         $forwardedtoEto = DetcAction::where('detc_district', $district)
+    //             ->where('send_to', 'eto')
+    //             ->count();
+    //     }
+
+    //     /* =========================
+    //        FORWARDED TO HQ
+    //     ========================= */
+
+    //     if ($district == 3) {
+
+    //         $forwardedtoHq = DetcAction::whereIn('detc_district', [3, 12])
+    //             ->where('send_to', 'hq')
+    //             ->count();
+
+    //     } else {
+
+    //         $forwardedtoHq = DetcAction::where('detc_district', $district)
+    //             ->where('send_to', 'hq')
+    //             ->count();
+    //     }
+
+    //     /* =========================
+    //        PENDING FROM APPLICANT
+    //        (missing info not submitted)
+    //     ========================= */
+
+    //     if ($district == 3) {
+
+    //         $pendingFromApplicant = Complainant::whereIn('district_id', [3, 12])
+    //             ->where('is_completed', 1)
+    //             ->where('detc_rise_issue', 1)
+    //             ->whereNull('missing_info_submitted_at')
+    //             ->count();
+
+    //     } else {
+
+    //         $pendingFromApplicant = Complainant::where('district_id', $district)
+    //             ->where('is_completed', 1)
+    //             ->where('detc_rise_issue', 1)
+    //             ->whereNull('missing_info_submitted_at')
+    //             ->count();
+    //     }
+
+    //     /* =========================
+    //        PENDING FROM DETC
+    //        (info submitted, action pending)
+    //     ========================= */
+
+    //     if ($district == 3) {
+
+    //         $pendingFromDetc = Complainant::whereIn('district_id', [3, 12])
+    //             ->where('is_completed', 1)
+    //             ->where('detc_rise_issue', 1)
+    //             ->whereNotNull('missing_info_submitted_at')
+    //             ->count();
+
+    //     } else {
+
+    //         $pendingFromDetc = Complainant::where('district_id', $district)
+    //             ->where('is_completed', 1)
+    //             ->where('detc_rise_issue', 1)
+    //             ->whereNotNull('missing_info_submitted_at')
+    //             ->count();
+    //     }
 
     //     return view('detc.dashboard', compact(
     //         'allComplain',
@@ -41,122 +117,122 @@ class DetcController extends Controller
     //         'forwardedtoEto',
     //         'forwardedtoHq',
     //         'pendingFromApplicant',
-    //         'pendingFromDetc',
+    //         'pendingFromDetc'
     //     ));
     // }
+
 
     public function dashboard()
     {
         $district = Auth::user()->district;
 
-        /* =========================
-           ALL COMPLAINTS
-        ========================= */
+        // Special district handling
+        $districtIds = ($district == 3) ? [3, 12] : [$district];
+
+        /*
+        |--------------------------------------------------------------------------
+        | BASE QUERY (DETC Dashboard)
+        |--------------------------------------------------------------------------
+        */
+        $baseQuery = Complainant::whereIn('district_id', $districtIds)
+            ->where('is_completed', 1);
+
+        /*
+        |--------------------------------------------------------------------------
+        | DASHBOARD COUNTS (As per Screenshot)
+        |--------------------------------------------------------------------------
+        */
+
+        // 1. Total Information
+        $totalInformation = (clone $baseQuery)->count();
+
+        // 2. Open / New Information
+        $newInformation = (clone $baseQuery)
+            ->where('current_status', 'pending')
+            ->where('is_final', 0)
+            ->count();
+
+        // 3. Pending with Applicant
+        $pendingWithApplicant = (clone $baseQuery)
+            ->where('current_owner', 'applicant')
+            ->where('is_final', 0)
+            ->count();
+
+        // 4. Under Review
+        $underReview = (clone $baseQuery)
+            ->where('current_status', 'in_process')
+            ->where('is_final', 0)
+            ->count();
+
+        // 5. Closed Information
+        $closedInformation = (clone $baseQuery)
+            ->where('is_final', 1)
+            ->count();
+
+        // 6. With DETC
+        $withDetc = (clone $baseQuery)
+            ->where('current_owner', 'detc')
+            ->where('is_final', 0)
+            ->count();
+
+        // 7. With ETO
+        $withEto = (clone $baseQuery)
+            ->where('current_owner', 'eto')
+            ->where('is_final', 0)
+            ->count();
+
+        // 8. With HQ
+        $withHq = (clone $baseQuery)
+            ->where('current_owner', 'hq')
+            ->where('is_final', 0)
+            ->count();
+
+
+        // No action taken
+         $noActionTaken = (clone $baseQuery)
+            ->where('is_final', 0)
+            ->where(function ($q) {
+                $q->whereNull('current_owner')
+                ->orWhere('current_owner', '')
+                ->orWhereNull('current_level')
+                ->orWhere('current_level', '')
+                ->orWhereNull('current_status')
+                ->orWhere('current_status', 'pending');
+        })
+        ->count();
+
+        // dd($noActionTaken);
 
         if ($district == 3) {
-
             $allComplain = Complainant::whereIn('district_id', [3, 12])
                 ->where('is_completed', 1)
                 ->orderBy('created_at', 'desc')
                 ->get();
-
         } else {
-
             $allComplain = Complainant::where('district_id', $district)
                 ->where('is_completed', 1)
                 ->orderBy('created_at', 'desc')
                 ->get();
         }
-
-        $totalInformation = $allComplain->count();
-
-        /* =========================
-           FORWARDED TO ETO
-        ========================= */
-
-        if ($district == 3) {
-
-            $forwardedtoEto = DetcAction::whereIn('detc_district', [3, 12])
-                ->where('send_to', 'eto')
-                ->count();
-
-        } else {
-
-            $forwardedtoEto = DetcAction::where('detc_district', $district)
-                ->where('send_to', 'eto')
-                ->count();
-        }
-
-        /* =========================
-           FORWARDED TO HQ
-        ========================= */
-
-        if ($district == 3) {
-
-            $forwardedtoHq = DetcAction::whereIn('detc_district', [3, 12])
-                ->where('send_to', 'hq')
-                ->count();
-
-        } else {
-
-            $forwardedtoHq = DetcAction::where('detc_district', $district)
-                ->where('send_to', 'hq')
-                ->count();
-        }
-
-        /* =========================
-           PENDING FROM APPLICANT
-           (missing info not submitted)
-        ========================= */
-
-        if ($district == 3) {
-
-            $pendingFromApplicant = Complainant::whereIn('district_id', [3, 12])
-                ->where('is_completed', 1)
-                ->where('detc_rise_issue', 1)
-                ->whereNull('missing_info_submitted_at')
-                ->count();
-
-        } else {
-
-            $pendingFromApplicant = Complainant::where('district_id', $district)
-                ->where('is_completed', 1)
-                ->where('detc_rise_issue', 1)
-                ->whereNull('missing_info_submitted_at')
-                ->count();
-        }
-
-        /* =========================
-           PENDING FROM DETC
-           (info submitted, action pending)
-        ========================= */
-
-        if ($district == 3) {
-
-            $pendingFromDetc = Complainant::whereIn('district_id', [3, 12])
-                ->where('is_completed', 1)
-                ->where('detc_rise_issue', 1)
-                ->whereNotNull('missing_info_submitted_at')
-                ->count();
-
-        } else {
-
-            $pendingFromDetc = Complainant::where('district_id', $district)
-                ->where('is_completed', 1)
-                ->where('detc_rise_issue', 1)
-                ->whereNotNull('missing_info_submitted_at')
-                ->count();
-        }
-
+        /*
+        |--------------------------------------------------------------------------
+        | RETURN VIEW
+        |--------------------------------------------------------------------------
+        */
         return view('detc.dashboard', compact(
-            'allComplain',
             'totalInformation',
-            'forwardedtoEto',
-            'forwardedtoHq',
-            'pendingFromApplicant',
-            'pendingFromDetc'
+            'newInformation',
+            'pendingWithApplicant',
+            'underReview',
+            'closedInformation',
+            'withDetc',
+            'withEto',
+            'withHq',
+            'allComplain',
+            'noActionTaken',
         ));
     }
+
 
     public function show($secure_id)
     {
@@ -477,15 +553,21 @@ class DetcController extends Controller
     {
         $district = Auth::user()->district;
 
-        $applications = Complainant::where('district_id', $district)
-            ->where('is_completed', 1)
+        $query = Complainant::where('is_completed', 1)
             ->where('detc_rise_issue', 1)
-            ->whereNull('missing_info_submitted_at')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->whereNull('missing_info_submitted_at');
+
+        if ($district == 3) {
+            $query->whereIn('district_id', [3, 12]);
+        } else {
+            $query->where('district_id', $district);
+        }
+
+        $applications = $query->orderBy('created_at', 'desc')->get();
 
         return view('detc.pending_from_applicant', compact('applications'));
     }
+
 
     public function pendingFromDetc()
     {
@@ -506,4 +588,93 @@ class DetcController extends Controller
 
         return view('detc.show', compact('complain'));
     }
+
+    public function underReview()
+    {
+        $district = Auth::user()->district;
+
+        $query = Complainant::where('is_completed', 1)
+            ->where('detc_rise_issue', 1)
+            ->whereNotNull('missing_info_submitted_at');
+
+        if ($district == 3) {
+            $query->whereIn('district_id', [3, 12]);
+        } else {
+            $query->where('district_id', $district);
+        }
+
+        // 👉 Sabhi records lao
+        $applications = $query
+            ->orderBy('missing_info_submitted_at', 'desc')
+            ->get();
+
+        return view('detc.under_review', compact('applications'));
+    }
+
+    public function closedInformation(){
+
+        $closed = Complainant::where('district_id', Auth::user()->district)
+            ->where('current_owner', 'CLOSED')
+            ->where('current_level', 'CLOSED')
+            ->where('is_final', 1)
+            ->get();
+        
+        return view('detc.closed_application', compact('closed'));
+
+    }
+
+    public function noActionTaken()
+    {
+        $district = Auth::user()->district;
+        $districtIds = ($district == 3) ? [3, 12] : [$district];
+
+        $applications = Complainant::whereIn('district_id', $districtIds)
+            ->where('is_completed', 1)
+            ->where('is_final', 0)
+            ->where(function ($q) {
+                $q->whereNull('current_owner')
+                ->orWhere('current_owner', '')
+                ->orWhereNull('current_level')
+                ->orWhere('current_level', '')
+                ->orWhereNull('current_status')
+                ->orWhere('current_status', 'pending');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('detc.no_action_taken', compact('applications'));
+    }
+
+    public function withEto()
+    {
+        $district = Auth::user()->district;
+
+        $applications = Complainant::where('district_id', $district)
+            ->where('current_owner', 'ETO')
+            ->where('current_level', 'ETO')
+            ->where('is_final', 0)
+            ->get();
+
+        return view('detc.with_eto', compact('applications'));
+    }
+
+    public function withHq()
+    {
+        $district = Auth::user()->district;
+
+        $applications = Complainant::where('district_id', $district)
+            ->where('current_owner', 'HQ')
+            ->where('current_level', 'HQ')
+            ->where('is_final', 0)
+            ->get();
+
+        return view('detc.with_hq', compact('applications'));
+    }
+
+
+
+
+
+
+
 }

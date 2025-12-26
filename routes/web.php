@@ -150,6 +150,14 @@ Route::prefix('detc')->name('detc.')->middleware(['auth', 'detcrole'])->group(fu
     Route::get('/applications/pending-detc', [DetcController::class, 'pendingFromDetc'])->name('applications.pending_detc');
 
     // Here 
+    Route::get('/applications/under-review',[DetcController::class, 'underReview'])->name('status.underreview');
+    Route::get('/closed-information', [DetcController::class, 'closedInformation'])->name('final.yes');
+    Route::get('/no-action', [DetcController::class, 'noActionTaken'])->name('no.action');
+    Route::get('/with-eto',[DetcController::class, 'withEto'])->name('owner.eto');
+    Route::get('/with-hq',[DetcController::class, 'withHq'])->name('owner.hq');
+
+
+
     
 });
 

@@ -32,9 +32,7 @@
                         </td>
                     </tr>
                 @empty
-                    {{-- <tr>
-                        <td colspan="6" class="text-center">No Records Found</td>
-                    </tr> --}}
+                   
                 @endforelse
             </tbody>
         </table>
