@@ -69,13 +69,16 @@
             </div>
 
             {{-- UNDER REVIEW --}}
-            {{-- <div class="col-md-3">
+            <div class="col-md-3">
                 <div class="card text-center p-3">
-                    <h5>Under Review</h5>
-                    <h2>{{ $underReview }}</h2>
-                    <a href="{{ route('detc.status.underreview') }}" class="new-butt">View All</a>
+                    <h5>Pending with DETC</h5>
+                    <h2>{{ $withDetc }}</h2>
+                    <a href="{{ route('detc.applications.pending_detc') }}" class="new-butt">
+                        View All
+                    </a>
                 </div>
-            </div> --}}
+            </div>
+
 
             {{-- CLOSED INFORMATION --}}
             <div class="col-md-3">

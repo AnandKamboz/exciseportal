@@ -36,6 +36,8 @@ class EtoController extends Controller
         $etoActions = EtoAction::where('application_id', $complain->application_id)
             ->orderBy('id', 'asc')
             ->get();
+        
+        $detcActions = DetcAction::where('user_application_id',$complain->application_id)->get();
 
         $infoIncompleteCount = EtoAction::where('application_id', $complain->application_id)
             ->where('action', 'non_actionable')
@@ -48,7 +50,8 @@ class EtoController extends Controller
             'complain',
             'etoActions',
             'etoAction',
-            'infoIncompleteCount'
+            'infoIncompleteCount',
+            'detcActions'
         ));
     }
 
@@ -305,7 +308,7 @@ class EtoController extends Controller
             'current_owner'  => 'HQ',
             'current_level'  => 'HQ',
             'current_status' => 'eto_report_uploaded',
-            'is_final'       => true,
+            'is_final'       => false,
         ]);
 
         return back()->with('success', 'Report uploaded successfully');

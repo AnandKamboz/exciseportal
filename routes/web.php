@@ -156,6 +156,8 @@ Route::prefix('detc')->name('detc.')->middleware(['auth', 'detcrole'])->group(fu
     Route::get('/with-eto',[DetcController::class, 'withEto'])->name('owner.eto');
     Route::get('/with-hq',[DetcController::class, 'withHq'])->name('owner.hq');
 
+    Route::get('/applications/pending-detc', [DetcController::class, 'pendingWithDetc'])->name('applications.pending_detc');
+
 
 
     

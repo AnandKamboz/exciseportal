@@ -411,6 +411,114 @@
             @endif
             <hr>
 
+            {{-- here detc  --}}
+
+            {{-- <div class="container mt-3">
+                <h4 class="mb-3">DETC Action</h4>
+
+                <div class="row g-3">
+
+                    @forelse($detcActions as $action)
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+
+                                <div class="card-body">
+                                    <p class="mb-2">
+                                        <strong>Proposed Action:</strong>
+                                        {{ ucwords(str_replace('_', ' ', $action->proposed_action)) }}
+                                    </p>
+
+                                    <p class="mb-0">
+                                        <strong>Remarks:</strong>
+                                        {{ $action->remarks ?? 'N/A' }}
+                                    </p>
+                                </div>
+
+                                <div class="card-footer text-muted small">
+                                    Action Date :
+                                    {{ \Carbon\Carbon::parse($action->created_at)->format('d M Y, h:i A') }}
+                                </div>
+
+                            </div>
+                        </div>
+
+                    @empty
+
+                        <div class="col-12 text-center text-muted">
+                            No action history found.
+                        </div>
+                    @endforelse
+
+                </div>
+            </div> --}}
+
+            <style>
+                .action-card {
+                    border-radius: 14px;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+                    border-left: 5px solid #2563eb;
+                }
+
+                .action-title {
+                    font-weight: 600;
+                    color: #1e3a8a;
+                }
+
+                .action-label {
+                    color: #475569;
+                }
+
+                .action-footer {
+                    background: #f8fafc;
+                    border-top: 1px solid #e5e7eb;
+                }
+            </style>
+
+            <div class="container mt-3">
+                <h4 class="mb-3">📌 DETC Action</h4>
+
+                <div class="row g-3">
+
+                    @forelse($detcActions as $action)
+                        <div class="col-12">
+                            <div class="card action-card border-0">
+
+                                <div class="card-body">
+                                    <p class="mb-2 action-label">
+                                        <strong>Proposed Action:</strong>
+                                        <span class="action-title">
+                                            {{ ucwords(str_replace('_', ' ', $action->proposed_action)) }}
+                                        </span>
+                                    </p>
+
+                                    <p class="mb-0 action-label">
+                                        <strong>Remarks:</strong>
+                                        {{ $action->remarks ?? 'N/A' }}
+                                    </p>
+                                </div>
+
+                                <div class="card-footer action-footer text-muted small">
+                                    🕒 Action Date :
+                                    {{ \Carbon\Carbon::parse($action->created_at)->format('d M Y, h:i A') }}
+                                </div>
+
+                            </div>
+                        </div>
+
+                    @empty
+                        <div class="col-12 text-center text-muted">
+                            No action history found.
+                        </div>
+                    @endforelse
+
+                </div>
+            </div>
+
+
+
+
+            {{-- here detc --}}
+
             <div class="container mt-4">
                 @if ($etoActions->count())
                     <div class="card shadow-lg border-0 mb-4" style="border-left:5px solid #28a745;">

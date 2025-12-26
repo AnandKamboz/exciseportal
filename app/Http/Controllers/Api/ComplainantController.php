@@ -2355,7 +2355,7 @@ class ComplainantController extends Controller
             'eto_district_id' => $action->eto_district,
             'eto_district_name' => $etoDistName ?? '',
             'missing_key' => $missingKey,
-            'submitted_value' => $submittedValue,
+            'submitted_value' => $submittedValue ?? "N/A",
             'eto_marked_at' => $action->created_at,
             'applicant_submitted_at' => now(),
             'ip_address' => request()->ip(),
