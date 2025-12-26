@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\ComplainantController;
+use App\Http\Controllers\Web\HQDistrictApplicationController;
 use App\Http\Controllers\Web\DetcController;
 use App\Http\Controllers\Web\InspectorDashboard;
 use App\Http\Controllers\Web\LogoutController;
@@ -102,9 +103,14 @@ Route::prefix('hq')->name('hq.')->middleware(['auth','hq'])->group(function () {
     Route::get('/detc/transfer', [HqController::class, 'transferDetc'])->name('detc.transfer');
     Route::post('/detc/transfer/store', [HqController::class, 'transferStore'])->name('detc.transfer.store');
 
+    Route::get('/district-applications',[HQDistrictApplicationController::class, 'districtList'])->name('district.applications');
+    Route::get('/district-applications/{district_id}',[HQDistrictApplicationController::class, 'districtApplications'])->name('district.applications.list');
 
+    // STEP 3: Application details
+    Route::get('/district-application/view/{secure_id}',[HQDistrictApplicationController::class, 'applicationView'])->name('district.application.view');
+    Route::get('/district-complaints/{district_name}',[HQDistrictApplicationController::class, 'districtApplications'])->name('district.complaints.list');
 
-
+    Route::get('/district-complaints/application/{secure_id}',[HQDistrictApplicationController::class, 'applicationDetails'])->name('district.complaints.view');
 
 
 

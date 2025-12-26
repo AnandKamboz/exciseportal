@@ -188,6 +188,17 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->is('hq/district-complaints*') ? 'active' : '' }}"
+                        href="{{ route('hq.district.applications') }}">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>District-wise Complaints</span>
+                    </a>
+                </li>
+
+
+
+
 
                 {{-- <li class="nav-item">
                     <a class="nav-link text-white" href="{{ route('hq.eto.list') }}">
