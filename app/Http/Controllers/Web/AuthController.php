@@ -182,7 +182,6 @@ class AuthController extends Controller
         $otpInput = $request->otp;
         $captcha = $request->captcha;
 
-        // ✅ OTP check
         $otpRecord = Otp::where('mobile', $mobile)
             ->where('otp', $otpInput)
             ->where('is_used', false)
@@ -197,21 +196,17 @@ class AuthController extends Controller
             ]);
         }
 
-        // ✅ Mark OTP used
         $otpRecord->update(['is_used' => true]);
 
-        // ✅ Generate new secure_id
         do {
             $secureId = Str::random(32);
         } while (User::where('secure_id', $secureId)->exists());
 
-        // ✅ Create user record (insert if not exists)
         $user = User::firstOrCreate(
             ['mobile' => $mobile],
             ['secure_id' => $secureId]
         );
 
-        // ✅ Assign default role if newly created
         if ($user->wasRecentlyCreated) {
             $defaultRole = RoleGroup::where('role_name', 'user')->first();
             if ($defaultRole) {
@@ -219,47 +214,58 @@ class AuthController extends Controller
             }
         }
 
-        // ✅ Login and session
         auth()->login($user);
         $request->session()->put('mobile', $mobile);
 
-        // ✅ Get role name
         $role = $user->roles()->pluck('role_name')->first();
+
 
         // if ($role === 'detc') {
         //     $redirectUrl = route('detc.dashboard');
         // } elseif ($role === 'excise inspector') {
         //     $redirectUrl = route('inspector.dashboard');
-        // } elseif ($role === 'hq') {
-        //     $redirectUrl = route('hq.dashboard');
-        // }else {
-        //     $redirectUrl = route('user.dashboard');
+        // } elseif ($role === 'jc') {
+        //     $redirectUrl = route('jc.dashboard');
+        // } else {
+        //     $mobile = Auth::user()->mobile;
+        //     $complaintExists = DB::table('complainants')
+        //         ->where('complainant_phone', $mobile)
+        //         ->where('is_completed', 1)
+        //         ->exists();
+
+
+
+        //     if ($complaintExists) {
+        //         $redirectUrl = route('user.dashboard');
+        //     } elseif ($role === 'hq') {
+        //         $redirectUrl = route('hq.dashboard');
+        //     } elseif ($role === 'eto') {
+        //         $redirectUrl = route('eto.dashboard');
+        //     } else {
+        //         abort(403, 'User Not Found.');
+        //     }
         // }
 
-        if ($role === 'detc') {
-            $redirectUrl = route('detc.dashboard');
-        } elseif ($role === 'excise inspector') {
-            $redirectUrl = route('inspector.dashboard');
-        } elseif ($role === 'jc') {
-            $redirectUrl = route('jc.dashboard');
-        } else {
-            $mobile = Auth::user()->mobile;
-            $complaintExists = DB::table('complainants')
-                ->where('complainant_phone', $mobile)
-                ->where('is_completed', 1)
-                ->exists();
-
-            if ($complaintExists) {
-                $redirectUrl = route('user.dashboard');
-            } elseif ($role === 'hq') {
-                $redirectUrl = route('hq.dashboard');
-            } elseif ($role === 'eto') {
+        switch ($role) {
+            case 'detc':
+                $redirectUrl = route('detc.dashboard');
+                break;
+            case 'eto':
                 $redirectUrl = route('eto.dashboard');
-            } else {
-                // $redirectUrl = route('complainant');
-                abort(403, 'User Not Found.');
-            }
+                break;
+            case 'hq':
+                $redirectUrl = route('hq.dashboard');
+                break;
+            case 'excise inspector':
+                $redirectUrl = route('inspector.dashboard');
+                break;
+            case 'jc':
+                $redirectUrl = route('jc.dashboard');
+                break;
+            default:
+                $redirectUrl = route('user.dashboard');
         }
+
 
         return response()->json([
             'success' => true,
