@@ -47,7 +47,7 @@
             </div>
 
             {{-- INFORMER DETAILS --}}
-            <div class="section-head">Informer Details</div>
+            {{-- <div class="section-head">Informer Details</div>
 
             <div class="row g-3">
 
@@ -107,7 +107,7 @@
 
             </div>
 
-            <hr>
+            <hr> --}}
 
             {{-- INFORMATION DETAILS --}}
             <div class="section-head">Information Details</div>
