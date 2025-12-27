@@ -47,45 +47,45 @@
             </div>
 
             {{-- INFORMER DETAILS --}}
-            {{-- <div class="section-head">Informer Details</div>
+            <div class="section-head">Informer Details</div>
 
             <div class="row g-3">
 
-                @if ($information->complainant_name)
+                {{-- @if ($information->complainant_name)
                     <div class="col-md-4">
                         <div class="info-card">
                             <div class="label-text">Name</div>
                             <div class="value-text">{{ $information->complainant_name }}</div>
                         </div>
                     </div>
-                @endif
+                @endif --}}
 
-                @if ($information->complainant_phone)
+                {{-- @if ($information->complainant_phone)
                     <div class="col-md-4">
                         <div class="info-card">
                             <div class="label-text">Phone</div>
                             <div class="value-text">{{ $information->complainant_phone }}</div>
                         </div>
                     </div>
-                @endif
+                @endif --}}
 
-                @if ($information->complainant_email)
+                {{-- @if ($information->complainant_email)
                     <div class="col-md-4">
                         <div class="info-card">
                             <div class="label-text">Email</div>
                             <div class="value-text">{{ $information->complainant_email }}</div>
                         </div>
                     </div>
-                @endif
+                @endif --}}
 
-                @if ($information->complainant_aadhar)
+                {{-- @if ($information->complainant_aadhar)
                     <div class="col-md-4">
                         <div class="info-card">
                             <div class="label-text">Aadhar Number</div>
                             <div class="value-text">{{ $information->complainant_aadhar }}</div>
                         </div>
                     </div>
-                @endif
+                @endif --}}
 
                 @if ($stateName)
                     <div class="col-md-4">
@@ -104,10 +104,9 @@
                         </div>
                     </div>
                 @endif
-
             </div>
 
-            <hr> --}}
+            <hr>
 
             {{-- INFORMATION DETAILS --}}
             <div class="section-head">Information Details</div>
