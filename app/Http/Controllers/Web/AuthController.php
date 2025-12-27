@@ -52,13 +52,14 @@ class AuthController extends Controller
         //     $otp = rand(100000, 999999);
         // }
 
-        if($request->mobile = "9898989898" || $request->mobile == "9090909090" || $request->mobile == "2323232323"){
-            $otp = '222333';
-        }elseif(config('app.env') === 'local'){
-            $otp = '111111';
-        }else{
-            $otp = rand(100000, 999999);
-        }
+        if (in_array($request->mobile, ['9898989898','9090909090','2323232323'])) {
+                $otp = '222333';
+            } elseif (config('app.env') === 'local') {
+                $otp = '111111';
+            } else {
+                $otp = rand(100000, 999999);
+            }
+
 
         Otp::create([
             'mobile' => $request->mobile,
@@ -216,32 +217,6 @@ class AuthController extends Controller
 
         $role = $user->roles()->pluck('role_name')->first();
 
-
-        // if ($role === 'detc') {
-        //     $redirectUrl = route('detc.dashboard');
-        // } elseif ($role === 'excise inspector') {
-        //     $redirectUrl = route('inspector.dashboard');
-        // } elseif ($role === 'jc') {
-        //     $redirectUrl = route('jc.dashboard');
-        // } else {
-        //     $mobile = Auth::user()->mobile;
-        //     $complaintExists = DB::table('complainants')
-        //         ->where('complainant_phone', $mobile)
-        //         ->where('is_completed', 1)
-        //         ->exists();
-
-
-
-        //     if ($complaintExists) {
-        //         $redirectUrl = route('user.dashboard');
-        //     } elseif ($role === 'hq') {
-        //         $redirectUrl = route('hq.dashboard');
-        //     } elseif ($role === 'eto') {
-        //         $redirectUrl = route('eto.dashboard');
-        //     } else {
-        //         abort(403, 'User Not Found.');
-        //     }
-        // }
 
         switch ($role) {
             case 'detc':
