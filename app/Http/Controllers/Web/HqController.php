@@ -15,50 +15,16 @@ use Illuminate\Validation\Rule;
 use App\Models\DetcDeleteLog;
 use App\Models\DetcTransferLog;
 use App\Models\DetcUpdateLog;
+use App\Models\EtoAction;
 
 class HqController extends Controller
 {
-    // public function dashboard()
-    // {
-    //     $allComplain = Complainant::where('is_completed', 1)
-    //         ->orderBy('created_at', 'desc')
-    //         ->get();
-
-    //     $totalInformation = $allComplain->count();
-    //     $forwardedtoEto = DetcAction::where('send_to', 'eto')->count();
-    //     $forwardedtoHq = DetcAction::where('send_to', 'hq')->count();
-    //     $pendingFromApplicant = Complainant::where('is_completed', 1)
-    //         ->where('detc_rise_issue', 1)
-    //         ->whereNull('missing_info_submitted_at')
-    //         ->count();
-    //     $pendingFromDetc = Complainant::where('is_completed', 1)
-    //         ->where('detc_rise_issue', 1)
-    //         ->whereNull('missing_info_submitted_at')
-    //         ->count();
-
-    //     $informations = Complainant::latest()->get();
-
-    //     return view('hq.dashboard', compact('informations','allComplain','totalInformation','forwardedtoEto','forwardedtoHq','pendingFromApplicant','pendingFromDetc'));
-    // }
-
     public function dashboard()
     {
-        /*
-        |--------------------------------------------------------------------------
-        | FETCH ALL COMPLETED COMPLAINTS (HQ CAN SEE ALL)
-        |--------------------------------------------------------------------------
-        */
         $allComplain = Complainant::where('is_completed', 1)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        /*
-        |--------------------------------------------------------------------------
-        | DASHBOARD CARDS (HQ VIEW)
-        |--------------------------------------------------------------------------
-        */
-
-        // 🟢 CARD 1: OPEN / NEW
         $openNew = Complainant::where('is_completed', 1)
             ->where(function ($q) {
                 $q->whereNull('current_owner')
@@ -67,19 +33,16 @@ class HqController extends Controller
             ->where('is_final', 0)
             ->count();
 
-        // 🟡 CARD 2: ACTION REQUIRED (Applicant)
         $pendingFromApplicant = Complainant::where('is_completed', 1)
             ->where('current_owner', 'APPLICANT')
             ->where('is_final', 0)
             ->count();
 
-        // 🔵 CARD 3: UNDER REVIEW (Dept / HQ)
         $underReview = Complainant::where('is_completed', 1)
             ->whereIn('current_owner', ['DETC', 'ETO', 'HQ'])
             ->where('is_final', 0)
             ->count();
 
-        // 🔴 CARD 4: CLOSED
         $closed = Complainant::where('is_completed', 1)
             ->where(function ($q) {
                 $q->where('current_owner', 'CLOSED')
@@ -87,11 +50,6 @@ class HqController extends Controller
             })
             ->count();
 
-        /*
-        |--------------------------------------------------------------------------
-        | ADD STATUS SUMMARY (ONE COLUMN – FULL STORY)
-        |--------------------------------------------------------------------------
-        */
         $informations = $allComplain->map(function ($c) {
 
             if (is_null($c->current_owner)) {
@@ -119,11 +77,6 @@ class HqController extends Controller
             return $c;
         });
 
-        /*
-        |--------------------------------------------------------------------------
-        | RETURN VIEW
-        |--------------------------------------------------------------------------
-        */
         return view('hq.dashboard', compact(
             'informations',
             'allComplain',
@@ -140,6 +93,13 @@ class HqController extends Controller
             ->with('detcAction')
             ->firstOrFail();
 
+        $application_id = $information->application_id;
+       
+        $actionOfDetc = DetcAction::where('user_application_id',$application_id)->get();
+       
+        $etoAction = EtoAction::where('application_id',$application_id)->get();
+        // dd($actionofEto);
+
         $detcAction = $information->detcAction;
 
         $stateName = null;
@@ -154,7 +114,7 @@ class HqController extends Controller
                 ->value('name');
         }
 
-        return view('hq.details', compact('information', 'stateName', 'districtName', 'detcAction'));
+        return view('hq.details', compact('information', 'stateName', 'districtName', 'detcAction','actionOfDetc','etoAction'));
     }
 
     public function viewAll($type)

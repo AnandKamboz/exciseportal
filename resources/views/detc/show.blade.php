@@ -379,9 +379,6 @@
 
             @endif
 
-
-
-
             <hr>
 
             @if ($detcActions->count() > 0)

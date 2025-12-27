@@ -174,11 +174,6 @@
             </div>
 
             <ul class="nav flex-column">
-                {{-- <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('hq.dashboard') }}">
-                        <i class="bi bi-house"></i> <span>Dashboard</span>
-                    </a>
-                </li> --}}
 
                 <li class="nav-item">
                     <a class="nav-link text-white {{ request()->is('hq/dashboard') || request()->is('hq/information/*') ? 'active' : '' }}"
@@ -189,23 +184,15 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->is('hq/district-complaints*') ? 'active' : '' }}"
+                    <a class="nav-link text-white
+                        {{ request()->is('hq/district-complaints*') || request()->is('hq/district-applications*') ? 'active' : '' }}"
                         href="{{ route('hq.district.applications') }}">
+
                         <i class="bi bi-geo-alt"></i>
                         <span>District-wise Complaints</span>
                     </a>
                 </li>
 
-
-
-
-
-                {{-- <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('hq.eto.list') }}">
-                        <i class="bi bi-plus-circle"></i>
-                        <span>Create ETO</span>
-                    </a>
-                </li> --}}
 
                 <li class="nav-item">
                     <a class="nav-link text-white {{ request()->is('hq/eto*') ? 'active' : '' }}"
@@ -215,16 +202,20 @@
                     </a>
                 </li>
 
-
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('hq.detc.list') }}">
+                    <a class="nav-link text-white 
+                         {{ request()->is('hq/detc/*') ? 'active' : '' }}"
+                        href="{{ route('hq.detc.list') }}">
                         <i class="bi bi-diagram-3-fill"></i>
                         <span>Create DETC</span>
                     </a>
                 </li>
 
+
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('hq.detc.transfer') }}">
+                    <a class="nav-link text-white 
+                    {{ request()->is('hq/detc/transfer*') ? 'active' : '' }}"
+                        href="{{ route('hq.detc.transfer') }}">
                         <i class="bi bi-arrow-left-right"></i>
                         <span>DETC Transfer</span>
                     </a>

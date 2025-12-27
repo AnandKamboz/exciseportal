@@ -1,7 +1,11 @@
 @extends('hq.layouts.dashboard')
 
 @section('title', 'Complaint Details')
-@section('page_title', 'Dashboard')
+@section(
+    'page_title',
+    Auth::check() ? Auth::user()->name . ' | Dashboard' : 'Dashboard'
+)
+
 
 @section('content')
     <div class="container-fluid">
@@ -103,10 +107,10 @@
             <h5 class="fw-bold  mb-3">Information Details</h5>
 
             <div class="table-responsive">
-                <table id="complaintsTable" class="table table-hover table-striped">
+                {{-- <table id="complaintsTable" class="table table-hover table-striped">
                     <thead style="background: #FF8A73; color: #fff;">
                         <tr>
-                            {{-- <th>#</th> --}}
+                            <th>#</th>
                             <th>Date of Receiving</th>
                             <th>Application Id</th>
                             <th>Type of Information</th>
@@ -118,7 +122,7 @@
 
                         @foreach ($informations as $index => $row)
                             <tr>
-                                {{-- <td>{{ $index + 1 }}</td> --}}
+                                <td>{{ $index + 1 }}</td>
                                 <td>{{ $row->created_at->format('d-m-Y') }}</td>
                                 <td>{{ $row->application_id }}</td>
                                 <td>{{ ucwords(str_replace('_', ' ', $row->type_of_complaint)) }}</td>
@@ -131,7 +135,77 @@
                         @endforeach
 
                     </tbody>
+                </table> --}}
+
+                <table id="complaintsTable" class="table table-hover table-striped">
+                    <thead style="background: #FF8A73; color: #fff;">
+                        <tr>
+                            <th>#</th>
+                            <th>Date of Receiving</th>
+                            <th>Application Id</th>
+                            <th>Type of Information</th>
+                            <th>District</th>
+                            <th>Status</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($informations as $index => $row)
+                            @php
+                                // Default
+                                $status = 'No Action Yet';
+                                $badge = 'bg-secondary';
+
+                                if ($row->is_final == 1) {
+                                    $status = 'Completed';
+                                    $badge = 'bg-success';
+                                } elseif ($row->current_owner === 'APPLICANT') {
+                                    $status = 'Pending with Applicant';
+                                    $badge = 'bg-danger';
+                                } elseif ($row->current_owner === 'DETC') {
+                                    $status = 'Pending with DETC';
+                                    $badge = 'bg-warning';
+                                } elseif ($row->current_owner === 'ETO') {
+                                    $status = 'With ETO';
+                                    $badge = 'bg-info';
+                                } elseif ($row->current_owner === 'HQ') {
+                                    $status = 'With HQ';
+                                    $badge = 'bg-dark';
+                                }
+                            @endphp
+
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+
+                                <td>{{ $row->created_at->format('d-m-Y') }}</td>
+
+                                <td class="fw-semibold text-primary">
+                                    {{ $row->application_id }}
+                                </td>
+
+                                <td>
+                                    {{ ucwords(str_replace('_', ' ', $row->type_of_complaint)) }}
+                                </td>
+
+                                <td>{{ $row->district_name }}</td>
+
+                                <td>
+                                    <span class="badge {{ $badge }}">
+                                        {{ $status }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <a href="{{ route('hq.details', $row->secure_id) }}" class="btn btn-sm btn-primary">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
+
             </div>
         </div>
 

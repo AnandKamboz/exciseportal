@@ -178,6 +178,80 @@
                     </div>
                 @endif
 
+                {{-- here --}}
+
+                @if ($information->missing_gst_number)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Missing Gst Number (Provided after DETC Query)</div>
+                            <div class="value-text">{{ $information->missing_gst_number }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($information->missing_firm_location)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Missing firm location (Provided after DETC Query)</div>
+                            <div class="value-text">{{ $information->missing_firm_location }}</div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($information->missing_address)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">Missing Firm Address (Provided after DETC Query)</div>
+                            <div class="value-text">{{ $information->missing_address }}</div>
+                        </div>
+                    </div>
+                @endif
+
+
+                {{-- HERE ETO MISSING FIELD --}}
+
+                @if ($information->eto_missing_gst_number)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">
+                                GST Number (Provided after ETO Query)
+                            </div>
+                            <div class="value-text">
+                                {{ $information->eto_missing_gst_number }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($information->eto_missing_firm_location)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">
+                                Firm Location (Provided after ETO Query)
+                            </div>
+                            <div class="value-text">
+                                {{ $information->eto_missing_firm_location }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($information->eto_missing_address)
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <div class="label-text">
+                                Firm Address (Provided after ETO Query)
+                            </div>
+                            <div class="value-text">
+                                {{ $information->eto_missing_address }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+
+
+
             </div>
 
             {{-- DOCUMENTS --}}
@@ -227,73 +301,260 @@
             @endif
 
 
-            {{-- DETC ACTION --}}
-            @if ($detcAction)
+            {{-- DETC  --}}
+
+            @if (!empty($actionOfDetc) && $actionOfDetc->count() > 0)
                 <hr>
-                <div class="section-head">DETC Action Taken</div>
-                <div class="row g-3">
-                    @if ($detcAction->proposed_action)
-                        <div class="col-md-4">
-                            <div class="info-card" style="border-left:4px solid #0a3d62;">
-                                <div class="label-text">Proposed Action</div>
-                                <div class="value-text">
-                                    {{ ucfirst(str_replace('_', ' ', $detcAction->proposed_action)) }}
+
+                <h5 class="section-head mb-3">
+                    🧾 DETC Action Taken
+                </h5>
+
+                <style>
+                    .info-card {
+                        background: #ffffff;
+                        border-radius: 12px;
+                        padding: 14px 16px;
+                        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+                        height: 100%;
+                    }
+
+                    .label-text {
+                        font-size: 13px;
+                        color: #6b7280;
+                        font-weight: 600;
+                        margin-bottom: 4px;
+                        text-transform: uppercase;
+                    }
+
+                    .value-text {
+                        font-size: 15px;
+                        color: #111827;
+                        font-weight: 500;
+                    }
+
+                    .action-wrapper {
+                        background: #f8fafc;
+                        border-radius: 14px;
+                        padding: 16px;
+                        margin-bottom: 20px;
+                    }
+                </style>
+
+                {{-- 🔁 LOOP HERE --}}
+                @foreach ($actionOfDetc as $index => $action)
+                    <div class="action-wrapper">
+                        <h6 class="mb-3 text-primary">
+                            Action #{{ $index + 1 }}
+                        </h6>
+
+                        <div class="row g-3">
+
+                            {{-- Proposed Action --}}
+                            @if ($action->proposed_action)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #2563eb;">
+                                        <div class="label-text">Proposed Action</div>
+                                        <div class="value-text">
+                                            {{ ucwords(str_replace('_', ' ', $action->proposed_action)) }}
+                                        </div>
+                                    </div>
                                 </div>
+                            @endif
 
-                            </div>
-                        </div>
-                    @endif
-
-                    @if ($detcAction->action_taken)
-                        <div class="col-md-4">
-                            <div class="info-card" style="border-left:4px solid #28a745;">
-                                <div class="label-text">Action Taken</div>
-                                <div class="value-text">{{ $detcAction->action_taken }}</div>
-                            </div>
-                        </div>
-                    @endif
-
-                    @if ($detcAction->reason)
-                        <div class="col-md-4">
-                            <div class="info-card" style="border-left:4px solid #ffc107;">
-                                <div class="label-text">Reason</div>
-                                {{-- <div class="value-text">{{ $detcAction->reason }}</div> --}}
-                                <div class="value-text">
-                                    {{ ucwords(str_replace('_', ' ', $detcAction->reason)) }}
+                            {{-- Action Taken --}}
+                            @if ($action->action_taken)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #16a34a;">
+                                        <div class="label-text">Action Taken</div>
+                                        <div class="value-text">
+                                            {{ $action->action_taken }}
+                                        </div>
+                                    </div>
                                 </div>
+                            @endif
 
+                            {{-- Reason --}}
+                            @if ($action->reason)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #f59e0b;">
+                                        <div class="label-text">Reason</div>
+                                        <div class="value-text">
+                                            {{ ucwords(str_replace('_', ' ', $action->reason)) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Remarks --}}
+                            @if ($action->remarks)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #64748b;">
+                                        <div class="label-text">Remarks</div>
+                                        <div class="value-text">
+                                            {{ $action->remarks }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- DETC Report --}}
+                            @if ($action->file_name)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #0ea5e9;">
+                                        <div class="label-text">DETC Report</div>
+                                        <a href="{{ asset('storage/complaints/' . $action->user_application_id . '/' . $action->file_name) }}"
+                                            class="btn btn-primary btn-sm mt-2" target="_blank">
+                                            View Report
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Date --}}
+                            <div class="col-md-4">
+                                <div class="info-card" style="border-left:5px solid #8b5cf6;">
+                                    <div class="label-text">Action Date</div>
+                                    <div class="value-text">
+                                        {{ $action->created_at->format('d-m-Y') }}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    @endif
 
-                    @if ($detcAction->remarks)
-                        <div class="col-md-4">
-                            <div class="info-card" style="border-left:4px solid #6c757d;">
-                                <div class="label-text">Remarks</div>
-                                <div class="value-text">{{ $detcAction->remarks }}</div>
-                            </div>
-                        </div>
-                    @endif
-
-                    @if ($detcAction->file_name)
-                        <div class="col-md-4">
-                            <div class="info-card" style="border-left:4px solid #007bff;">
-                                <div class="label-text">DETC Report</div>
-                                <a href="{{ asset('storage/complaints/' . $detcAction->user_application_id . '/' . $detcAction->file_name) }}"
-                                    class="btn btn-primary btn-sm mt-2" target="_blank">View Report</a>
-                            </div>
-                        </div>
-                    @endif
-
-                    <div class="col-md-4">
-                        <div class="info-card" style="border-left:4px solid #17a2b8;">
-                            <div class="label-text">Date</div>
-                            <div class="value-text">{{ $detcAction->created_at->format('d-m-Y') }}</div>
                         </div>
                     </div>
-
-                </div>
+                @endforeach
             @endif
+
+
+
+            @if (!empty($etoAction) && $etoAction->count() > 0)
+                <hr>
+
+                <h5 class="section-head mb-3">
+                    🧾 ETO Action Taken
+                </h5>
+
+                <style>
+                    .info-card {
+                        background: #ffffff;
+                        border-radius: 12px;
+                        padding: 14px 16px;
+                        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+                        height: 100%;
+                    }
+
+                    .label-text {
+                        font-size: 13px;
+                        color: #6b7280;
+                        font-weight: 600;
+                        margin-bottom: 4px;
+                        text-transform: uppercase;
+                    }
+
+                    .value-text {
+                        font-size: 15px;
+                        color: #111827;
+                        font-weight: 500;
+                    }
+
+                    .action-wrapper {
+                        background: #f8fafc;
+                        border-radius: 14px;
+                        padding: 16px;
+                        margin-bottom: 20px;
+                    }
+                </style>
+
+                {{-- 🔁 LOOP HERE --}}
+                @foreach ($etoAction as $index => $action)
+                    <div class="action-wrapper">
+                        <h6 class="mb-3 text-success">
+                            Action #{{ $index + 1 }}
+                        </h6>
+
+                        <div class="row g-3">
+
+                            {{-- Proposed Action --}}
+                            @if ($action->proposed_action)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #22c55e;">
+                                        <div class="label-text">Proposed Action</div>
+                                        <div class="value-text">
+                                            {{ ucwords(str_replace('_', ' ', $action->proposed_action)) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Action Taken --}}
+                            @if ($action->action_taken)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #16a34a;">
+                                        <div class="label-text">Action Taken</div>
+                                        <div class="value-text">
+                                            {{ $action->action_taken }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Reason --}}
+                            @if ($action->reason)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #f59e0b;">
+                                        <div class="label-text">Reason</div>
+                                        <div class="value-text">
+                                            {{ ucwords(str_replace('_', ' ', $action->reason)) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Remarks --}}
+                            @if ($action->remarks)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #64748b;">
+                                        <div class="label-text">Remarks</div>
+                                        <div class="value-text">
+                                            {{ $action->remarks }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- ETO Report --}}
+                            @if ($action->file_name)
+                                <div class="col-md-4">
+                                    <div class="info-card" style="border-left:5px solid #0ea5e9;">
+                                        <div class="label-text">ETO Report</div>
+                                        <a href="{{ asset('storage/complaints/' . $action->user_application_id . '/' . $action->file_name) }}"
+                                            class="btn btn-success btn-sm mt-2" target="_blank">
+                                            View Report
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Date --}}
+                            <div class="col-md-4">
+                                <div class="info-card" style="border-left:5px solid #8b5cf6;">
+                                    <div class="label-text">Action Date</div>
+                                    <div class="value-text">
+                                        {{ $action->created_at->format('d-m-Y') }}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+
+
+
+
+
 
             {{-- BACK BUTTON --}}
             <div class="text-center mt-4">

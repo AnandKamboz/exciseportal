@@ -13,59 +13,10 @@
         </div>
 
         <div class="table-responsive">
-            {{-- <table id="complaintsTable" class="table table-bordered table-hover align-middle">
-                <thead style="background: #FF8A73; color: #fff;">
-                    <tr>
-                        <th class="text-center">Name</th>
-                        <th class="text-center">Mobile</th>
-                        <th class="text-center">District</th>
-                        <th class="text-center">Ward No.</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach ($users as $index => $row)
-                        <tr>
-                            <td class="text-center">
-                                <i class="bi bi-person-badge-fill me-1 text-primary"></i>
-                                {{ $row->name }}
-                            </td>
-
-                            <td class="text-center">
-                                <i class="bi bi-telephone-fill me-1 text-success"></i>
-                                {{ $row->mobile }}
-                            </td>
-
-                            <td class="text-center">
-                                <i class="bi bi-geo-alt-fill me-1 text-danger"></i>
-                                {{ $row->district_name }}
-                            </td>
-
-                            <td class="text-center">
-                                <i class="bi bi-building-fill me-1 text-warning"></i>
-                                Ward No {{ $row->ward_no }}
-                            </td>
-
-                            <td class="text-center">
-                                <form action="{{ route('hq.eto.delete', $row->secure_id) }}" method="POST"
-                                    class="delete-form">
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table> --}}
-
             <table id="complaintsTable" class="table table-bordered table-hover align-middle">
                 <thead style="background: #FF8A73; color: #fff;">
                     <tr>
+                        <th class="text-center">S.N.</th>
                         <th class="text-center">Name</th>
                         <th class="text-center">Mobile</th>
                         <th class="text-center">District</th>
@@ -75,8 +26,9 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($users as $row)
+                    @foreach ($users as $key=>$row)
                         <tr>
+                            <td class="text-center">{{ $key+1 }}</td>
                             <td class="text-center">{{ $row->name }}</td>
                             <td class="text-center">{{ $row->mobile }}</td>
                             <td class="text-center">{{ $row->district_name }}</td>

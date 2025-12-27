@@ -13,64 +13,10 @@
         </div>
 
         <div class="table-responsive">
-            {{-- <table id="complaintsTable" class="table table-bordered table-hover align-middle">
-                <thead style="background: #FF8A73; color: #fff;">
-                    <tr>
-                        <th class="text-center">Name</th>
-                        <th class="text-center">Mobile</th>
-                        <th class="text-center">District</th>
-                        <th class="text-center d-none">Ward No.</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach ($users as $index => $row)
-                        <tr>
-                            <td class="text-center">
-                                <i class="bi bi-person-badge-fill me-1 text-primary"></i>
-                                {{ $row->name }}
-                            </td>
-
-                            <td class="text-center">
-                                <i class="bi bi-telephone-fill me-1 text-success"></i>
-                                {{ $row->mobile }}
-                            </td>
-
-                            <td class="text-center">
-                                <i class="bi bi-geo-alt-fill me-1 text-danger"></i>
-                                {{ $row->district_name }}
-                            </td>
-
-                            <td class="text-center d-none">
-                                <i class="bi bi-building-fill me-1 text-warning"></i>
-                                Ward No {{ $row->ward_no }}
-                            </td>
-
-                            <td class="text-center">
-                                <a href="{{ route('hq.detc.edit', $row->secure_id) }}" class="btn btn-sm btn-warning me-1"
-                                    title="Edit DETC">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-
-                                <form action="{{ route('hq.detc.delete', $row->secure_id) }}" method="POST"
-                                    class="delete-form d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete DETC">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                </form>
-                            </td>
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table> --}}
-
             <table id="complaintsTable" class="table table-bordered table-hover align-middle">
                 <thead style="background: #FF8A73; color: #fff;">
                     <tr>
+                        <th class="text-center">S.N.</th>
                         <th class="text-center">Name</th>
                         <th class="text-center">Mobile</th>
                         <th class="text-center">District</th>
@@ -81,8 +27,12 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($users as $row)
+                    @foreach ($users as $key => $row)
                         <tr>
+                            <td class="text-center">
+                                <i class="bi bi-list-ol me-1 text-primary"></i>
+                                {{ $key + 1 }}
+                            </td>
 
                             {{-- NAME --}}
                             <td class="text-center">
@@ -188,52 +138,11 @@
         </script>
     @endif
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    {{-- <script>
-        document.querySelectorAll('.status-toggle').forEach(toggle => {
-            toggle.addEventListener('change', function() {
-
-                let secureId = this.dataset.id;
-                let status = this.checked ? 1 : 0;
-
-                Swal.fire({
-                    title: status ? 'Activate DETC?' : 'Deactivate DETC?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-                        fetch("{{ route('hq.detc.toggle') }}", {
-                                method: "POST",
-                                headers: {
-                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    secure_id: secureId,
-                                    status: status
-                                })
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                Swal.fire('Success', data.message, 'success');
-                            });
-                    } else {
-                        // revert toggle if cancelled
-                        this.checked = !status;
-                    }
-                });
-            });
-        });
-    </script> --}}
-
     <script>
         document.querySelectorAll('.status-toggle').forEach(toggle => {
             toggle.addEventListener('change', function() {
 
-                let checkbox = this; 
+                let checkbox = this;
                 let secureId = checkbox.dataset.id;
                 let status = checkbox.checked ? 1 : 0;
 
